@@ -27,7 +27,26 @@ export class HomePage {
       price: '$13.990',
       image: 'assets/img/dragonball.jpg',
     },
-    // Agrega más cómics según sea necesario
+    {
+      title: 'Demon Slayer',
+      price: '$11.990',
+      image: 'assets/img/demonslayer.jpg',
+    },
+    {
+      title: 'Batman Beyond',
+      price: '$21.990',
+      image: 'assets/img/batman2.jpg',
+    },
+    {
+      title: 'naruto',
+      price: '$11.990',
+      image: 'assets/img/naruto.jpg',
+    },
+    {
+      title: 'The Amazing Spiderman',
+      price: '$18.990',
+      image: 'assets/img/spiderman.jpg',
+    },
   ];
 
   constructor() {}
