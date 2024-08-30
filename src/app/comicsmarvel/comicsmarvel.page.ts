@@ -8,44 +8,52 @@ import { Component, OnInit } from '@angular/core';
 export class ComicsmarvelPage {
   comics = [
     {
-      title: 'Naruto',
-      price: '$11.990',
-      image: 'assets/img/naruto.jpg',
+      title: 'The Incredible Hulk And Now The Wolverine!',
+      price: '$22.990',
+      image: 'assets/img/hulk.png',
+      link: 'hulk.html'
     },
     {
-      title: 'Demon Slayer',
-      price: '$11.990',
-      image: 'assets/img/demonslayer.jpg',
+      title: 'The Amazing Spider-Man',
+      price: '$18.990',
+      image: 'assets/img/spiderman.jpg',
+      link: 'spiderman1.html'
     },
     {
-      title: 'Dragon Ball',
-      price: '$13.990',
-      image: 'assets/img/dragonball.jpg',
+      title: 'The Astonishing Ant-Man',
+      price: '$23.990',
+      image: 'assets/img/antman.jpg',
+      link: 'antman.html'
     },
     {
-      title: 'Jujutsu Kaisen',
-      price: '$13.990',
-      image: 'assets/img/jujutsukaisen.jpg',
+      title: 'The Avengers: Captain America Lives Again!',
+      price: '$22.990',
+      image: 'assets/img/capitanamerica.jpg',
+      link: 'capitanamerica.html'
     },
     {
-      title: 'Tokyo Revengers',
-      price: '$12.990',
-      image: 'assets/img/tokyorevengers.jpg',
+      title: 'Marvel Super Heroes: Secret Wars',
+      price: '$20.990',
+      image: 'assets/img/secretwars.jpg',
+      link: 'secretwars.html'
     },
     {
-      title: 'My Hero Academia',
-      price: '$11.990',
-      image: 'assets/img/myheroacademia.jpg',
+      title: 'The Invincible Iron Man: Cry Revolution!',
+      price: '$24.990',
+      image: 'assets/img/ironman.jpg',
+      link: 'ironman.html'
     },
     {
-      title: 'Attack On Titan',
-      price: '$12.990',
-      image: 'assets/img/atackontitan.jpg',
+      title: 'The Mighty Thor: The Wrath Of Odin!',
+      price: '$21.990',
+      image: 'assets/img/thor.jpg',
+      link: 'thor.html'
     },
     {
-      title: 'Hunter X Hunter',
-      price: '$13.990',
-      image: 'assets/img/hxh.jpg',
-    },
+      title: "Black Widow: Widow's Sting",
+      price: '$24.990',
+      image: 'assets/img/blackwidow.jpg',
+      link: 'blackwidow.html'
+    }
   ];
 }
