@@ -1,13 +1,35 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>linternaverde1</ion-title>
+    <ion-title>Linterna Verde</ion-title>
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon slot="icon-only" name="search"></ion-icon> <!-- Botón de Búsqueda -->
+      </ion-button>
+      <ion-button href="carrito.html">
+        <ion-icon slot="icon-only" name="cart"></ion-icon> <!-- Botón de Carrito -->
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">linternaverde1</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content padding>
+  <ion-card>
+    <ion-img src="assets/img/linternaverde.jpg"></ion-img>
+    <ion-card-header>
+      <ion-card-title>Green Lantern: Tales of the Sinestro Corps</ion-card-title>
+      <ion-card-subtitle>Descripión:</ion-card-subtitle>
+      <p>"Sumérgete en el universo de Linterna Verde, donde los valientes protectores del orden cósmico, los Green Lantern Corps, patrullan los confines del espacio. Armados con los legendarios anillos de poder, estos héroes forjan construcciones de energía con su voluntad, enfrentándose a las amenazas más temibles del universo. Desde el astuto Sinestro hasta la aterradora Parallax, cada página te lleva a una aventura épica llena de acción, honor y sacrificio. ¡Únete a la lucha por la justicia intergaláctica y sé testigo de cómo los portadores del anillo verde defienden la luz contra la oscuridad!"</p>
+    </ion-card-header>
+    <ion-card-content>
+      <div class="comic-details">
+        <h3>Detalles</h3>
+        <p>Precio: $19.990</p>
+        <ion-item>
+          <ion-label position="floating">Cantidad</ion-label>
+          <ion-input type="number" min="1" [(ngModel)]="quantity"></ion-input>
+        </ion-item>
+        <ion-button expand="full" color="primary" (click)="addToCart()">Añadir al Carrito</ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

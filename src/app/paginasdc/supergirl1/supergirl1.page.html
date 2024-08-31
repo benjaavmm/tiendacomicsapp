@@ -1,13 +1,36 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>supergirl1</ion-title>
+    <ion-title>SuperGirl</ion-title>
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon slot="icon-only" name="search"></ion-icon> <!-- Botón de Búsqueda -->
+      </ion-button>
+      <ion-button href="carrito.html">
+        <ion-icon slot="icon-only" name="cart"></ion-icon> <!-- Botón de Carrito -->
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">supergirl1</ion-title>
-    </ion-toolbar>
-  </ion-header>
+
+<ion-content padding>
+  <ion-card>
+    <ion-img src="assets/img/Supergirl.jpg"></ion-img>
+    <ion-card-header>
+      <ion-card-title>Supergirl #3: El Reinado de los Superhombres Cibernéticos</ion-card-title>
+      <ion-card-subtitle>Descripión:</ion-card-subtitle>
+      <p>"Descubre el emocionante capítulo de Supergirl #3, donde Kara Zor-El enfrenta una amenaza que golpea cerca del corazón. Al regresar a Argo City, su hogar de la infancia, Supergirl se encuentra con un descubrimiento sombrío: la ciudad está bajo el control del Cyborg Superman. En una lucha desesperada por el destino de dos mundos, Kara debe enfrentarse a fantasmas de su pasado y a un enemigo que busca destruir todo lo que ella ama.¡No te pierdas la oportunidad de sumergirte en esta aventura épica con la Chica de Acero!"</p>
+    </ion-card-header>
+    <ion-card-content>
+      <div class="comic-details">
+        <h3>Detalles</h3>
+        <p>Precio: $17.000</p>
+        <ion-item>
+          <ion-label position="floating">Cantidad</ion-label>
+          <ion-input type="number" min="1" [(ngModel)]="quantity"></ion-input>
+        </ion-item>
+        <ion-button expand="full" color="primary" (click)="addToCart()">Añadir al Carrito</ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
 </ion-content>
