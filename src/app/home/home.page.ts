@@ -71,14 +71,26 @@ export class HomePage {
   filteredComics = [...this.comics];  // Inicializar con todos los cómics
 
   carouselImages = [
-    'assets/img/imagen1.jpg',
-    'assets/img/imagen2.jpg',
-    'assets/img/imagen3.jpg'
+    { src: 'assets/img/marvel.png', link: '/comicsmarvel' },
+    { src: 'assets/img/mangas.png', link: '/mangas' },
+    { src: 'assets/img/supermancomic.jpg', link: '/comicsdc' }
   ];
+  
+  navigateToPage(link: string) {
+    window.location.href = link;
+  }
 
   currentSlide = 0;
+  slideInterval: any;
 
   constructor(private menu: MenuController, private alertCtrl: AlertController) {}
+
+  ngOnInit() {
+    // Iniciar el carrusel automático al cargar la página
+    this.slideInterval = setInterval(() => {
+      this.nextSlide();
+    }, 3000);  // Cambia la imagen cada 3 segundos
+  }
 
   openMenu() {
     this.menu.open('first');
@@ -109,10 +121,16 @@ export class HomePage {
     }
   }
   nextSlide() {
-    this.currentSlide = (this.currentSlide + 1) % this.comics.length;
+    this.currentSlide = (this.currentSlide + 1) % this.carouselImages.length;
   }
-
+  
   prevSlide() {
-    this.currentSlide = (this.currentSlide - 1 + this.comics.length) % this.comics.length;
+    this.currentSlide = (this.currentSlide - 1 + this.carouselImages.length) % this.carouselImages.length;
+  }
+  ngOnDestroy() {
+    // Detener el carrusel automático cuando se destruya el componente
+    if (this.slideInterval) {
+      clearInterval(this.slideInterval);
+    }
   }
 }
