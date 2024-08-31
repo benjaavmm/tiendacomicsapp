@@ -1,0 +1,33 @@
+<ion-header>
+  <ion-toolbar>
+    <!-- Flecha de retroceso -->
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Carrito de Compras</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <!-- Item del Carrito -->
+    <ion-item *ngFor="let item of cartItems">
+      <ion-thumbnail slot="start">
+        <img [src]="item.image" alt="{{ item.title }}">
+      </ion-thumbnail>
+      <ion-label>
+        <h2>{{ item.title }}</h2>
+        <p>{{ item.price }}</p>
+      </ion-label>
+      <ion-button slot="end" color="danger" (click)="removeItem(item)">Eliminar</ion-button>
+    </ion-item>
+  </ion-list>
+
+  <!-- Total y botón de compra -->
+  <ion-footer>
+    <ion-toolbar>
+      <ion-title>Total: {{ totalPrice | currency }}</ion-title>
+      <ion-button expand="full" color="primary" (click)="checkout()">Proceder al Pago</ion-button>
+    </ion-toolbar>
+  </ion-footer>
+</ion-content>
