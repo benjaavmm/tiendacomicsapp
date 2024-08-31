@@ -66,6 +66,8 @@ export class ComicsdcPage {
     }
   ];
 
+  filteredComics = [...this.comics];  // Inicializar con todos los cómics
+
   constructor(private menu: MenuController, private alertCtrl: AlertController) {}
 
   openMenu() {
@@ -83,5 +85,17 @@ export class ComicsdcPage {
 
   navigateToComic(link: string) {
     window.location.href = link;
+  }
+
+  filterComics(event: any) {
+    const searchTerm = event.target.value.toLowerCase();
+
+    if (searchTerm && searchTerm.trim() !== '') {
+      this.filteredComics = this.comics.filter((comic) => {
+        return comic.title.toLowerCase().includes(searchTerm);
+      });
+    } else {
+      this.filteredComics = [...this.comics];
+    }
   }
 }

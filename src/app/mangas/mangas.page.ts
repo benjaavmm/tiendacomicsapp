@@ -66,6 +66,8 @@ export class MangasPage {
     }
   ];
   
+  filteredComics = [...this.comics];  // Inicializar con todos los cómics
+
   constructor(private menu: MenuController, private alertCtrl: AlertController) {}
 
   openMenu() {
@@ -81,10 +83,19 @@ export class MangasPage {
     await alert.present();
   }
 
-  navigateToComic(title: string) {
-    const selectedComic = this.comics.find(comic => comic.title === title);
-    if (selectedComic) {
-      window.location.href = selectedComic.link;
+  navigateToComic(link: string) {
+    window.location.href = link;
+  }
+
+  filterComics(event: any) {
+    const searchTerm = event.target.value.toLowerCase();
+
+    if (searchTerm && searchTerm.trim() !== '') {
+      this.filteredComics = this.comics.filter((comic) => {
+        return comic.title.toLowerCase().includes(searchTerm);
+      });
+    } else {
+      this.filteredComics = [...this.comics];
     }
   }
 }
