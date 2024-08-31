@@ -60,6 +60,18 @@
         </ion-row>
       </ion-grid>
 
+      <!-- Aquí empieza el carrusel -->
+      <div class="carousel-container">
+        <div class="carousel-slide" *ngFor="let image of carouselImages; let i = index" [ngStyle]="{'transform': 'translateX(' + (-currentSlide * 100) + '%)'}">
+          <img [src]="image" alt="Carrusel">
+        </div>
+      </div>
+      <div class="carousel-controls">
+        <button (click)="prevSlide()">&#10094;</button>
+        <button (click)="nextSlide()">&#10095;</button>
+      </div>
+      <!-- Fin del carrusel -->
+
        <!-- Productos Destacados -->
        <ion-grid>
         <ion-row>
@@ -113,7 +125,7 @@
           </ion-col>
         </ion-row>
       </ion-grid>
-
+      
       <!-- Sección del footer -->
       <footer class="footer bg-dark text-white">
         <ion-grid>

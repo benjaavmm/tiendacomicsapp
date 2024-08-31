@@ -2,9 +2,11 @@ import { Component } from '@angular/core';
 import { MenuController, AlertController } from '@ionic/angular';
 
 @Component({
+  
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
+
 })
 export class HomePage {
   comics = [
@@ -68,6 +70,14 @@ export class HomePage {
 
   filteredComics = [...this.comics];  // Inicializar con todos los cómics
 
+  carouselImages = [
+    'assets/img/imagen1.jpg',
+    'assets/img/imagen2.jpg',
+    'assets/img/imagen3.jpg'
+  ];
+
+  currentSlide = 0;
+
   constructor(private menu: MenuController, private alertCtrl: AlertController) {}
 
   openMenu() {
@@ -97,5 +107,12 @@ export class HomePage {
     } else {
       this.filteredComics = [...this.comics];
     }
+  }
+  nextSlide() {
+    this.currentSlide = (this.currentSlide + 1) % this.comics.length;
+  }
+
+  prevSlide() {
+    this.currentSlide = (this.currentSlide - 1 + this.comics.length) % this.comics.length;
   }
 }
