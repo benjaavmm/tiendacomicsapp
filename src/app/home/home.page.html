@@ -20,19 +20,16 @@
     </ion-content>
   </ion-menu>
 
-  <!-- Contenido Principal -->
+  
   <div class="ion-page" id="main">
-    <!-- Cabecera -->
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
           <ion-menu-button></ion-menu-button> <!-- Botón del Menú -->
         </ion-buttons>
         <ion-title>Zona de Comics</ion-title>
+        <ion-searchbar slot="end" (ionInput)="filterComics($event)" placeholder="Buscar cómics"></ion-searchbar>
         <ion-buttons slot="end">
-          <ion-button>
-            <ion-icon slot="icon-only" name="search"></ion-icon> <!-- Botón de Búsqueda -->
-          </ion-button>
           <ion-button routerLink="/carrito">
             <ion-icon slot="icon-only" name="cart"></ion-icon> <!-- Botón de Carrito -->
           </ion-button>
@@ -63,10 +60,10 @@
         </ion-row>
       </ion-grid>
 
-      <!-- Productos Destacados -->
-      <ion-grid>
+       <!-- Productos Destacados -->
+       <ion-grid>
         <ion-row>
-          <ion-col size="6" size-md="3" *ngFor="let comic of comics">
+          <ion-col size="6" size-md="3" *ngFor="let comic of filteredComics">
             <ion-card>
               <!-- Solo la imagen redirige a la página del cómic -->
               <img [src]="comic.image" [alt]="comic.title" (click)="navigateToComic(comic)">
@@ -83,6 +80,73 @@
           </ion-col>
         </ion-row>
       </ion-grid>
+
+      <!-- Información de la tienda -->
+      <ion-grid class="store-features mt-5">
+        <ion-row>
+          <ion-col size="12" size-md="4">
+            <ion-card class="store-features_wrapper p-4 rounded shadow-sm text-center">
+              <ion-icon name="car-outline" size="large"></ion-icon>
+              <ion-card-header>
+                <ion-card-title>Envíos a todo Chile</ion-card-title>
+              </ion-card-header>
+              <ion-card-content>Hacemos envíos de lunes a viernes</ion-card-content>
+            </ion-card>
+          </ion-col>
+          <ion-col size="12" size-md="4">
+            <ion-card class="store-features_wrapper p-4 rounded shadow-sm text-center">
+              <ion-icon name="time-outline" size="large"></ion-icon>
+              <ion-card-header>
+                <ion-card-title>Compra 24/7</ion-card-title>
+              </ion-card-header>
+              <ion-card-content>Puedes comprar a toda hora en nuestro sitio web</ion-card-content>
+            </ion-card>
+          </ion-col>
+          <ion-col size="12" size-md="4">
+            <ion-card class="store-features_wrapper p-4 rounded shadow-sm text-center">
+              <ion-icon name="bookmark-outline" size="large"></ion-icon>
+              <ion-card-header>
+                <ion-card-title>100% Originales</ion-card-title>
+              </ion-card-header>
+              <ion-card-content>Todos nuestros productos son importados y 100% originales de cada marca.</ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+      <!-- Sección del footer -->
+      <footer class="footer bg-dark text-white">
+        <ion-grid>
+          <ion-row>
+            <ion-col size="12" size-md="3">
+              <img src="./assets/img/logo.png" alt="Comics Sharingann" width="100">
+            </ion-col>
+            <ion-col size="12" size-md="3">
+              <h5>Nosotros</h5>
+              <p>Ayúdanos a ser la mejor tienda de cómics en Chile. Tenemos un enorme catálogo y el despacho más rápido de Chile. ¡Somos tu tienda favorita!</p>
+            </ion-col>
+            <ion-col size="12" size-md="3">
+              <h5>AYUDA</h5>
+              <ul>
+                <li><a href="#">Preguntas frecuentes</a></li>
+                <li><a href="#">Contacto</a></li>
+              </ul>
+            </ion-col>
+            <ion-col size="12" size-md="3">
+              <h5>Términos y Condiciones</h5>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam et lorem eu dolor viverra porta.</p>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="12" class="text-center">
+              <p><strong>HORARIOS</strong></p>
+              <p>Lunes a Jueves 10:00 a 18:00<br>Viernes 10:00 a 14:00</p>
+              <p><strong>DIRECCIÓN</strong></p>
+              <p>Santiago</p>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </footer>
     </ion-content>
   </div>
 </ion-app>
