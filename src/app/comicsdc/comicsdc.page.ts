@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { MenuController } from '@ionic/angular';
 
 @Component({
   selector: 'app-comicsdc',
@@ -57,4 +58,10 @@ export class ComicsdcPage {
       link: 'titans.html'
     }
   ];
-}
+  
+  constructor(private menu: MenuController) {}
+
+  openMenu() {
+    this.menu.open('first');
+  }
+  }

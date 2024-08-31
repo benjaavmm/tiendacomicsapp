@@ -1,6 +1,6 @@
 <ion-app>
   <!-- Menú Lateral -->
-  <ion-menu side="start" menuId="first" contentId="main">
+  <ion-menu side="start" menuId="first" contentId="main" swipeGesture="false">
     <ion-header>
       <ion-toolbar>
         <ion-title>Zona de Comics</ion-title>
@@ -8,75 +8,93 @@
     </ion-header>
     <ion-content>
       <ion-list>
-        <ion-item routerLink="/home">Pagina Principal</ion-item>
-        <ion-item routerLink="/mangas">Mangas</ion-item>
-        <ion-item routerLink="/comicsdc">Comics DC</ion-item>
-        <ion-item routerLink="/comicsmarvel">Comics Marvel</ion-item>
-        <ion-item routerLink="/contacto">Contacto</ion-item>
-        <ion-item routerLink="/login">Identifícate</ion-item>
+        <!-- Utiliza ion-menu-toggle para cerrar el menú automáticamente al seleccionar una opción -->
+        <ion-menu-toggle auto-hide="true">
+          <ion-item routerLink="/home" routerDirection="root">
+            Página Principal
+          </ion-item>
+          <ion-item routerLink="/mangas" routerDirection="root">
+            Mangas
+          </ion-item>
+          <ion-item routerLink="/comicsdc" routerDirection="root">
+            Comics DC
+          </ion-item>
+          <ion-item routerLink="/comicsmarvel" routerDirection="root">
+            Comics Marvel
+          </ion-item>
+          <ion-item routerLink="/contacto" routerDirection="root">
+            Contacto
+          </ion-item>
+          <ion-item routerLink="/login" routerDirection="root">
+            Identifícate
+          </ion-item>
+        </ion-menu-toggle>
       </ion-list>
     </ion-content>
   </ion-menu>
 
   <!-- Contenido Principal -->
-  <ion-router-outlet id="main"></ion-router-outlet>
+  <div class="ion-page" id="main">
+    <!-- Cabecera -->
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-menu-button></ion-menu-button> <!-- Botón del Menú -->
+        </ion-buttons>
+        <ion-title>Zona de Comics</ion-title>
+        <ion-buttons slot="end">
+          <ion-button>
+            <ion-icon slot="icon-only" name="search"></ion-icon> <!-- Botón de Búsqueda -->
+          </ion-button>
+          <ion-button href="carrito.html">
+            <ion-icon slot="icon-only" name="cart"></ion-icon> <!-- Botón de Carrito -->
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
 
-  <!-- Cabecera -->
-  <ion-header>
-    <ion-toolbar>
-      <ion-buttons slot="start">
-        <ion-menu-button></ion-menu-button> <!-- Botón del Menú -->
-      </ion-buttons>
-      <ion-title>Zona de Comics</ion-title>
-      <ion-buttons slot="end">
-        <ion-button>
-          <ion-icon slot="icon-only" name="search"></ion-icon> <!-- Botón de Búsqueda -->
-        </ion-button>
-        <ion-button href="carrito.html">
-          <ion-icon slot="icon-only" name="cart"></ion-icon> <!-- Botón de Carrito -->
-        </ion-button>
-      </ion-buttons>
-    </ion-toolbar>
-  </ion-header>
+    <!-- Router Outlet para Navegación -->
+    <ion-router-outlet></ion-router-outlet>
 
-  <!-- Contenido Principal -->
-  <ion-content id="main-content">
-    <ion-grid>
-      <ion-row>
-        <ion-col size="12">
-          <ion-card>
-            <ion-card-content style="text-align: center;">
-              <img src="assets/img/logo.png" alt="Comics Sharingann" width="100">
-            </ion-card-content>
-            <ion-card-header>
-              <ion-card-title>¡Bienvenido a Zona de Comics!</ion-card-title>
-            </ion-card-header>
-            <ion-card-content>
-              En nuestra tienda, encontrarás una emocionante selección de cómics y mangas. Desde los clásicos hasta las últimas novedades, tenemos algo para todos los fanáticos.
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+    <!-- Contenido Principal -->
+    <ion-content>
+      <ion-grid>
+        <ion-row>
+          <ion-col size="12">
+            <ion-card>
+              <ion-card-content style="text-align: center;">
+                <img src="assets/img/logo.png" alt="Comics Sharingann" width="100">
+              </ion-card-content>
+              <ion-card-header>
+                <ion-card-title>¡Bienvenido a Zona de Comics!</ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                En nuestra tienda, encontrarás una emocionante selección de cómics y mangas. Desde los clásicos hasta las últimas novedades, tenemos algo para todos los fanáticos.
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
 
-    <!-- Productos Destacados -->
-    <ion-grid>
-      <ion-row>
-        <ion-col size="6" size-md="3" *ngFor="let comic of comics">
-          <ion-card>
-            <img [src]="comic.image" [alt]="comic.title">
-            <ion-card-header>
-              <ion-card-title>{{ comic.title }}</ion-card-title>
-              <ion-card-subtitle>{{ comic.price }}</ion-card-subtitle>
-            </ion-card-header>
-            <ion-item>
-              <ion-label position="stacked">Cantidad</ion-label>
-              <ion-input type="number" min="1" value="1"></ion-input>
-            </ion-item>
-            <ion-button expand="full" color="primary">Añadir al Carro</ion-button>
-          </ion-card>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-  </ion-content>
+      <!-- Productos Destacados -->
+      <ion-grid>
+        <ion-row>
+          <ion-col size="6" size-md="3" *ngFor="let comic of comics">
+            <ion-card>
+              <img [src]="comic.image" [alt]="comic.title">
+              <ion-card-header>
+                <ion-card-title>{{ comic.title }}</ion-card-title>
+                <ion-card-subtitle>{{ comic.price }}</ion-card-subtitle>
+              </ion-card-header>
+              <ion-item>
+                <ion-label position="stacked">Cantidad</ion-label>
+                <ion-input type="number" min="1" value="1"></ion-input>
+              </ion-item>
+              <ion-button expand="full" color="primary">Añadir al Carro</ion-button>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-content>
+  </div>
 </ion-app>

@@ -1,8 +1,13 @@
 <ion-app>
   <!-- Menú Lateral -->
-  <ion-menu side="start" menuId="first" contentId="main">
+  <ion-menu side="start" menuId="first" contentId="main" swipeGesture="false">
     <ion-header>
       <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-button (click)="openMenu()">
+            <ion-menu-button></ion-menu-button>
+          </ion-button>
+        </ion-buttons>
         <ion-title>Comics DC</ion-title>
       </ion-toolbar>
     </ion-header>

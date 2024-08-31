@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { MenuController } from '@ionic/angular';
+
 @Component({
   selector: 'app-mangas',
   templateUrl: './mangas.page.html',
@@ -48,4 +50,11 @@ export class MangasPage {
       image: 'assets/img/hxh.jpg',
     },
   ];
-}
+  
+  constructor(private menu: MenuController) {}
+
+  openMenu() {
+    this.menu.open('first');
+  }
+  }
+  
