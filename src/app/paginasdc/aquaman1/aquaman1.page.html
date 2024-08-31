@@ -1,13 +1,27 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>aquaman1</ion-title>
+    <ion-title>Aquaman</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">aquaman1</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content padding>
+  <ion-card>
+    <ion-img src="assets/img/aquaman1.jpg"></ion-img>
+    <ion-card-header>
+      <ion-card-title>Aquaman #14: La Marea del Terror</ion-card-title>
+      <ion-card-subtitle>Descripión:</ion-card-subtitle>
+      <p>"En las profundidades de los océanos de la Tierra, Aquaman se enfrenta a una nueva ola de terror en el número 14 de su serie. Este número no solo es un testimonio de la valentía y el heroísmo de Aquaman, sino también una invitación a sumergirse en las aventuras que aguardan en el vasto y misterioso océano. ¡Prepárate para ser arrastrado por la corriente de sus emocionantes hazañas!."</p>
+    </ion-card-header>
+    <ion-card-content>
+      <div class="comic-details">
+        <h3>Detalles</h3>
+        <p>Precio: $18.890</p>
+        <ion-item>
+          <ion-label position="floating">Cantidad</ion-label>
+          <ion-input type="number" min="1" [(ngModel)]="quantity"></ion-input>
+        </ion-item>
+        <ion-button expand="full" color="primary" (click)="addToCart()">Añadir al Carrito</ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

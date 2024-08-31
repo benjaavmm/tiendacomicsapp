@@ -1,13 +1,27 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>batman1</ion-title>
+    <ion-title>Batman</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">batman1</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content padding>
+  <ion-card>
+    <ion-img src="assets/img/batman1.jpg"></ion-img>
+    <ion-card-header>
+      <ion-card-title>Detective Comics #400: El Desafío del Hombre Murciélago</ion-card-title>
+      <ion-card-subtitle>Descripión:</ion-card-subtitle>
+      <p>"En esta edición histórica, sumérgete en la oscuridad de Gotham City con Batman, Robin y Batgirl enfrentando una de las amenazas más inusuales: el Hombre Murciélago. Este número especial presenta el choque entre el Caballero Oscuro y una criatura de la noche que desafía todo lo que Batman representa. Con viñetas emocionantes y una narrativa que te mantiene al borde de tu asiento, “El Desafío del Hombre Murciélago” es una pieza clave en la colección de cualquier aficionado al mundo del cómic. ¡No te pierdas la oportunidad de poseer un pedazo de la historia de los cómics con esta emblemática portada!"</p>
+    </ion-card-header>
+    <ion-card-content>
+      <div class="comic-details">
+        <h3>Detalles</h3>
+        <p>Precio: $23.990</p>
+        <ion-item>
+          <ion-label position="floating">Cantidad</ion-label>
+          <ion-input type="number" min="1" [(ngModel)]="quantity"></ion-input>
+        </ion-item>
+        <ion-button expand="full" color="primary" (click)="addToCart()">Añadir al Carrito</ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
 </ion-content>
