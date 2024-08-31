@@ -1,6 +1,6 @@
 <ion-app>
   <!-- Menú Lateral -->
-  <ion-menu side="start" menuId="first" contentId="main"  swipeGesture="false">
+  <ion-menu side="start" menuId="first" contentId="main" swipeGesture="false">
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
@@ -13,7 +13,7 @@
     </ion-header>
     <ion-content>
       <ion-list>
-        <ion-item routerLink="/home">Pagina Principal</ion-item>
+        <ion-item routerLink="/home">Página Principal</ion-item>
         <ion-item routerLink="/mangas">Mangas</ion-item>
         <ion-item routerLink="/comicsdc">Comics DC</ion-item>
         <ion-item routerLink="/comicsmarvel">Comics Marvel</ion-item>
@@ -22,9 +22,6 @@
       </ion-list>
     </ion-content>
   </ion-menu>
-
-   <!-- Contenido Principal -->
-   <ion-router-outlet id="main"></ion-router-outlet>
 
   <!-- Cabecera -->
   <ion-header>
@@ -37,7 +34,7 @@
         <ion-button>
           <ion-icon slot="icon-only" name="search"></ion-icon> <!-- Botón de Búsqueda -->
         </ion-button>
-        <ion-button href="carrito.html">
+        <ion-button routerLink="/carrito">
           <ion-icon slot="icon-only" name="cart"></ion-icon> <!-- Botón de Carrito -->
         </ion-button>
       </ion-buttons>
@@ -50,7 +47,8 @@
       <ion-row>
         <ion-col size="6" size-md="3" *ngFor="let comic of comics">
           <ion-card>
-            <ion-img [src]="comic.image" [alt]="comic.title"></ion-img>
+            <!-- Solo la imagen redirige a la página del manga -->
+            <ion-img [src]="comic.image" [alt]="comic.title" (click)="navigateToComic(comic.title)"></ion-img>
             <ion-card-header>
               <ion-card-title>{{ comic.title }}</ion-card-title>
               <p>{{ comic.price }}</p>
@@ -58,9 +56,9 @@
             <ion-card-content>
               <ion-item>
                 <ion-label position="floating">Cantidad</ion-label>
-                <ion-input type="number" min="1" value="1"></ion-input>
+                <ion-input type="number" min="1" value="1" [(ngModel)]="comic.quantity"></ion-input>
               </ion-item>
-              <ion-button expand="full" color="primary">Añadir al Carro</ion-button>
+              <ion-button expand="full" color="primary" (click)="addToCart(comic)">Añadir al Carro</ion-button>
             </ion-card-content>
           </ion-card>
         </ion-col>
