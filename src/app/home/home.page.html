@@ -8,26 +8,13 @@
     </ion-header>
     <ion-content>
       <ion-list>
-        <!-- Utiliza ion-menu-toggle para cerrar el menú automáticamente al seleccionar una opción -->
         <ion-menu-toggle auto-hide="true">
-          <ion-item routerLink="/home" routerDirection="root">
-            Página Principal
-          </ion-item>
-          <ion-item routerLink="/mangas" routerDirection="root">
-            Mangas
-          </ion-item>
-          <ion-item routerLink="/comicsdc" routerDirection="root">
-            Comics DC
-          </ion-item>
-          <ion-item routerLink="/comicsmarvel" routerDirection="root">
-            Comics Marvel
-          </ion-item>
-          <ion-item routerLink="/contacto" routerDirection="root">
-            Contacto
-          </ion-item>
-          <ion-item routerLink="/login" routerDirection="root">
-            Identifícate
-          </ion-item>
+          <ion-item routerLink="/home" routerDirection="root">Página Principal</ion-item>
+          <ion-item routerLink="/mangas" routerDirection="root">Mangas</ion-item>
+          <ion-item routerLink="/comicsdc" routerDirection="root">Comics DC</ion-item>
+          <ion-item routerLink="/comicsmarvel" routerDirection="root">Comics Marvel</ion-item>
+          <ion-item routerLink="/contacto" routerDirection="root">Contacto</ion-item>
+          <ion-item routerLink="/login" routerDirection="root">Identifícate</ion-item>
         </ion-menu-toggle>
       </ion-list>
     </ion-content>
@@ -46,7 +33,7 @@
           <ion-button>
             <ion-icon slot="icon-only" name="search"></ion-icon> <!-- Botón de Búsqueda -->
           </ion-button>
-          <ion-button href="carrito.html">
+          <ion-button routerLink="/carrito">
             <ion-icon slot="icon-only" name="cart"></ion-icon> <!-- Botón de Carrito -->
           </ion-button>
         </ion-buttons>
@@ -81,16 +68,17 @@
         <ion-row>
           <ion-col size="6" size-md="3" *ngFor="let comic of comics">
             <ion-card>
-              <img [src]="comic.image" [alt]="comic.title">
+              <!-- Solo la imagen redirige a la página del cómic -->
+              <img [src]="comic.image" [alt]="comic.title" (click)="navigateToComic(comic)">
               <ion-card-header>
                 <ion-card-title>{{ comic.title }}</ion-card-title>
                 <ion-card-subtitle>{{ comic.price }}</ion-card-subtitle>
               </ion-card-header>
               <ion-item>
                 <ion-label position="stacked">Cantidad</ion-label>
-                <ion-input type="number" min="1" value="1"></ion-input>
+                <ion-input type="number" min="1" value="1" [(ngModel)]="comic.quantity"></ion-input>
               </ion-item>
-              <ion-button expand="full" color="primary">Añadir al Carro</ion-button>
+              <ion-button expand="full" color="primary" (click)="addToCart(comic)">Añadir al Carro</ion-button>
             </ion-card>
           </ion-col>
         </ion-row>
