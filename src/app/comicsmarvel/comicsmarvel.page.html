@@ -48,7 +48,7 @@
         <ion-col size="6" size-md="3" *ngFor="let comic of comics">
           <ion-card>
             <!-- Solo la imagen redirige a la página del cómic -->
-            <ion-img [src]="comic.image" [alt]="comic.title" (click)="navigateToComic(comic.link)"></ion-img>
+            <img [src]="comic.image" [alt]="comic.title" (click)="navigateToComic(comic.link)">
             <ion-card-header>
               <ion-card-title>{{ comic.title }}</ion-card-title>
               <ion-card-subtitle>{{ comic.price }}</ion-card-subtitle>
@@ -66,3 +66,4 @@
     </ion-grid>
   </ion-content>
 </ion-app>
+

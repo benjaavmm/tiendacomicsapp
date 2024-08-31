@@ -1,13 +1,37 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>naruto</ion-title>
+    <ion-title>Naruto</ion-title>
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon slot="icon-only" name="search"></ion-icon> <!-- Botón de Búsqueda -->
+      </ion-button>
+      <ion-button href="carrito.html">
+        <ion-icon slot="icon-only" name="cart"></ion-icon> <!-- Botón de Carrito -->
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">naruto</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content padding>
+  <ion-card>
+    <ion-img src="assets/img/naruto.jpg"></ion-img>
+    <ion-card-header>
+      <ion-card-title>Naruto</ion-card-title>
+      <ion-card-subtitle>Descripión:</ion-card-subtitle>
+      <p>"Uno de los clones de Naruto se topa frente a frente con Sasuke, con lo que el grupo que ha salido en su búsqueda logra recuperar finalmente su rastro. Mientras tanto, Jiraiya se infiltra con éxito en Amegakure y comienza sus indagaciones acerca del líder de Akatsuki, pero este descubre su presencia y está decidido a eliminarlo. Nagato y Konan se enfrentan con Jiraiya, su antiguo maestro, quien ante el inmenso poder de sus ahora enemigos decide luchar ¡en modo sennin!"</p>
+    </ion-card-header>
+    <ion-card-content>
+      <div class="comic-details">
+        <h3>Detalles</h3>
+        <p>Precio: $11.990</p>
+        <ion-item>
+          <ion-label position="floating">Cantidad</ion-label>
+          <ion-input type="number" min="1" [(ngModel)]="quantity"></ion-input>
+        </ion-item>
+        <ion-button expand="full" color="primary" (click)="addToCart()">Añadir al Carrito</ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
 </ion-content>
+
+

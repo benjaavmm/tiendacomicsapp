@@ -1,13 +1,35 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>capitanamerica</ion-title>
+    <ion-title>Capitan America</ion-title>
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon slot="icon-only" name="search"></ion-icon> <!-- Botón de Búsqueda -->
+      </ion-button>
+      <ion-button href="carrito.html">
+        <ion-icon slot="icon-only" name="cart"></ion-icon> <!-- Botón de Carrito -->
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">capitanamerica</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content padding>
+  <ion-card>
+    <ion-img src="assets/img/capitanamerica.jpg"></ion-img>
+    <ion-card-header>
+      <ion-card-title>The Avengers: Captain America Lives Again!</ion-card-title>
+      <ion-card-subtitle>Descripión:</ion-card-subtitle>
+      <p>"The Avengers: Captain America Lives Again!" presenta el emocionante regreso del legendario Capitán América a las filas de los Vengadores. En esta historia épica, después de décadas de estar atrapado en un estado de animación suspendida, el Capitán América despierta en el mundo moderno para enfrentarse a una nueva era de desafíos. A medida que se une a sus compañeros Vengadores para proteger al mundo de las amenazas, el Capitán América lucha por adaptarse a un mundo que ha cambiado drásticamente desde su tiempo original. Con un emocionante guion, acción trepidante y momentos emocionales, este cómic celebra el legado del Capitán América mientras lo coloca en el centro de la lucha por la justicia y la libertad una vez más."<p>
+    </ion-card-header>
+    <ion-card-content>
+      <div class="comic-details">
+        <h3>Detalles</h3>
+        <p>Precio: $22.990</p>
+        <ion-item>
+          <ion-label position="floating">Cantidad</ion-label>
+          <ion-input type="number" min="1" [(ngModel)]="quantity"></ion-input>
+        </ion-item>
+        <ion-button expand="full" color="primary" (click)="addToCart()">Añadir al Carrito</ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

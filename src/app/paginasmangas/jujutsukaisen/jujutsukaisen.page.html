@@ -1,13 +1,37 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>jujutsukaisen</ion-title>
+    <ion-title>Jujutsu Kaisen</ion-title>
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon slot="icon-only" name="search"></ion-icon> <!-- Botón de Búsqueda -->
+      </ion-button>
+      <ion-button href="carrito.html">
+        <ion-icon slot="icon-only" name="cart"></ion-icon> <!-- Botón de Carrito -->
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">jujutsukaisen</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content padding>
+  <ion-card>
+    <ion-img src="assets/img/jujutsukaisen.jpg"></ion-img>
+    <ion-card-header>
+      <ion-card-title>Jujutsu Kaisen</ion-card-title>
+      <ion-card-subtitle>Descripión:</ion-card-subtitle>
+      <p>"Sukuna es libre por un momento, y sus acciones atroces provocan gravísimos daños en el distrito de Shibuya. Por otro lado, un hechicero maléfico ataca por la espalda a Fushiguro y le inflige una herida fatal, por lo que no le queda otro remedio de usar su as bajo la manga."</p>
+    </ion-card-header>
+    <ion-card-content>
+      <div class="comic-details">
+        <h3>Detalles</h3>
+        <p>Precio: $13.990</p>
+        <ion-item>
+          <ion-label position="floating">Cantidad</ion-label>
+          <ion-input type="number" min="1" [(ngModel)]="quantity"></ion-input>
+        </ion-item>
+        <ion-button expand="full" color="primary" (click)="addToCart()">Añadir al Carrito</ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
 </ion-content>
+
+

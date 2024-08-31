@@ -1,13 +1,35 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>blackwidow</ion-title>
+    <ion-title>Black Widow</ion-title>
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon slot="icon-only" name="search"></ion-icon> <!-- Botón de Búsqueda -->
+      </ion-button>
+      <ion-button href="carrito.html">
+        <ion-icon slot="icon-only" name="cart"></ion-icon> <!-- Botón de Carrito -->
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">blackwidow</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content padding>
+  <ion-card>
+    <ion-img src="assets/img/blackwidow.jpg"></ion-img>
+    <ion-card-header>
+      <ion-card-title>Black Widow: Widow's Sting</ion-card-title>
+      <ion-card-subtitle>Descripión:</ion-card-subtitle>
+      <p>"Black Widow: Widow's Sting" sigue los pasos de Natasha Romanoff, también conocida como la Viuda Negra, en una emocionante misión llena de intriga y peligro. Cuando un antiguo enemigo resurge con un plan para desatar el caos mundial, Natasha se ve obligada a enfrentar su pasado oscuro mientras lucha por detener una conspiración que amenaza con destruir todo lo que ama. Con una combinación de acción intensa, giros sorprendentes y un arte impresionante, este cómic captura la esencia de la icónica espía y asesina mientras demuestra por qué la Viuda Negra es una de las heroínas más formidables del Universo Marvel"<p>
+    </ion-card-header>
+    <ion-card-content>
+      <div class="comic-details">
+        <h3>Detalles</h3>
+        <p>Precio: $24.990</p>
+        <ion-item>
+          <ion-label position="floating">Cantidad</ion-label>
+          <ion-input type="number" min="1" [(ngModel)]="quantity"></ion-input>
+        </ion-item>
+        <ion-button expand="full" color="primary" (click)="addToCart()">Añadir al Carrito</ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
 </ion-content>
