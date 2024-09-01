@@ -1,0 +1,23 @@
+.profile-icon-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+  }
+  
+  .profile-icon {
+    font-size: 100px; /* Ajusta el tamaño del ícono */
+    color: var(red); /* Puedes cambiar este color si lo deseas */
+  }
+  
+  /* Botón rojo pastel */
+  ion-button[color="primary"] {
+    --background: #ff7f7f;
+    --color: #d31111;
+  }
+  
+  /* Botón azul pastel */
+  ion-button[color="secondary"] {
+    --background: #7fbfff;
+    --color: #fff;
+  }
+  

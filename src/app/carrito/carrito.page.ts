@@ -37,6 +37,6 @@ export class CarritoPage {
   }
 
   checkout() {
-    // INNECESARIO :)
+    // INNECESARIO por ahora :)
   }
 }

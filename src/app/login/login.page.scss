@@ -37,7 +37,7 @@ color: #fff;
 cursor: pointer;
 }
 .registro-link {
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.671);
     padding: 5px 10px;
     border-radius: 5px;
     color: #000000;
@@ -47,4 +47,13 @@ cursor: pointer;
   .registro-link:hover {
     background-color: #f0f0f0;
   }
+  
+  .recuperar-link {
+    background-color: rgba(255, 255, 255, 0.671);
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: #000000;
+    text-decoration: none;
+  }
+  
   

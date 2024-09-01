@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-buttons slot="start">
+    <ion-back-button defaultHref="/home"></ion-back-button>
+  </ion-buttons>
+  <ion-toolbar>
+    <ion-title>Perfil</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Información del Perfil</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <!-- Ícono de Perfil -->
+      <div style="display: flex; justify-content: center; margin: 20px 0;">
+        <ion-icon name="person-circle-outline" style="font-size: 100px; color: var(--ion-color-primary);"></ion-icon>
+      </div>
+      <!-- Nombre -->
+      <ion-item>
+        <ion-label>Nombre:</ion-label>
+        <ion-text>{{ user.name }}</ion-text>
+      </ion-item>
+      <!-- Email -->
+      <ion-item>
+        <ion-label>Email:</ion-label>
+        <ion-text>{{ user.email }}</ion-text>
+      </ion-item>
+      <!-- Rol -->
+      <ion-item>
+        <ion-label>Rol:</ion-label>
+        <ion-text>{{ user.role }}</ion-text>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Botones con colores personalizados -->
+  <ion-button expand="full" style="background-color: #ff7f7f; color: white;" (click)="editProfile()">Editar Perfil</ion-button>
+  <ion-button expand="full" style="background-color: #7fbfff; color: white;" (click)="changePassword()">Modificar Contraseña</ion-button>
+</ion-content>

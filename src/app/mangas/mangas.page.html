@@ -20,7 +20,6 @@
         <ion-item routerLink="/mangas">Mangas</ion-item>
         <ion-item routerLink="/comicsdc">Comics DC</ion-item>
         <ion-item routerLink="/comicsmarvel">Comics Marvel</ion-item>
-        <ion-item routerLink="/contacto">Contacto</ion-item>
         <ion-item routerLink="/login">Identifícate</ion-item>
       </ion-list>
     </ion-content>
@@ -36,11 +35,16 @@
       <ion-searchbar slot="end" (ionInput)="filterComics($event)" placeholder="Buscar mangas"></ion-searchbar> <!-- barra busqueda -->
       <ion-buttons slot="end">
         <ion-button routerLink="/carrito">
-          <ion-icon slot="icon-only" name="cart"></ion-icon> <!-- boton carrito -->
+          <ion-icon slot="icon-only" name="cart"></ion-icon> <!-- Botón de Carrito -->
+        </ion-button>
+        <!-- Ícono de Perfil -->
+        <ion-button routerLink="/perfil">
+          <ion-icon slot="icon-only" name="person-circle-outline"></ion-icon>
         </ion-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
+  
 
   <!-- contenido principal -->
   <ion-content id="main">

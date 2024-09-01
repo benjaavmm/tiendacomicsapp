@@ -13,14 +13,12 @@
           <ion-item routerLink="/mangas" routerDirection="root">Mangas</ion-item>
           <ion-item routerLink="/comicsdc" routerDirection="root">Comics DC</ion-item>
           <ion-item routerLink="/comicsmarvel" routerDirection="root">Comics Marvel</ion-item>
-          <ion-item routerLink="/contacto" routerDirection="root">Contacto</ion-item>
           <ion-item routerLink="/login" routerDirection="root">Identifícate</ion-item>
         </ion-menu-toggle>
       </ion-list>
     </ion-content>
   </ion-menu>
 
-  
   <div class="ion-page" id="main">
     <ion-header>
       <ion-toolbar>
@@ -33,6 +31,10 @@
           <ion-button routerLink="/carrito">
             <ion-icon slot="icon-only" name="cart"></ion-icon> <!-- Botón de Carrito -->
           </ion-button>
+          <!-- Ícono de Perfil -->
+          <ion-button routerLink="/perfil">
+            <ion-icon slot="icon-only" name="person-circle-outline"></ion-icon>
+          </ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
@@ -40,7 +42,7 @@
     <!-- Router Outlet para Navegación -->
     <ion-router-outlet></ion-router-outlet>
 
-    <!--  barra  -->
+    <!-- Contenido de la página -->
     <ion-content>
       <ion-grid>
         <ion-row>
@@ -62,19 +64,19 @@
 
       <!-- inicio carrusel -->
       <div class="carousel-container">
-  <div class="carousel-slide" *ngFor="let image of carouselImages; let i = index"
-       [class.active]="i === currentSlide">
-    <img [src]="image.src" alt="Carrusel" (click)="navigateToPage(image.link)">
-  </div>
-</div>
-<div class="carousel-controls">
-  <button (click)="prevSlide()">&#10094;</button>
-  <button (click)="nextSlide()">&#10095;</button>
-</div>
-      <!-- fin carrusel -->
+        <div class="carousel-slide" *ngFor="let image of carouselImages; let i = index"
+             [class.active]="i === currentSlide">
+          <img [src]="image.src" alt="Carrusel" (click)="navigateToPage(image.link)">
+        </div>
+      </div>
+      <div class="carousel-controls">
+        <button (click)="prevSlide()">&#10094;</button>
+        <button (click)="nextSlide()">&#10095;</button>
+      </div>
+      <!-- carrusel -->
 
-       <!-- productos destacados -->
-       <ion-grid>
+      <!-- productos destacados -->
+      <ion-grid>
         <ion-row>
           <ion-col size="6" size-md="3" *ngFor="let comic of filteredComics">
             <ion-card>
