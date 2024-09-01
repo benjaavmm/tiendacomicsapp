@@ -13,7 +13,7 @@ export class MangasPage {
       title: 'Naruto',
       price: '$11.990',
       image: 'assets/img/naruto.jpg',
-      link: '/naruto',  // Asegúrate de que esta ruta esté configurada en AppRoutingModule
+      link: '/naruto',  
       quantity: 1
     },
     {
@@ -55,7 +55,7 @@ export class MangasPage {
       title: 'Attack On Titan',
       price: '$12.990',
       image: 'assets/img/attackontitan.jpg',
-      link: '/attackontitan',  // Asegúrate de que esta ruta esté configurada en AppRoutingModule
+      link: '/attackontitan',  
       quantity: 1
     },
     {
@@ -85,7 +85,7 @@ export class MangasPage {
   }
 
   navigateToComic(link: string) {
-    this.router.navigate([link]);  // Usar el enrutador de Angular
+    this.router.navigate([link]);  
   }
 
   filterComics(event: any) {
