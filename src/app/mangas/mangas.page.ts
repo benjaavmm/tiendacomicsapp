@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { MenuController, AlertController } from '@ionic/angular';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-mangas',
@@ -12,7 +13,7 @@ export class MangasPage {
       title: 'Naruto',
       price: '$11.990',
       image: 'assets/img/naruto.jpg',
-      link: '/naruto',
+      link: '/naruto',  // Asegúrate de que esta ruta esté configurada en AppRoutingModule
       quantity: 1
     },
     {
@@ -53,8 +54,8 @@ export class MangasPage {
     {
       title: 'Attack On Titan',
       price: '$12.990',
-      image: 'assets/img/atackontitan.jpg',
-      link: '/atackontitan',
+      image: 'assets/img/attackontitan.jpg',
+      link: '/attackontitan',  // Asegúrate de que esta ruta esté configurada en AppRoutingModule
       quantity: 1
     },
     {
@@ -68,7 +69,7 @@ export class MangasPage {
   
   filteredComics = [...this.comics];  // Inicializar con todos los cómics
 
-  constructor(private menu: MenuController, private alertCtrl: AlertController) {}
+  constructor(private menu: MenuController, private alertCtrl: AlertController, private router: Router) {}
 
   openMenu() {
     this.menu.open('first');
@@ -84,7 +85,7 @@ export class MangasPage {
   }
 
   navigateToComic(link: string) {
-    window.location.href = link;
+    this.router.navigate([link]);  // Usar el enrutador de Angular
   }
 
   filterComics(event: any) {
