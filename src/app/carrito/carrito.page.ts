@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
   templateUrl: './carrito.page.html',
   styleUrls: ['./carrito.page.scss'],
 })
-//Importamos ejemplos de comics de como se veria
+//ejemplos de comics de como se veria
 export class CarritoPage {
   cartItems = [
     {

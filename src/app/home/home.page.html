@@ -1,5 +1,5 @@
 <ion-app>
-  <!-- Menú Lateral -->
+  <!-- menú lateral -->
   <ion-menu side="start" menuId="first" contentId="main" swipeGesture="false">
     <ion-header>
       <ion-toolbar>
@@ -40,7 +40,7 @@
     <!-- Router Outlet para Navegación -->
     <ion-router-outlet></ion-router-outlet>
 
-    <!-- Contenido Principal -->
+    <!--  barra  -->
     <ion-content>
       <ion-grid>
         <ion-row>
@@ -60,7 +60,7 @@
         </ion-row>
       </ion-grid>
 
-      <!-- Aquí empieza el carrusel -->
+      <!-- inicio carrusel -->
       <div class="carousel-container">
   <div class="carousel-slide" *ngFor="let image of carouselImages; let i = index"
        [class.active]="i === currentSlide">
@@ -71,14 +71,14 @@
   <button (click)="prevSlide()">&#10094;</button>
   <button (click)="nextSlide()">&#10095;</button>
 </div>
-      <!-- Fin del carrusel -->
+      <!-- fin carrusel -->
 
-       <!-- Productos Destacados -->
+       <!-- productos destacados -->
        <ion-grid>
         <ion-row>
           <ion-col size="6" size-md="3" *ngFor="let comic of filteredComics">
             <ion-card>
-              <!-- Solo la imagen redirige a la página del cómic -->
+              <!-- al hacer click en la imagen lleva a la pagina del comic -->
               <img [src]="comic.image" [alt]="comic.title" (click)="navigateToComic(comic)">
               <ion-card-header>
                 <ion-card-title>{{ comic.title }}</ion-card-title>
@@ -94,7 +94,7 @@
         </ion-row>
       </ion-grid>
 
-      <!-- Información de la tienda -->
+      <!-- información de la tienda -->
       <ion-grid class="store-features mt-5">
         <ion-row>
           <ion-col size="12" size-md="4">
@@ -127,7 +127,7 @@
         </ion-row>
       </ion-grid>
       
-      <!-- Sección del footer -->
+      <!-- footer -->
       <footer class="footer bg-dark text-white">
         <ion-grid>
           <ion-row>

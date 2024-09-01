@@ -68,7 +68,7 @@ export class HomePage {
     },
   ];
 
-  filteredComics = [...this.comics];  // Inicializar con todos los cómics
+  filteredComics = [...this.comics];  // inicializar con todos los cómics
 
   carouselImages = [
     { src: 'assets/img/marvel.png', link: '/comicsmarvel' },
@@ -89,7 +89,7 @@ export class HomePage {
     // Iniciar el carrusel automático al cargar la página
     this.slideInterval = setInterval(() => {
       this.nextSlide();
-    }, 3000);  // Cambia la imagen cada 3 segundos
+    }, 5000);  // Cambia la imagen cada 5 segundos
   }
 
   openMenu() {

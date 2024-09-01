@@ -66,7 +66,7 @@ export class ComicsmarvelPage {
     }
   ];
   
-   filteredComics = [...this.comics];  // Inicializar con todos los cómics
+   filteredComics = [...this.comics];  // inicializar con todos los cómics
 
   constructor(private menu: MenuController, private alertCtrl: AlertController) {}
 
