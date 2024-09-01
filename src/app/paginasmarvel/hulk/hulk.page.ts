@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-hulk',
@@ -8,14 +9,17 @@ import { Component, OnInit } from '@angular/core';
 export class HulkPage implements OnInit {
   quantity: number = 1; // Define la propiedad quantity con un valor inicial
 
-  constructor() { }
+  constructor(private alertCtrl: AlertController) { }
 
   ngOnInit() {
   }
 
-  addToCart() {
-    // Lógica para agregar al carrito
-    console.log(`Añadido al carrito: Cantidad ${this.quantity}`);
+  async addToCart() {
+    const alert = await this.alertCtrl.create({
+      header: 'Añadido al Carro',
+      message: `Has añadido ${this.quantity} de Hulk al carrito.`,
+      buttons: ['OK']
+    });
+    await alert.present();
   }
 }
-
