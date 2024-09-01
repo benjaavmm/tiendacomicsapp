@@ -117,13 +117,15 @@ const routes: Routes = [
     path: 'perfil',
     loadChildren: () => import('./perfil/perfil.module').then( m => m.PerfilPageModule)
   },
-  {
-    path: '**',
-    loadChildren: () => import('./notfound/notfound.module').then( m => m.NotfoundPageModule)
-  },
+  
   {
     path: 'recuperaclave',
     loadChildren: () => import('./recuperaclave/recuperaclave.module').then( m => m.RecuperaclavePageModule)
+  },
+
+  {
+    path: '**',
+    loadChildren: () => import('./notfound/notfound.module').then( m => m.NotfoundPageModule)
   },
 
 
