@@ -1,5 +1,16 @@
 ion-content {
-  --background: #6dafc4; /* Cambia este color si lo deseas */
+  --background: #86cfe7; /* Cambia este color si lo deseas */
+}
+
+ion-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+ion-col {
+  display: flex;
+  justify-content: center;
 }
 
 
