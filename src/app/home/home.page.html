@@ -47,7 +47,7 @@
       <ion-grid>
         <ion-row>
           <ion-col size="12">
-            <ion-card>
+            <ion-card class="welcome-card">
               <ion-card-content style="text-align: center;">
                 <img src="assets/img/logo.png" alt="Comics Sharingann" width="100">
               </ion-card-content>
@@ -79,7 +79,7 @@
       <ion-grid>
         <ion-row>
           <ion-col size="6" size-md="3" *ngFor="let comic of filteredComics">
-            <ion-card>
+            <ion-card class="comic-card">
               <!-- al hacer click en la imagen lleva a la pagina del comic -->
               <img [src]="comic.image" [alt]="comic.title" (click)="navigateToComic(comic)">
               <ion-card-header>
@@ -100,7 +100,7 @@
       <ion-grid class="store-features mt-5">
         <ion-row>
           <ion-col size="12" size-md="4">
-            <ion-card class="store-features_wrapper p-4 rounded shadow-sm text-center">
+            <ion-card class="info-tienda">
               <ion-icon name="car-outline" size="large"></ion-icon>
               <ion-card-header>
                 <ion-card-title>Envíos a todo Chile</ion-card-title>
@@ -109,7 +109,7 @@
             </ion-card>
           </ion-col>
           <ion-col size="12" size-md="4">
-            <ion-card class="store-features_wrapper p-4 rounded shadow-sm text-center">
+            <ion-card class="compra">
               <ion-icon name="time-outline" size="large"></ion-icon>
               <ion-card-header>
                 <ion-card-title>Compra 24/7</ion-card-title>
@@ -118,7 +118,7 @@
             </ion-card>
           </ion-col>
           <ion-col size="12" size-md="4">
-            <ion-card class="store-features_wrapper p-4 rounded shadow-sm text-center">
+            <ion-card class="productos">
               <ion-icon name="bookmark-outline" size="large"></ion-icon>
               <ion-card-header>
                 <ion-card-title>100% Originales</ion-card-title>

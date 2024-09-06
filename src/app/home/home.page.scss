@@ -2,15 +2,77 @@ ion-content {
   --background: #86cfe7; /* Cambia este color si lo deseas */
 }
 
-ion-card {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+
+comic-card {
+  background-color: #f0f0f0;
+  color: #333;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  height: 550px; /* Mantiene todas las tarjetas del mismo tamaño */
 }
-ion-col {
-  display: flex;
-  justify-content: center;
+
+.welcome-card {
+  background-color: #d8f2ff; /* Un color suave para diferenciarla */
+  border-radius: 15px;
+  text-align: center;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.welcome-card img {
+  width: 200px; /* Tamaño del logo */
+  margin: 0 auto; /* Centrar la imagen */
+}
+
+.welcome-card:hover {
+  transform: scale(1.05); /* Un leve aumento al interactuar */
+}
+
+.info-tienda {
+  background-color: #e3f2fd; /* Color azul claro */
+  color: #333;
+  border-radius: 10px;
+  text-align: center;
+  padding: 20px;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.info-tienda:hover {
+  background-color: #bbdefb; /* Un azul más oscuro al interactuar */
+  transform: scale(1.02);
+}
+
+.compra {
+  background-color: #e3f2fd; /* Color azul claro */
+  color: #333;
+  border-radius: 10px;
+  text-align: center;
+  padding: 20px;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.compra:hover {
+  background-color: #bbdefb; /* Un azul más oscuro al interactuar */
+  transform: scale(1.02);
+}
+
+.productos {
+  background-color: #e3f2fd; /* Color azul claro */
+  color: #333;
+  border-radius: 10px;
+  text-align: center;
+  padding: 20px;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.productos:hover {
+  background-color: #bbdefb; /* Un azul más oscuro al interactuar */
+  transform: scale(1.02);
 }
 
 
