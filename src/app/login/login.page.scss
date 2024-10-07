@@ -1,59 +1,76 @@
 body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  margin: 0;
+  background-color: #f8f9fa; /* Fondo general para mejorar el contraste */
 }
 
 .logo {
-    background-image: url('/assets/img/fondo.png');  // Usar ruta relativa desde /src
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
+  background-image: url('/assets/img/fondo.png'); /* Usar ruta relativa desde /src */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 .container {
-width: 300px;
-padding: 20px;
-border: 1px solid #ccc;
-border-radius: 5px;
-text-align: center;
+  width: 90%;
+  max-width: 400px; /* Aumentar el max-width para pantallas más grandes */
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  text-align: center;
+  background-color: #ffffff; /* Fondo blanco para el contenedor */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para darle profundidad */
 }
+
 .container form {
-display: flex;
-flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
-.container form input {
-margin-bottom: 10px;
-padding: 5px;
-border-radius: 3px;
-border: 1px solid #ccc;
+
+.container form ion-item {
+  margin-bottom: 10px;
 }
-.container form input[type="submit"] {
-background-color: #bb2e07;
-color: #fff;
-cursor: pointer;
+
+.container form ion-button {
+  margin-top: 10px;
 }
-.registro-link {
-    background-color: rgba(255, 255, 255, 0.671);
-    padding: 5px 10px;
-    border-radius: 5px;
-    color: #000000;
-    text-decoration: none;
+
+.links-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 15px;
+}
+
+.links-container a {
+  margin: 5px 0;
+  padding: 5px 10px;
+  border-radius: 5px;
+  color: #000;
+  text-decoration: none;
+  background-color: rgba(255, 255, 255, 0.671);
+  transition: background-color 0.3s ease;
+}
+
+.links-container a:hover {
+  background-color: #f0f0f0;
+}
+
+.separator {
+  display: none; /* Ocultar el separador en pantallas pequeñas */
+}
+
+@media (min-width: 600px) {
+  .links-container {
+    flex-direction: row;
   }
-  
-  .registro-link:hover {
-    background-color: #f0f0f0;
+
+  .separator {
+    display: inline;
+    margin: 0 10px;
   }
-  
-  .recuperar-link {
-    background-color: rgba(255, 255, 255, 0.671);
-    padding: 5px 10px;
-    border-radius: 5px;
-    color: #000000;
-    text-decoration: none;
-  }
-  
-  
+}
