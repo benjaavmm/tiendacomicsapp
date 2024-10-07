@@ -50,7 +50,7 @@
     <ion-grid>
       <ion-row>
         <ion-col size="6" size-md="3" *ngFor="let comic of filteredComics">
-          <ion-card>
+          <ion-card class="comic-card"> <!-- Añadir la clase aquí -->
             <!-- Al hacer click en la imagen lleva a la página del cómic -->
             <ion-img [src]="comic.image" [alt]="comic.title" (click)="navigateToComic(comic.link)"></ion-img>
             <ion-card-header>
