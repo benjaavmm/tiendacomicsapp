@@ -1,14 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MenuController, AlertController } from '@ionic/angular';
 
 @Component({
-  
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
-
 })
-export class HomePage {
+export class HomePage implements OnInit, OnDestroy {
   comics = [
     {
       title: 'The Flash N°52',
@@ -89,7 +87,7 @@ export class HomePage {
     // Iniciar el carrusel automático al cargar la página
     this.slideInterval = setInterval(() => {
       this.nextSlide();
-    }, 5000);  // Cambia la imagen cada 5 segundos
+    }, 4000);  // Cambia la imagen cada 2 segundos
   }
 
   openMenu() {
@@ -120,6 +118,7 @@ export class HomePage {
       this.filteredComics = [...this.comics];
     }
   }
+
   nextSlide() {
     this.currentSlide = (this.currentSlide + 1) % this.carouselImages.length;
   }
@@ -127,6 +126,7 @@ export class HomePage {
   prevSlide() {
     this.currentSlide = (this.currentSlide - 1 + this.carouselImages.length) % this.carouselImages.length;
   }
+
   ngOnDestroy() {
     // Detener el carrusel automático cuando se destruya el componente
     if (this.slideInterval) {

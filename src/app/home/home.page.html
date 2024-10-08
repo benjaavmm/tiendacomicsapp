@@ -70,32 +70,29 @@
         </div>
       </div>
       <div class="carousel-controls">
-        <button (click)="prevSlide()">&#10094;</button>
-        <button (click)="nextSlide()">&#10095;</button>
       </div>
       <!-- carrusel -->
 
-     <!-- productos destacados -->
-<ion-grid>
-  <ion-row>
-    <ion-col size="6" size-md="3" *ngFor="let comic of filteredComics">
-      <ion-card class="comic-card">
-        <!-- al hacer click en la imagen lleva a la pagina del comic -->
-        <img [src]="comic.image" [alt]="comic.title" (click)="navigateToComic(comic)">
-        <ion-card-header>
-          <ion-card-title>{{ comic.title }}</ion-card-title>
-          <ion-card-subtitle>{{ comic.price }}</ion-card-subtitle>
-        </ion-card-header>
-        <ion-item>
-          <ion-label position="stacked">Cantidad</ion-label>
-          <ion-input type="number" min="1" [(ngModel)]="comic.quantity" value="1"></ion-input>
-        </ion-item>
-        <ion-button expand="full" color="primary" (click)="addToCart(comic)">Añadir al Carro</ion-button>
-      </ion-card>
-    </ion-col>
-  </ion-row>
-</ion-grid>
-
+      <!-- productos destacados -->
+      <ion-grid>
+        <ion-row>
+          <ion-col size="6" size-md="3" *ngFor="let comic of filteredComics">
+            <ion-card class="comic-card">
+              <!-- al hacer click en la imagen lleva a la pagina del comic -->
+              <img [src]="comic.image" [alt]="comic.title" (click)="navigateToComic(comic)">
+              <ion-card-header>
+                <ion-card-title>{{ comic.title }}</ion-card-title>
+                <ion-card-subtitle>{{ comic.price }}</ion-card-subtitle>
+              </ion-card-header>
+              <ion-item>
+                <ion-label position="stacked">Cantidad</ion-label>
+                <ion-input type="number" min="1" [(ngModel)]="comic.quantity" value="1"></ion-input>
+              </ion-item>
+              <ion-button expand="full" color="primary" (click)="addToCart(comic)">Añadir al Carro</ion-button>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
 
       <!-- información de la tienda -->
       <ion-grid class="store-features mt-5">
@@ -142,12 +139,7 @@
               <p>Ayúdanos a ser la mejor tienda de cómics en Chile. Tenemos un enorme catálogo y el despacho más rápido de Chile. ¡Somos tu tienda favorita!</p>
             </ion-col>
             <ion-col size="12" size-md="3">
-              <h5>AYUDA</h5>
-              <ul>
-                <li><a href="#">Preguntas frecuentes</a></li>
-                <li><a href="#">Contacto</a></li>
-              </ul>
-            </ion-col>
+              </ion-col>
             <ion-col size="12" size-md="3">
               <h5>Términos y Condiciones</h5>
               <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam et lorem eu dolor viverra porta.</p>

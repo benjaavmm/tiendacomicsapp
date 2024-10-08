@@ -54,7 +54,7 @@ export class MangasPage {
     {
       title: 'Attack On Titan',
       price: '$12.990',
-      image: 'assets/img/attackontitan.jpg',
+      image: 'assets/img/atackontitan.jpg',
       link: '/attackontitan',  
       quantity: 1
     },
