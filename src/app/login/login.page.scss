@@ -8,14 +8,13 @@ body {
   background-color: #f8f9fa; /* Fondo general para mejorar el contraste */
 }
 
-.logo {
-  background-image: url('/assets/img/fondo.png'); /* Usar ruta relativa desde /src */
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
+ion-content {
+  --background: url('/assets/img/fondo.png') no-repeat center center / cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-
-.container {
+tainer {
   width: 90%;
   max-width: 400px; /* Aumentar el max-width para pantallas más grandes */
   padding: 20px;
