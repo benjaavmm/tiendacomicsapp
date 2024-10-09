@@ -3,8 +3,8 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 90vh;
-  margin: 0;
+  height: 100vh;
+  margin: 25;
   background-color: #f8f9fa; /* Fondo general para mejorar el contraste */
 }
 
@@ -14,12 +14,12 @@ ion-content {
   justify-content: center;
   align-items: center;
 }
-tainer {
+container {
   width: 90%;
   max-width: 400px; /* Aumentar el max-width para pantallas más grandes */
   padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  border: 15px solid #ccc;
+  border-radius: px;
   text-align: center;
   background-color: #ffffff; /* Fondo blanco para el contenedor */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para darle profundidad */
