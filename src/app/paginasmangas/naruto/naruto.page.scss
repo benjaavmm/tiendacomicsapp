@@ -1,0 +1,19 @@
+ion-content {
+    --background: #006effad; /* fondo */
+  }
+  
+  /* Estilos para iconos específicos */
+  ion-back-button {
+      --color: #ff9900; /* Color del ícono */
+      padding: 5px; /* Espaciado interno del botón */
+  }
+  
+  ion-icon[name="cart"] {
+      color: #86beff; /* Azul para el carrito */
+    }
+    
+    ion-icon[name="person-circle-outline"] {
+      color: #f35454; /* Rojo para el perfil */
+    }
+   
+  
