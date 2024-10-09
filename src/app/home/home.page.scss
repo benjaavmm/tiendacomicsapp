@@ -1,19 +1,22 @@
+/* Estilos generales para ion-content */
 ion-content {
   --background: #006effad; /* fondo */
 }
 
+/* Estilos para iconos específicos */
 ion-icon[name="cart"] {
   color: #86beff; /* Verde para el carrito */
 }
 
 ion-icon[name="person-circle-outline"] {
-  color: #f35454; /* Azul para el perfil */
+  color: #f01616; /* Azul para el perfil */
 }
 
 ion-menu-button {
   color: #ff9900; /* Naranja para el ícono del menú */
 }
 
+/* Contenedor del carrusel */
 .carousel-container {
   position: relative;
   width: 100%;
@@ -51,6 +54,7 @@ ion-menu-button {
   }
 }
 
+/* Estilos para el contenedor de las tarjetas */
 .card-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -58,6 +62,7 @@ ion-menu-button {
   padding: 10px;
 }
 
+/* Estilos de las tarjetas de los cómics */
 .comic-card {
   background-color: #ffffff;
   color: #333;
@@ -85,6 +90,7 @@ ion-menu-button {
   font-size: 1rem;
 }
 
+/* Estilos para ion-item y ion-button */
 .ion-item, .ion-button {
   margin-top: auto;
 }
@@ -97,11 +103,17 @@ ion-menu-button {
   border-radius: 4px;
 }
 
-.ion-button {
-  background-color: #0000ff;
-  color: #ffffff;
+ion-button.add-to-cart {
+  --background: #ff0404 !important; /* Asegura que se aplique el fondo rojo */
+  --color: #ffffff !important;      /* Asegura que el texto blanco se aplique */
 }
 
+.ion-button:hover {
+  background-color: #d93a3a; /* Un tono más oscuro para el hover */
+  cursor: pointer; /* Cambia el cursor a pointer al pasar sobre el botón */
+}
+
+/* Estilos para la tarjeta de bienvenida */
 .welcome-card {
   background-color: #f4f9fc;
   border-radius: 15px;
@@ -119,10 +131,11 @@ ion-menu-button {
   color: red;
 }
 
+/* Estilos para secciones de información */
 .info-tienda,
 .compra,
 .productos {
-  background-color: #e3f2fd;
+  background-color: #ffffff;
   color: #333;
   border-radius: 10px;
   text-align: center;
@@ -130,6 +143,7 @@ ion-menu-button {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* Estilos para el contenedor */
 #container {
   text-align: center;
   position: center;
@@ -155,6 +169,7 @@ ion-menu-button {
   text-decoration: none;
 }
 
+/* Estilos para el pie de página */
 .footer {
   padding: 20px;
   background-color: #333;

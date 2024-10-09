@@ -88,7 +88,7 @@
                 <ion-label position="stacked">Cantidad</ion-label>
                 <ion-input type="number" min="1" [(ngModel)]="comic.quantity" value="1"></ion-input>
               </ion-item>
-              <ion-button expand="full" color="primary" (click)="addToCart(comic)">Añadir al Carro</ion-button>
+              <ion-button expand="full" class="add-to-cart" (click)="addToCart(comic)">Añadir al Carro</ion-button>
             </ion-card>
           </ion-col>
         </ion-row>
@@ -139,7 +139,7 @@
               <p>Ayúdanos a ser la mejor tienda de cómics en Chile. Tenemos un enorme catálogo y el despacho más rápido de Chile. ¡Somos tu tienda favorita!</p>
             </ion-col>
             <ion-col size="12" size-md="3">
-              </ion-col>
+            </ion-col>
             <ion-col size="12" size-md="3">
               <h5>Términos y Condiciones</h5>
               <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam et lorem eu dolor viverra porta.</p>
