@@ -132,7 +132,11 @@ const routes: Routes = [
   {
     path: '**',
     loadChildren: () => import('./notfound/notfound.module').then( m => m.NotfoundPageModule)
+  },  {
+    path: 'modificar-contrasena',
+    loadChildren: () => import('./modificar-contrasena/modificar-contrasena.module').then( m => m.ModificarContrasenaPageModule)
   },
+
 
 
 
