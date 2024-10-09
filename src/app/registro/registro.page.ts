@@ -22,47 +22,42 @@ export class RegistroPage {
   // Método onSubmit
   async onSubmit(form: NgForm) {
     if (form.valid) {
+      // Validación de que las contraseñas coincidan
       if (this.contrasena !== this.confirmarContrasena) {
-        const alert = await this.alertCtrl.create({
-          header: 'Error',
-          message: 'Las contraseñas no coinciden.',
-          buttons: ['Aceptar']
-        });
-        await alert.present();
+        await this.presentAlert('Error', 'Las contraseñas no coinciden.');
         return;
       }
 
-      // Validación de la longitud de la contraseña
-      if (this.contrasena.length < 8) {
-        const alert = await this.alertCtrl.create({
-          header: 'Error',
-          message: 'La contraseña debe tener al menos 8 caracteres.',
-          buttons: ['Aceptar']
-        });
-        await alert.present();
+      // Validación de la contraseña: al menos 8 caracteres, una mayúscula y un número
+      const passwordPattern = /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+      if (!passwordPattern.test(this.contrasena)) {
+        await this.presentAlert('Error', 'La contraseña debe tener al menos 8 caracteres, una mayúscula y un número.');
         return;
       }
 
       // Validación del formato de email
-      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regex para validar el email
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailPattern.test(this.email)) {
-        const alert = await this.alertCtrl.create({
-          header: 'Error',
-          message: 'Por favor, ingresa un correo electrónico válido.',
-          buttons: ['Aceptar']
-        });
-        await alert.present();
+        await this.presentAlert('Error', 'Por favor, ingresa un correo electrónico válido.');
         return;
       }
 
       // Validación de que el nombre no contenga números
-      if (this.nombre.match(/\d/)) {
-        const alert = await this.alertCtrl.create({
-          header: 'Error',
-          message: 'El nombre no debe contener números.',
-          buttons: ['Aceptar']
-        });
-        await alert.present();
+      if (/\d/.test(this.nombre)) {
+        await this.presentAlert('Error', 'El nombre no debe contener números.');
+        return;
+      }
+
+      // Validación de que el apellido no contenga números
+      if (/\d/.test(this.apellido)) {
+        await this.presentAlert('Error', 'El apellido no debe contener números.');
+        return;
+      }
+
+      // Validación del formato del teléfono
+      const phonePattern = /^\+?[0-9\s]+$/;
+      if (!phonePattern.test(this.telefono)) {
+        await this.presentAlert('Error', 'El teléfono solo puede contener números.');
         return;
       }
 
@@ -79,12 +74,17 @@ export class RegistroPage {
       });
       await alert.present();
     } else {
-      const alert = await this.alertCtrl.create({
-        header: 'Error',
-        message: 'Por favor, completa todos los campos obligatorios.',
-        buttons: ['Aceptar']
-      });
-      await alert.present();
+      await this.presentAlert('Error', 'Por favor, completa todos los campos obligatorios.');
     }
+  }
+
+  // Método para presentar alertas
+  private async presentAlert(header: string, message: string) {
+    const alert = await this.alertCtrl.create({
+      header: header,
+      message: message,
+      buttons: ['Aceptar']
+    });
+    await alert.present();
   }
 }

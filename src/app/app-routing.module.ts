@@ -123,10 +123,17 @@ const routes: Routes = [
     loadChildren: () => import('./recuperaclave/recuperaclave.module').then( m => m.RecuperaclavePageModule)
   },
 
+  
+  {
+    path: 'modificarperfil',
+    loadChildren: () => import('./modificarperfil/modificarperfil.module').then( m => m.ModificarperfilPageModule)
+  },
+
   {
     path: '**',
     loadChildren: () => import('./notfound/notfound.module').then( m => m.NotfoundPageModule)
   },
+
 
 
 
