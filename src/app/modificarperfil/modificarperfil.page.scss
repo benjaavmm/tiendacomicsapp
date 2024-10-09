@@ -1,10 +1,4 @@
 body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  margin: 0;
   background-color: #f8f9fa; /* Fondo general para mejorar el contraste */
 }
 
@@ -12,17 +6,20 @@ body {
   width: 90%;
   max-width: 400px;
   padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  border: 1px solid #e0e0e0; /* Color de borde más suave */
+  border-radius: 10px; /* Bordes más redondeados */
   text-align: center;
   background-color: #ffffff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Sombra más pronunciada */
+  margin: auto; /* Centrar el contenedor */
+  margin-top: 20px; /* Espacio superior */
 }
 
 .profile-picture {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-bottom: 20px; /* Espacio inferior */
 }
 
 .profile-img {
@@ -31,6 +28,8 @@ body {
   border-radius: 50%;
   object-fit: cover;
   margin-bottom: 10px;
+  border: 2px solid var(--ion-color-primary); /* Borde alrededor de la imagen */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Sombra sutil */
 }
 
 .container form {
@@ -39,9 +38,32 @@ body {
 }
 
 .container form ion-item {
-  margin-bottom: 10px;
+  margin-bottom: 15px; /* Mayor espacio entre los items */
+}
+
+.container form ion-label {
+  color: var(--ion-color-dark); /* Color del texto de las etiquetas */
+}
+
+.container form ion-input {
+  --padding-start: 10px; /* Espaciado interno */
+  --padding-end: 10px; /* Espaciado interno */
 }
 
 .container form ion-button {
   margin-top: 10px;
+  --background: var(--ion-color-primary); /* Color de fondo del botón */
+  --color: white; /* Color del texto del botón */
+  border-radius: 5px; /* Bordes redondeados */
+  transition: background-color 0.3s; /* Transición suave al pasar el mouse */
+}
+
+.container form ion-button:hover {
+  --background: darken(var(--ion-color-primary), 10%); /* Color al pasar el mouse */
+}
+
+.error-message {
+  color: red;
+  font-size: 0.9em;
+  margin-top: 5px;
 }

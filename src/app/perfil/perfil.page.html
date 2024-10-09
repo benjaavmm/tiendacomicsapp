@@ -14,8 +14,8 @@
     </ion-card-header>
     <ion-card-content>
       <!-- Ícono de Perfil -->
-      <div style="display: flex; justify-content: center; margin: 20px 0;">
-        <ion-icon name="person-circle-outline" style="font-size: 100px; color: var(--ion-color-primary);"></ion-icon>
+      <div class="profile-icon-container">
+        <ion-icon name="person-circle-outline" class="profile-icon"></ion-icon>
       </div>
       <!-- Nombre -->
       <ion-item>
@@ -36,6 +36,8 @@
   </ion-card>
 
   <!-- Botones con colores personalizados -->
-  <ion-button expand="full" style="background-color: #ff7f7f; color: white;" (click)="editProfile()">Editar Perfil</ion-button>
-  <ion-button expand="full" style="background-color: #7fbfff; color: white;" (click)="changePassword()">Modificar Contraseña</ion-button>
+  <div class="button-container">
+    <ion-button expand="full" class="edit-button" (click)="editProfile()">Editar Perfil</ion-button>
+    <ion-button expand="full" class="change-password-button" (click)="changePassword()">Modificar Contraseña</ion-button>
+  </div>
 </ion-content>

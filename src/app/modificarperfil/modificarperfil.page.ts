@@ -23,6 +23,13 @@ export class ModificarperfilPage {
       return;
     }
 
+    // Validación del formato de email
+    const emailPattern = /^[^\s@]+@gmail\.com$/;
+    if (!emailPattern.test(this.email)) {
+      await this.presentAlert('Error', 'Por favor, ingresa un correo electrónico válido que termine en @gmail.com.');
+      return;
+    }
+
     try {
       // Aquí podrías implementar la lógica para actualizar el perfil si fuera necesario.
       console.log('Perfil actualizado:', {
@@ -45,5 +52,14 @@ export class ModificarperfilPage {
       });
       await alert.present();
     }
+  }
+
+  private async presentAlert(header: string, message: string) {
+    const alert = await this.alertController.create({
+      header,
+      message,
+      buttons: ['OK']
+    });
+    await alert.present();
   }
 }

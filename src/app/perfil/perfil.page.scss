@@ -9,14 +9,36 @@
   color: var(--ion-color-primary);
 }
 
-/* Botón rojo pastel */
-ion-button[color="primary"] {
-  --background: #ff7f7f;
-  --color: #d31111;
+.button-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Espacio entre botones */
+  padding: 20px; /* Espacio alrededor de los botones */
 }
 
-/* Botón azul pastel */
-ion-button[color="secondary"] {
+/* Botón para editar perfil */
+.edit-button {
+  --background: #ff7f7f;
+  --color: white;
+  --border-radius: 10px; /* Bordes redondeados */
+}
+
+/* Botón para modificar contraseña */
+.change-password-button {
   --background: #7fbfff;
-  --color: #fff;
+  --color: white;
+  --border-radius: 10px; /* Bordes redondeados */
+}
+
+/* Estilo para el ion-card */
+ion-card {
+  border-radius: 15px; /* Bordes redondeados */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+}
+
+/* Estilo para el ion-item */
+ion-item {
+  --background: #f9f9f9; /* Fondo claro para los items */
+  border-radius: 5px; /* Bordes redondeados */
+  margin: 10px 0; /* Espacio entre items */
 }
