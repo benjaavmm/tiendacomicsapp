@@ -26,7 +26,7 @@ export class ModificarperfilPage {
     // Validación del formato de email
     const emailPattern = /^[^\s@]+@gmail\.com$/;
     if (!emailPattern.test(this.email)) {
-      await this.presentAlert('Error', 'Por favor, ingresa un correo electrónico válido que termine en @gmail.com.');
+      await this.presentAlert('Error', 'Por favor, ingresa un correo electrónico en formato válido.');
       return;
     }
 
