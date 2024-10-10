@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-modificarcontrasena',
@@ -7,20 +6,35 @@ import { AlertController } from '@ionic/angular';
   styleUrls: ['./modificarcontrasena.page.scss'],
 })
 export class ModificarContrasenaPage {
-  currentPassword: string = ''; // Inicializado como cadena vacía
-  newPassword: string = '';      // Inicializado como cadena vacía
+  currentPassword: string = '';
+  newPassword: string = '';
+  confirmPassword: string = '';
+  newPasswordError: string = '';
+  confirmPasswordError: string = '';
 
-  constructor(private alertController: AlertController) {}
+  changePassword() {
+    this.newPasswordError = '';
+    this.confirmPasswordError = '';
 
-  async changePassword() {
-    // Aquí puedes agregar la lógica para cambiar la contraseña, como llamar a una API.
+    if (!this.newPassword) {
+      this.newPasswordError = 'La nueva contraseña es obligatoria.';
+    } else if (!this.isPasswordValid(this.newPassword)) {
+      this.newPasswordError = 'Debe tener al menos 8 caracteres y una letra mayúscula.';
+    }
 
-    const alert = await this.alertController.create({
-      header: 'Éxito',
-      message: 'Contraseña cambiada correctamente.',
-      buttons: ['OK']
-    });
+    if (this.newPassword !== this.confirmPassword) {
+      this.confirmPasswordError = 'Las contraseñas no coinciden.';
+    }
 
-    await alert.present();
+    if (!this.newPasswordError && !this.confirmPasswordError) {
+      // Aquí puedes agregar la lógica para cambiar la contraseña, como llamar a una API.
+      alert('Contraseña cambiada correctamente.');
+    }
+  }
+
+  private isPasswordValid(password: string): boolean {
+    const minLength = 8;
+    const hasUpperCase = /[A-Z]/.test(password);
+    return password.length >= minLength && hasUpperCase;
   }
 }
