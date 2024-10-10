@@ -16,3 +16,7 @@ ion-icon[name="cart"] {
     color: #f35454; /* Rojo para el perfil */
   }
  
+  ion-button.add-tooooo-cart {
+    --background: #ff0404 !important; /* Asegura que se aplique el fondo rojo */
+    --color: #ffffff !important;      /* Asegura que el texto blanco se aplique */
+  }
