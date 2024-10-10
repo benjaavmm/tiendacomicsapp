@@ -129,12 +129,10 @@ const routes: Routes = [
     loadChildren: () => import('./modificarperfil/modificarperfil.module').then( m => m.ModificarperfilPageModule)
   },
 
+
   {
     path: '**',
     loadChildren: () => import('./notfound/notfound.module').then( m => m.NotfoundPageModule)
-  },  {
-    path: 'modificar-contrasena',
-    loadChildren: () => import('./modificar-contrasena/modificar-contrasena.module').then( m => m.ModificarContrasenaPageModule)
   },
 
 

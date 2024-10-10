@@ -24,8 +24,8 @@ export class PerfilPage {
   }
 
   changePassword() {
-    // Navegar a la página de cambio de contraseña
-    this.router.navigate(['/cambiarcontrasena']);
+    // Navegar a la página de modificar contraseña
+    this.router.navigate(['/modificarcontrasena']);
   }
 
   async presentAlert(header: string, message: string) {

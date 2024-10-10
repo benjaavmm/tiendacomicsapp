@@ -1,3 +1,7 @@
+ion-content {
+  --background: #006effad; /* fondo */
+}
+
 .profile-icon-container {
   display: flex;
   justify-content: center;
@@ -34,11 +38,18 @@
 ion-card {
   border-radius: 15px; /* Bordes redondeados */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+  --background: var(--ion-background-color); /* Fondo adaptable */
 }
 
 /* Estilo para el ion-item */
 ion-item {
-  --background: #f9f9f9; /* Fondo claro para los items */
+  --background: var(--ion-item-background, #f9f9f9); /* Fondo adaptable */
+  --ion-text-color: var(--ion-text-color); /* Texto adaptable */
   border-radius: 5px; /* Bordes redondeados */
   margin: 10px 0; /* Espacio entre items */
+  color: var(--ion-text-color); /* Asegura que el texto sea visible */
+}
+
+ion-label, ion-text {
+  color: var(--ion-text-color); /* Asegura que el texto sea visible */
 }
