@@ -1,6 +1,5 @@
 <ion-header>
   <ion-toolbar>
-    <!-- Flecha para volver a home -->
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/home"></ion-back-button>
     </ion-buttons>
@@ -10,20 +9,23 @@
 
 <ion-content>
   <ion-list>
-    <!-- Item del Carrito -->
     <ion-item *ngFor="let item of cartItems">
       <ion-thumbnail slot="start">
         <img [src]="item.image" alt="{{ item.title }}">
       </ion-thumbnail>
       <ion-label>
         <h2>{{ item.title }}</h2>
-        <p>{{ item.price }}</p>
+        <p>{{ item.price | currency }}</p>
+        <div>
+          <ion-button size="small" (click)="decreaseQuantity(item)" [disabled]="item.quantity <= 1">-</ion-button>
+          <span>{{ item.quantity }}</span>
+          <ion-button size="small" (click)="increaseQuantity(item)">+</ion-button>
+        </div>
       </ion-label>
       <ion-button slot="end" color="danger" (click)="removeItem(item)">Eliminar</ion-button>
     </ion-item>
   </ion-list>
 
-  <!-- Total y botón de compra -->
   <ion-footer>
     <ion-toolbar>
       <ion-title>Total: {{ totalPrice | currency }}</ion-title>

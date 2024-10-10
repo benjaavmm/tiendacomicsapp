@@ -5,7 +5,6 @@ import { Component } from '@angular/core';
   templateUrl: './carrito.page.html',
   styleUrls: ['./carrito.page.scss'],
 })
-//ejemplos de comics de como se veria
 export class CarritoPage {
   cartItems = [
     {
@@ -38,5 +37,15 @@ export class CarritoPage {
 
   checkout() {
     // INNECESARIO por ahora :)
+  }
+
+  increaseQuantity(item: any) {
+    item.quantity += 1;
+  }
+
+  decreaseQuantity(item: any) {
+    if (item.quantity > 1) {
+      item.quantity -= 1;
+    }
   }
 }
