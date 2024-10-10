@@ -40,7 +40,9 @@ export class CarritoPage {
   }
 
   increaseQuantity(item: any) {
-    item.quantity += 1;
+    if (item.quantity < 10) {
+      item.quantity += 1;
+    }
   }
 
   decreaseQuantity(item: any) {

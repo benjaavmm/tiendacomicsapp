@@ -17,9 +17,9 @@
         <h2>{{ item.title }}</h2>
         <p>{{ item.price | currency }}</p>
         <div>
-          <ion-button size="small" (click)="decreaseQuantity(item)" [disabled]="item.quantity <= 1">-</ion-button>
+          <ion-button size="small" fill="outline" (click)="decreaseQuantity(item)" [disabled]="item.quantity <= 1">-</ion-button>
           <span>{{ item.quantity }}</span>
-          <ion-button size="small" (click)="increaseQuantity(item)">+</ion-button>
+          <ion-button size="small" fill="outline" (click)="increaseQuantity(item)" [disabled]="item.quantity >= 10">+</ion-button>
         </div>
       </ion-label>
       <ion-button slot="end" color="danger" (click)="removeItem(item)">Eliminar</ion-button>
