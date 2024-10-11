@@ -19,6 +19,11 @@ ion-menu-button {
 }
 
 
+ion-back-button {
+
+  color: #8daad0;
+}
+
 .card-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));

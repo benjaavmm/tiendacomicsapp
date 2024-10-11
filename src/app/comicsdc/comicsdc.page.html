@@ -1,8 +1,5 @@
 <ion-app>
   <!-- menú lateral -->
-  <ion-buttons slot="start">
-    <ion-back-button defaultHref="/home"></ion-back-button>
-  </ion-buttons>
   <ion-menu side="start" menuId="first" contentId="main" swipeGesture="false">
     <ion-header>
       <ion-toolbar>
@@ -25,14 +22,14 @@
     </ion-content>
   </ion-menu>
 
-  <!-- barra -->
+  <!-- Primera barra con la barra de búsqueda, carrito y perfil -->
   <ion-header>
     <ion-toolbar>
       <ion-buttons slot="start">
-        <ion-menu-button></ion-menu-button> <!-- boton menu -->
+        <ion-menu-button></ion-menu-button> <!-- botón de menú -->
       </ion-buttons>
-      <ion-title>Comics DC</ion-title>
-      <ion-searchbar slot="end" (ionInput)="filterComics($event)" placeholder="Buscar cómics"></ion-searchbar> <!-- barra busqueda -->
+      <!-- Barra de búsqueda -->
+      <ion-searchbar slot="end" (ionInput)="filterComics($event)" placeholder="Buscar cómics"></ion-searchbar>
       <ion-buttons slot="end">
         <ion-button routerLink="/carrito">
           <ion-icon slot="icon-only" name="cart"></ion-icon> <!-- Botón de Carrito -->
@@ -42,6 +39,14 @@
           <ion-icon slot="icon-only" name="person-circle-outline"></ion-icon>
         </ion-button>
       </ion-buttons>
+    </ion-toolbar>
+
+    <!-- Segunda barra con la flecha de retroceso y el título de la página -->
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-back-button defaultHref="/home"></ion-back-button> <!-- Flecha de retroceso -->
+      </ion-buttons>
+      <ion-title>Comics DC</ion-title>
     </ion-toolbar>
   </ion-header>
 

@@ -1,8 +1,5 @@
 <ion-app>
   <!-- Menú lateral -->
-  <ion-buttons slot="start">
-    <ion-back-button defaultHref="/home"></ion-back-button>
-  </ion-buttons>
   <ion-menu side="start" menuId="first" contentId="main" swipeGesture="false">
     <ion-header>
       <ion-toolbar>
@@ -25,13 +22,12 @@
     </ion-content>
   </ion-menu>
 
-  <!-- Barra -->
+  <!-- Primera barra con la barra de búsqueda, carrito y perfil -->
   <ion-header>
     <ion-toolbar>
       <ion-buttons slot="start">
         <ion-menu-button></ion-menu-button> <!-- Botón menú -->
       </ion-buttons>
-      <ion-title>Mangas</ion-title>
       <ion-searchbar slot="end" (ionInput)="filterComics($event)" placeholder="Buscar mangas"></ion-searchbar>
       <ion-buttons slot="end">
         <ion-button routerLink="/carrito">
@@ -43,8 +39,16 @@
         </ion-button>
       </ion-buttons>
     </ion-toolbar>
+
+    <!-- Segunda barra con la flecha de retroceso y el título de la página -->
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-back-button defaultHref="/home"></ion-back-button> <!-- Flecha de retroceso -->
+      </ion-buttons>
+      <ion-title>Mangas</ion-title>
+    </ion-toolbar>
   </ion-header>
-  
+
   <!-- Contenido principal -->
   <ion-content id="main">
     <ion-grid>
@@ -70,3 +74,6 @@
     </ion-grid>
   </ion-content>
 </ion-app>
+
+
+
