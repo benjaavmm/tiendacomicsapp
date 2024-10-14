@@ -37,14 +37,16 @@ export class RegistroPage {
         await this.presentAlert('Error', 'Las contraseñas no coinciden.');
         return;
       }
-
-      // Valida la complejidad de la contraseña
+  
+      // Eliminar espacios en blanco
+      this.contrasena = this.contrasena.trim();
+  
       const passwordPattern = /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{8,}$/;
+      console.log(this.contrasena); // Verifica el valor de la contraseña
       if (!passwordPattern.test(this.contrasena)) {
         await this.presentAlert('Error', 'La contraseña debe tener al menos 8 caracteres, una mayúscula, un número y un carácter especial.');
         return;
       }
-
 
       // Valida el formato del correo electrónico
       const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
