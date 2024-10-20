@@ -10,22 +10,20 @@
       </ion-button>
       <ion-button routerLink="/carrito">
         <ion-icon slot="icon-only" name="cart"></ion-icon> <!-- Botón de Carrito -->
-          </ion-button>
-          <!-- Ícono de Perfil -->
-          <ion-button routerLink="/perfil">
-            <ion-icon slot="icon-only" name="person-circle-outline"></ion-icon>
-          </ion-button>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-header>
-
+      </ion-button>
+      <ion-button routerLink="/perfil">
+        <ion-icon slot="icon-only" name="person-circle-outline"></ion-icon> <!-- Ícono de Perfil -->
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
 
 <ion-content padding>
   <ion-card>
     <ion-img src="assets/img/titans.png"></ion-img>
     <ion-card-header>
-      <ion-card-title>Jovenes Titanes #1: El Reinado de los Superhombres Cibernéticos</ion-card-title>
-      <ion-card-subtitle>Descripión:</ion-card-subtitle>
+      <ion-card-title>Jóvenes Titanes #1: El Reinado de los Superhombres Cibernéticos</ion-card-title>
+      <ion-card-subtitle>Descripción:</ion-card-subtitle>
       <p>"En este emocionante número, los Jóvenes Titanes están más separados que nunca. Damian Wayne, también conocido como Robin, recluta a Starfire, Raven, Beast Boy y el nuevo Kid Flash para unirse en una pelea contra su propio abuelo, Ra s al Ghul. Pero el verdadero liderazgo va más allá de tener la última palabra. ¿Está Robin realmente a la altura de la tarea? ¿O los Jóvenes Titanes rechazarán a este diminuto dictador? Este cómic promete acción, intriga y dilemas morales mientras los Jóvenes Titanes se enfrentan a un enemigo que amenaza su unidad y su mundo. ¡Prepárate para descubrir el secreto del Mariscal de Campo Fantasma en esta emocionante entrega!"</p>
     </ion-card-header>
     <ion-card-content>
@@ -36,7 +34,7 @@
           <ion-label position="floating">Cantidad</ion-label>
           <ion-input type="number" min="1" [(ngModel)]="quantity"></ion-input>
         </ion-item>
-        <ion-button expand="full" class="adddddddddd-to-cart" (click)="addToCart()">Añadir al Carrito</ion-button>
+        <ion-button expand="full" (click)="addToCart()">Añadir al Carrito</ion-button>
       </div>
     </ion-card-content>
   </ion-card>

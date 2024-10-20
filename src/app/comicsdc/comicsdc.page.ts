@@ -18,7 +18,7 @@ export class ComicsdcPage {
       quantity: 1
     },
     {
-      title: 'Linterna Verde',
+      title: 'Green Lantern: Tales of the Sinestro Corps',
       price: 19990, 
       image: 'assets/img/linternaverde.jpg',
       link: '/linternaverde1',

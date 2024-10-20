@@ -10,23 +10,21 @@
       </ion-button>
       <ion-button routerLink="/carrito">
         <ion-icon slot="icon-only" name="cart"></ion-icon> <!-- Botón de Carrito -->
-          </ion-button>
-          <!-- Ícono de Perfil -->
-          <ion-button routerLink="/perfil">
-            <ion-icon slot="icon-only" name="person-circle-outline"></ion-icon>
-          </ion-button>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-header>
-
+      </ion-button>
+      <ion-button routerLink="/perfil">
+        <ion-icon slot="icon-only" name="person-circle-outline"></ion-icon> <!-- Ícono de Perfil -->
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
 
 <ion-content padding>
   <ion-card>
     <ion-img src="assets/img/Supergirl.jpg"></ion-img>
     <ion-card-header>
       <ion-card-title>Supergirl #3: El Reinado de los Superhombres Cibernéticos</ion-card-title>
-      <ion-card-subtitle>Descripión:</ion-card-subtitle>
-      <p>"Descubre el emocionante capítulo de Supergirl #3, donde Kara Zor-El enfrenta una amenaza que golpea cerca del corazón. Al regresar a Argo City, su hogar de la infancia, Supergirl se encuentra con un descubrimiento sombrío: la ciudad está bajo el control del Cyborg Superman. En una lucha desesperada por el destino de dos mundos, Kara debe enfrentarse a fantasmas de su pasado y a un enemigo que busca destruir todo lo que ella ama.¡No te pierdas la oportunidad de sumergirte en esta aventura épica con la Chica de Acero!"</p>
+      <ion-card-subtitle>Descripción:</ion-card-subtitle>
+      <p>"Descubre el emocionante capítulo de Supergirl #3, donde Kara Zor-El enfrenta una amenaza que golpea cerca del corazón..."</p>
     </ion-card-header>
     <ion-card-content>
       <div class="comic-details">
@@ -36,7 +34,7 @@
           <ion-label position="floating">Cantidad</ion-label>
           <ion-input type="number" min="1" [(ngModel)]="quantity"></ion-input>
         </ion-item>
-        <ion-button expand="full" class="adddddddd-to-cart" (click)="addToCart()">Añadir al Carrito</ion-button>
+        <ion-button expand="full" class="add-to-cart" (click)="addToCart()">Añadir al Carrito</ion-button>
       </div>
     </ion-card-content>
   </ion-card>

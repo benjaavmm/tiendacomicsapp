@@ -10,21 +10,20 @@
       </ion-button>
       <ion-button routerLink="/carrito">
         <ion-icon slot="icon-only" name="cart"></ion-icon> <!-- Botón de Carrito -->
-          </ion-button>
-          <!-- Ícono de Perfil -->
-          <ion-button routerLink="/perfil">
-            <ion-icon slot="icon-only" name="person-circle-outline"></ion-icon>
-          </ion-button>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-header>
+      </ion-button>
+      <ion-button routerLink="/perfil">
+        <ion-icon slot="icon-only" name="person-circle-outline"></ion-icon> <!-- Ícono de Perfil -->
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
 
 <ion-content padding>
   <ion-card>
     <ion-img src="assets/img/hxh.jpg"></ion-img>
     <ion-card-header>
       <ion-card-title>Hunter X Hunter</ion-card-title>
-      <ion-card-subtitle>Descripión:</ion-card-subtitle>
+      <ion-card-subtitle>Descripción:</ion-card-subtitle>
       <p>"Empiezan las elecciones para elegir presidente, como dejó dicho Netero. Las elecciones se presentan movidas debido a las tretas de Pariston. Por su lado, Killua regresa a su casa para intentar salvar a Gon con la ayuda de Alluka. ¿¡Qué poderes tendrá Alluka!?"</p>
     </ion-card-header>
     <ion-card-content>
@@ -35,9 +34,8 @@
           <ion-label position="floating">Cantidad</ion-label>
           <ion-input type="number" min="1" [(ngModel)]="quantity"></ion-input>
         </ion-item>
-        <ion-button expand="full" class="add-tooooo-cart" (click)="addToCart()">Añadir al Carrito</ion-button>
+        <ion-button expand="full" (click)="addToCart()">Añadir al Carrito</ion-button>
       </div>
     </ion-card-content>
   </ion-card>
 </ion-content>
-

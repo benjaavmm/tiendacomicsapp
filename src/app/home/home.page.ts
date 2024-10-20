@@ -32,7 +32,7 @@ export class HomePage implements OnInit, OnDestroy {
       quantity: 1,
     },
     {
-      title: 'Dragon Ball',
+      title: 'Dragon Ball #12: El Desafío de Goku y Vegeta',
       price: 13990,
       image: 'assets/img/dragonball.jpg',
       link: '/dragonball',

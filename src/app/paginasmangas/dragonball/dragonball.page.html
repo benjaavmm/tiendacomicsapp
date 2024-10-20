@@ -3,29 +3,28 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/mangas"></ion-back-button>
     </ion-buttons>
-    <ion-title>Dragon Ball</ion-title>
+    <ion-title>Dragon Ball #12: El Desafío de Goku y Vegeta</ion-title>
     <ion-buttons slot="end">
       <ion-button>
         <ion-icon slot="icon-only" name="search"></ion-icon> <!-- Botón de Búsqueda -->
       </ion-button>
       <ion-button routerLink="/carrito">
         <ion-icon slot="icon-only" name="cart"></ion-icon> <!-- Botón de Carrito -->
-          </ion-button>
-          <!-- Ícono de Perfil -->
-          <ion-button routerLink="/perfil">
-            <ion-icon slot="icon-only" name="person-circle-outline"></ion-icon>
-          </ion-button>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-header>
+      </ion-button>
+      <ion-button routerLink="/perfil">
+        <ion-icon slot="icon-only" name="person-circle-outline"></ion-icon> <!-- Ícono de Perfil -->
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
 
 <ion-content padding>
   <ion-card>
     <ion-img src="assets/img/dragonball.jpg"></ion-img>
     <ion-card-header>
       <ion-card-title>Dragon Ball #12: El Desafío de Goku y Vegeta</ion-card-title>
-      <ion-card-subtitle>Descripión:</ion-card-subtitle>
-      <p>"En esta emocionante entrega de Dragon Ball, los legendarios guerreros Goku y Vegeta se enfrentan a un enemigo formidable lo cual promete acción, poder y emociones intensas. ¡No te pierdas esta emocionante entrega de Dragon Ball!."</p>
+      <ion-card-subtitle>Descripción:</ion-card-subtitle>
+      <p>"En esta emocionante entrega de Dragon Ball, los legendarios guerreros Goku y Vegeta se enfrentan a un enemigo formidable lo cual promete acción, poder y emociones intensas. ¡No te pierdas esta emocionante entrega de Dragon Ball!"</p>
     </ion-card-header>
     <ion-card-content>
       <div class="comic-details">
@@ -35,7 +34,7 @@
           <ion-label position="floating">Cantidad</ion-label>
           <ion-input type="number" min="1" [(ngModel)]="quantity"></ion-input>
         </ion-item>
-        <ion-button expand="full" class="add-tooooo-cart" (click)="addToCart()">Añadir al Carrito</ion-button>
+        <ion-button expand="full" (click)="addToCart()">Añadir al Carrito</ion-button>
       </div>
     </ion-card-content>
   </ion-card>

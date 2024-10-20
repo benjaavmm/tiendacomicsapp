@@ -10,22 +10,21 @@
       </ion-button>
       <ion-button routerLink="/carrito">
         <ion-icon slot="icon-only" name="cart"></ion-icon> <!-- Botón de Carrito -->
-          </ion-button>
-          <!-- Ícono de Perfil -->
-          <ion-button routerLink="/perfil">
-            <ion-icon slot="icon-only" name="person-circle-outline"></ion-icon>
-          </ion-button>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-header>
+      </ion-button>
+      <ion-button routerLink="/perfil">
+        <ion-icon slot="icon-only" name="person-circle-outline"></ion-icon> <!-- Ícono de Perfil -->
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
 
 <ion-content padding>
   <ion-card>
     <ion-img src="assets/img/atackontitan.jpg"></ion-img>
     <ion-card-header>
       <ion-card-title>Attack On Titan</ion-card-title>
-      <ion-card-subtitle>Descripión:</ion-card-subtitle>
-      <p>"El Escuadrón de Reconocimiento planea una jugada arriesgada; Que Eren, en forma de Titán, intente reparar la Muralla Rose, reclamando, por primera vez en un siglo, territorio para los humanos. Pero el control que tieneEren como Titán dista mucho de ser perfecto y, cuando se descontrola, ¡ni siquiera Armin puede detenerlo! Con el peso de la supervivencia de la humanidad sobre sus enormes hombros, ¿podrá Eren recuperar la razón? ¿O se perderá para siempre?"</p>
+      <ion-card-subtitle>Descripción:</ion-card-subtitle>
+      <p>"El Escuadrón de Reconocimiento planea una jugada arriesgada; que Eren, en forma de Titán, intente reparar la Muralla Rose, reclamando, por primera vez en un siglo, territorio para los humanos. Pero el control que tiene Eren como Titán dista mucho de ser perfecto y, cuando se descontrola, ¡ni siquiera Armin puede detenerlo! Con el peso de la supervivencia de la humanidad sobre sus enormes hombros, ¿podrá Eren recuperar la razón? ¿O se perderá para siempre?"</p>
     </ion-card-header>
     <ion-card-content>
       <div class="comic-details">
@@ -35,7 +34,7 @@
           <ion-label position="floating">Cantidad</ion-label>
           <ion-input type="number" min="1" [(ngModel)]="quantity"></ion-input>
         </ion-item>
-        <ion-button expand="full" class="add-tooo-cart" (click)="addToCart()">Añadir al Carrito</ion-button>
+        <ion-button expand="full" (click)="addToCart()">Añadir al Carrito</ion-button>
       </div>
     </ion-card-content>
   </ion-card>
