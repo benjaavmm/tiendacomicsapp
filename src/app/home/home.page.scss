@@ -90,6 +90,67 @@ ion-menu-button {
   font-size: 1rem;
 }
 
+.quantity-box {
+  display: flex;
+  flex-direction: column; /* Cambiado a columna para que el label esté arriba */
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ffffff; /* Color del borde */
+  border-radius: 5px; /* Esquinas redondeadas */
+  width: 100px; /* Ancho fijo, ajusta según sea necesario */
+  height: 40px; /* Altura fija */
+  background-color: #ffffff; /* Color de fondo */
+  margin: 10px; /* Margen alrededor */
+  box-shadow: 0 2px 5px rgb(255, 255, 255); /* Sombra suave */
+}
+
+.quantity-input {
+  width: 50px; // Ancho de la caja de cantidad
+  text-align: center; // Centra el texto
+  border: 1px solid #ced4da; // Color del borde
+  border-radius: 4px; // Bordes redondeados
+  padding: 5px; // Espaciado interno
+  margin: 0 10px; // Margen horizontal para separar de los botones
+  background-color: rgb(255, 255, 255); // Color de fondo blanco
+  font-size: 16px; // Tamaño de fuente
+  color: black; // Color del texto (puedes cambiarlo a 'white' o cualquier otro color)
+}
+
+.quantity-label{
+  flex-direction: column;
+  background-color: rgb(255, 255, 255); // Color de fondo blanco
+  color: black; // Color del texto (puedes cambiarlo a 'white' o cualquier otro color)
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  margin-top: 5px; /* Espacio entre el label y los botones */
+}
+
+.quantity-button {
+  background-color: #00bfff; /* Color del botón */
+  color: rgb(0, 0, 0); /* Color del texto del botón */
+  width: 30px;
+  height: 30px;
+  border: none; /* Sin borde */
+  border-radius: 5px; /* Esquinas redondeadas */
+  padding: 5px 10px; /* Espaciado interno */
+  cursor: pointer; /* Cambia el cursor al pasar el mouse */
+  transition: background-color 0.3s; /* Transición suave */
+}
+
+/* Estilos responsivos */
+@media (max-width: 600px) {
+  .quantity-box {
+      width: 80%; /* Ancho responsivo en pantallas pequeñas */
+  }
+
+  .quantity-input {
+      width: 40px; /* Ajustar ancho del input */
+  }
+}
+
 /* Estilos para ion-item y ion-button */
 .ion-item, .ion-button {
   margin-top: auto;
