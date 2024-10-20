@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { CartService, Comic } from '../services/cart.service'; 
 
 @Component({
   selector: 'app-carrito',
@@ -6,48 +7,39 @@ import { Component } from '@angular/core';
   styleUrls: ['./carrito.page.scss'],
 })
 export class CarritoPage {
-  cartItems = [
-    {
-      title: 'The Flash N°52',
-      price: 21990,
-      image: 'assets/img/flash.jpg',
-      quantity: 1
-    },
-    {
-      title: 'Linterna Verde',
-      price: 19990,
-      image: 'assets/img/linternaverde.jpg',
-      quantity: 1
-    },
-    {
-      title: 'Batman',
-      price: 23990,
-      image: 'assets/img/batman1.jpg',
-      quantity: 1
-    }
-  ];
+  cartItems: Comic[]; 
 
+  constructor(private cartService: CartService) {
+    this.cartItems = this.cartService.getCartItems(); 
+  }
+
+  // Método para calcular el precio total del carrito
   get totalPrice() {
     return this.cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
   }
 
-  removeItem(item: any) {
-    // Aun no lo vamos a hacer
+  // Método para eliminar un ítem del carrito
+  removeItem(item: Comic) {
+    this.cartService.removeItem(item); // Llama al método del servicio para eliminar
+    this.cartItems = this.cartService.getCartItems(); // Actualiza la lista de items en el carrito
   }
 
+  // Método de checkout (puedes implementarlo más adelante)
   checkout() {
     // INNECESARIO por ahora :)
   }
 
-  increaseQuantity(item: any) {
+  // Método para aumentar la cantidad de un ítem
+  increaseQuantity(item: Comic) {
     if (item.quantity < 10) {
-      item.quantity += 1;
+      item.quantity += 1; // Incrementa la cantidad
     }
   }
 
-  decreaseQuantity(item: any) {
+  // Método para disminuir la cantidad de un ítem
+  decreaseQuantity(item: Comic) {
     if (item.quantity > 1) {
-      item.quantity -= 1;
+      item.quantity -= 1; // Decrementa la cantidad
     }
   }
 }
