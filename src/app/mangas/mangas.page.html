@@ -59,7 +59,7 @@
             <ion-img [src]="comic.image" [alt]="comic.title" (click)="navigateToComic(comic.link)"></ion-img>
             <ion-card-header>
               <ion-card-title>{{ comic.title }}</ion-card-title>
-              <p>{{ comic.price }}</p>
+              <ion-card-subtitle>{{ comic.price }}</ion-card-subtitle>
             </ion-card-header>
             <ion-card-content>
               <div class="quantity-box">

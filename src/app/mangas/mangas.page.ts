@@ -12,56 +12,56 @@ export class MangasPage {
   comics = [
     {
       title: 'Naruto',
-      price: 11990, // Cambié a número para hacer cálculos más adelante
+      price: '$11990',
       image: 'assets/img/naruto.jpg',
       link: '/naruto',
       quantity: 1
     },
     {
       title: 'Demon Slayer',
-      price: 11990,
+      price: '$11990',
       image: 'assets/img/demonslayer.jpg',
       link: '/demonslayer',
       quantity: 1
     },
     {
       title: 'Dragon Ball',
-      price: 13990,
+      price: '$13990',
       image: 'assets/img/dragonball.jpg',
       link: '/dragonball',
       quantity: 1
     },
     {
       title: 'Jujutsu Kaisen',
-      price: 13990,
+      price: '$13990',
       image: 'assets/img/jujutsukaisen.jpg',
       link: '/jujutsukaisen',
       quantity: 1
     },
     {
       title: 'Tokyo Revengers',
-      price: 12990,
+      price: '$12990',
       image: 'assets/img/tokyorevengers.jpg',
       link: '/tokyorevengers',
       quantity: 1
     },
     {
       title: 'My Hero Academia',
-      price: 11990,
+      price: '$13990',
       image: 'assets/img/myheroacademia.jpg',
       link: '/myheroacademia',
       quantity: 1
     },
     {
       title: 'Attack On Titan',
-      price: 12990,
+      price: '$12990',
       image: 'assets/img/atackontitan.jpg',
       link: '/attackontitan',
       quantity: 1
     },
     {
       title: 'Hunter X Hunter',
-      price: 13990,
+      price: '$13990',
       image: 'assets/img/hxh.jpg',
       link: '/hxh',
       quantity: 1
