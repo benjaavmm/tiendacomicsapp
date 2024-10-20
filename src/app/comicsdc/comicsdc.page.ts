@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { MenuController, AlertController } from '@ionic/angular';
+import { CartService } from '../services/cart.service'; // Asegúrate de que la ruta sea correcta
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-comicsdc',
@@ -68,13 +70,14 @@ export class ComicsdcPage {
 
   filteredComics = [...this.comics];  // inicializar con todos los cómics
 
-  constructor(private menu: MenuController, private alertCtrl: AlertController) {}
+  constructor(private menu: MenuController, private alertCtrl: AlertController, private cartService: CartService, private router: Router) {}
 
   openMenu() {
     this.menu.open('first');
   }
 
   async addToCart(comic: any) {
+    this.cartService.addToCart({ ...comic });
     const alert = await this.alertCtrl.create({
       header: 'Añadido al Carro',
       message: `Has añadido ${comic.quantity} de ${comic.title} al carrito.`,
@@ -94,7 +97,7 @@ export class ComicsdcPage {
   }
 
   navigateToComic(link: string) {
-    window.location.href = link;
+    this.router.navigate([link]);
   }
 
   filterComics(event: any) {
