@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-modificarcontrasena',
@@ -12,7 +13,9 @@ export class ModificarContrasenaPage {
   newPasswordError: string = '';
   confirmPasswordError: string = '';
 
-  changePassword() {
+  constructor(private alertCtrl: AlertController) {}
+
+  async changePassword() {
     this.newPasswordError = '';
     this.confirmPasswordError = '';
 
@@ -28,7 +31,7 @@ export class ModificarContrasenaPage {
 
     if (!this.newPasswordError && !this.confirmPasswordError) {
       // Aquí puedes agregar la lógica para cambiar la contraseña, como llamar a una API.
-      alert('Contraseña cambiada correctamente.');
+      await this.showSuccessAlert();
     }
   }
 
@@ -36,5 +39,14 @@ export class ModificarContrasenaPage {
     const minLength = 8;
     const hasUpperCase = /[A-Z]/.test(password);
     return password.length >= minLength && hasUpperCase;
+  }
+
+  private async showSuccessAlert() {
+    const alert = await this.alertCtrl.create({
+      header: 'Éxito',
+      message: 'Contraseña cambiada correctamente.',
+      buttons: ['OK']
+    });
+    await alert.present();
   }
 }
