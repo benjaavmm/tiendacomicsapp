@@ -62,10 +62,14 @@
               <ion-card-subtitle>{{ comic.price }}</ion-card-subtitle>
             </ion-card-header>
             <ion-card-content>
-              <ion-item>
-                <ion-label position="floating">Cantidad</ion-label>
-                <ion-input type="number" min="1" value="1" [(ngModel)]="comic.quantity"></ion-input>
-              </ion-item>
+              <div class="quantity-box">
+                <label for="quantity" class="quantity-label">Cantidad</label>
+                <div class="quantity-controls">
+                  <button class="quantity-button" (click)="decrement(comic)">-</button>
+                  <input type="number" id="quantity" class="quantity-input" [(ngModel)]="comic.quantity" min="1" readonly />
+                  <button class="quantity-button" (click)="increment(comic)">+</button>
+                </div>
+              </div>
               <ion-button expand="full" class="add-to-cartt" (click)="addToCart(comic)">Añadir al Carro</ion-button>
             </ion-card-content>
           </ion-card>

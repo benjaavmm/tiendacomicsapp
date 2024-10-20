@@ -88,6 +88,16 @@ export class MangasPage {
     await alert.present();
   }
 
+  increment(comic: any) {
+    comic.quantity++;  // Aumenta la cantidad del cómic
+  }
+
+  decrement(comic: any) {
+    if (comic.quantity > 1) { // Evita que la cantidad sea menor que 1
+      comic.quantity--;  // Disminuye la cantidad del cómic
+    }
+  }
+
   navigateToComic(link: string) {
     this.router.navigate([link]);
   }
