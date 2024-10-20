@@ -59,7 +59,7 @@
             <ion-img [src]="comic.image" [alt]="comic.title" (click)="navigateToComic(comic.link)"></ion-img>
             <ion-card-header>
               <ion-card-title>{{ comic.title }}</ion-card-title>
-              <ion-card-subtitle>{{ comic.price }}</ion-card-subtitle>
+              <ion-card-subtitle>{{ '$' + comic.price }}</ion-card-subtitle> <!-- Aquí se añadió el símbolo de dólar -->
             </ion-card-header>
             <ion-card-content>
               <div class="quantity-box">
@@ -78,6 +78,3 @@
     </ion-grid>
   </ion-content>
 </ion-app>
-
-
-

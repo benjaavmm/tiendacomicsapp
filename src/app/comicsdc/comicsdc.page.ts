@@ -12,56 +12,56 @@ export class ComicsdcPage {
   comics = [
     {
       title: 'The Flash N°52',
-      price: '$21.990',
+      price: 21990, 
       image: 'assets/img/flash.jpg',
       link: '/flash1',
       quantity: 1
     },
     {
       title: 'Linterna Verde',
-      price: '$19.990',
+      price: 19990, 
       image: 'assets/img/linternaverde.jpg',
       link: '/linternaverde1',
       quantity: 1
     },
     {
       title: 'Batman',
-      price: '$23.990',
+      price: 23990, 
       image: 'assets/img/batman1.jpg',
       link: '/batman1',
       quantity: 1
     },
     {
       title: 'Aquaman #14: La Marea del Terror',
-      price: '$18.890',
+      price: 18890, 
       image: 'assets/img/aquaman1.jpg',
       link: '/aquaman1',
       quantity: 1
     },
     {
       title: 'Liga de la Justicia #27: Legado',
-      price: '$20.990',
+      price: 20990, 
       image: 'assets/img/ligadelajusticia1.jpg',
       link: '/ligadelajusticia1',
       quantity: 1
     },
     {
       title: 'Supergirl #3: El Reinado de los Superhombres Cibernéticos',
-      price: '$17.000',
+      price: 17000, 
       image: 'assets/img/Supergirl.jpg',
       link: '/supergirl1',
       quantity: 1
     },
     {
       title: 'Superman #264: El Secreto del Mariscal de Campo Fantasma',
-      price: '$18.800',
+      price: 18800, 
       image: 'assets/img/superman1.jpg',
       link: '/superman1',
       quantity: 1
     },
     {
       title: 'Jóvenes Titanes #1: El Reinado de los Superhombres Cibernéticos',
-      price: '$19.900',
+      price: 19900, 
       image: 'assets/img/titans.png',
       link: '/titans1',
       quantity: 1

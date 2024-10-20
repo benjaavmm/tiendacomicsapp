@@ -12,56 +12,56 @@ export class ComicsmarvelPage {
   comics = [
     {
       title: 'The Incredible Hulk And Now The Wolverine!',
-      price: '$22.990',
+      price: 22990, 
       image: 'assets/img/hulk.png',
       link: '/hulk',
       quantity: 1
     },
     {
       title: 'The Amazing Spider-Man',
-      price: '$18.990',
+      price: 18990, 
       image: 'assets/img/spiderman.jpg',
       link: '/spiderman',
       quantity: 1
     },
     {
       title: 'The Astonishing Ant-Man',
-      price: '$23.990',
+      price: 23990, 
       image: 'assets/img/antman.jpg',
       link: '/antman',
       quantity: 1
     },
     {
       title: 'The Avengers: Captain America Lives Again!',
-      price: '$22.990',
+      price: 22990, 
       image: 'assets/img/capitanamerica.jpg',
       link: '/capitanamerica',
       quantity: 1
     },
     {
       title: 'Marvel Super Heroes: Secret Wars',
-      price: '$20.990',
+      price: 20990, 
       image: 'assets/img/secretwars.jpg',
       link: '/secretwars',
       quantity: 1
     },
     {
       title: 'The Invincible Iron Man: Cry Revolution!',
-      price: '$24.990',
+      price: 24990, 
       image: 'assets/img/ironman.jpg',
       link: '/ironman',
       quantity: 1
     },
     {
       title: 'The Mighty Thor: The Wrath Of Odin!',
-      price: '$21.990',
+      price: 21990, 
       image: 'assets/img/thor.jpg',
       link: '/thor',
       quantity: 1
     },
     {
       title: "Black Widow: Widow's Sting",
-      price: '$24.990',
+      price: 24990, 
       image: 'assets/img/blackwidow.jpg',
       link: '/blackwidow',
       quantity: 1

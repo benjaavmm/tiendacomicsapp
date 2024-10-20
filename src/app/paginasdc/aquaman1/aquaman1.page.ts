@@ -19,7 +19,7 @@ export class Aquaman1Page implements OnInit {
 
   comic: Comic = { // Definición del comic
     title: 'Aquaman #14: La Marea del Terror',
-    price: 18890, // Asegúrate de que sea un número
+    price: 18890, 
     image: 'assets/img/aquaman1.jpg',
     quantity: this.quantity
   };
