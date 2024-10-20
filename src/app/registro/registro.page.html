@@ -103,7 +103,7 @@
       </ion-item>
 
       <!-- Botón para enviar el formulario -->
-      <ion-button expand="full" type="submit" [disabled]="registroForm.invalid" (click)="crear()" class="mt-3">Registrarse</ion-button>
+      <ion-button expand="full" type="submit" [disabled]="registroForm.invalid" (click)="crear(registroForm.value)" class="mt-3">Registrarse</ion-button>
     </form>
   </div>
 </ion-content>
