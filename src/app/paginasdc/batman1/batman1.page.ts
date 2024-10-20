@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { AlertController } from '@ionic/angular';
+import { CartService } from '../../services/cart.service';
 
 @Component({
   selector: 'app-batman1',
@@ -7,21 +8,25 @@ import { AlertController } from '@ionic/angular';
   styleUrls: ['./batman1.page.scss'],
 })
 export class Batman1Page {
-  quantity: number = 1; // Define la propiedad quantity con un valor inicial
+  quantity: number = 1; // Define la cantidad inicial
 
-  // Definir la información del cómic específico
+  // Información del cómic específico
   comic = {
-    title: 'Batman',
-    quantity: this.quantity
+    title: 'Detective Comics #400: El Desafío del Hombre Murciélago',
+    price: 23990,
+    image: 'assets/img/batman1.jpg',
   };
 
-  constructor(private alertCtrl: AlertController) { }
+  constructor(private alertCtrl: AlertController, private cartService: CartService) { }
 
   async addToCart() {
-    // Lógica para agregar al carrito
+    // Agrega el cómic al carrito usando el servicio
+    this.cartService.addToCart({ ...this.comic, quantity: this.quantity });
+    
+    // Muestra una alerta de confirmación
     const alert = await this.alertCtrl.create({
       header: 'Añadido al Carro',
-      message: `Has añadido ${this.comic.quantity} de ${this.comic.title} al carrito.`,
+      message: `Has añadido ${this.quantity} de ${this.comic.title} al carrito.`,
       buttons: ['OK']
     });
     await alert.present();

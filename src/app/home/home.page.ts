@@ -25,7 +25,7 @@ export class HomePage implements OnInit, OnDestroy {
       quantity: 1,
     },
     {
-      title: 'Batman',
+      title: 'Detective Comics #400: El Desafío del Hombre Murciélago',
       price: 23990,
       image: 'assets/img/batman1.jpg',
       link: '/batman1',

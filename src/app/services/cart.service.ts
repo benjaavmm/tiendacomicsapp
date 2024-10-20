@@ -42,4 +42,24 @@ export class CartService {
   clearCart() {
     this.cartItems = [];
   }
+
+  // Método para obtener la cantidad total de artículos en el carrito
+  getTotalItems(): number {
+    return this.cartItems.reduce((total, item) => total + item.quantity, 0);
+  }
+
+  // Método para obtener el total del costo del carrito
+  getTotalCost(): number {
+    return this.cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
+  }
+
+  // Método para verificar si el carrito está vacío
+  isCartEmpty(): boolean {
+    return this.cartItems.length === 0;
+  }
+
+  // Método para buscar un cómic específico en el carrito
+  findItem(title: string): Comic | undefined {
+    return this.cartItems.find(item => item.title === title);
+  }
 }

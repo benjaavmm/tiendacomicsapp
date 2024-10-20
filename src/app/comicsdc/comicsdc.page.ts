@@ -25,7 +25,7 @@ export class ComicsdcPage {
       quantity: 1
     },
     {
-      title: 'Batman',
+      title: 'Detective Comics #400: El Desafío del Hombre Murciélago',
       price: 23990, 
       image: 'assets/img/batman1.jpg',
       link: '/batman1',
@@ -39,8 +39,8 @@ export class ComicsdcPage {
       quantity: 1
     },
     {
-      title: 'Liga de la Justicia #27: Legado',
-      price: 20990, 
+      title: 'Liga De La Justicia #27: Legado',
+      price: 20890, 
       image: 'assets/img/ligadelajusticia1.jpg',
       link: '/ligadelajusticia1',
       quantity: 1
