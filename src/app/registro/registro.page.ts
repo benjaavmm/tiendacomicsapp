@@ -3,7 +3,6 @@ import { NgForm } from '@angular/forms';
 import { AlertController, NavController } from '@ionic/angular';
 import { ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { FormGroup, FormControl, Validators, FormBuilder, AbstractControl } from '@angular/forms';
 import { ServicebdService } from 'src/services/servicebd.service';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 
@@ -22,12 +21,12 @@ export class RegistroPage {
   direccion: string = '';
   contrasena: string = '';
   confirmarContrasena: string = '';
-  foto_usuario: any="";
-  id_rol= "1";
+  foto_usuario: any = "";
+  id_rol = "1";
   fotoIngresada: boolean = false;
 
   // Inyección de dependencias para control de alertas y navegación
-  constructor(private alertCtrl: AlertController, private navCtrl: NavController, private formBuilder: FormBuilder, private db: ServicebdService, public router:Router,private toastController: ToastController) {}
+  constructor(private alertCtrl: AlertController, private navCtrl: NavController, private db: ServicebdService, public router: Router, private toastController: ToastController) {}
 
   // Método que se ejecuta al enviar el formulario
   async onSubmit(form: NgForm) {
@@ -37,12 +36,11 @@ export class RegistroPage {
         await this.presentAlert('Error', 'Las contraseñas no coinciden.');
         return;
       }
-  
+
       // Eliminar espacios en blanco
       this.contrasena = this.contrasena.trim();
-  
+
       const passwordPattern = /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{8,}$/;
-      console.log(this.contrasena); // Verifica el valor de la contraseña
       if (!passwordPattern.test(this.contrasena)) {
         await this.presentAlert('Error', 'La contraseña debe tener al menos 8 caracteres, una mayúscula, un número y un carácter especial.');
         return;
@@ -106,48 +104,36 @@ export class RegistroPage {
   onFileSelected(event: any) {
     const file: File = event.target.files[0];
     if (file) {
-      this.foto_usuario = file;
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.foto_usuario = e.target.result; // Almacena la imagen seleccionada
+      };
+      reader.readAsDataURL(file);
     }
   }
 
+  // Método para tomar una foto
+  takePicture = async () => {
+    try {
+      const image = await Camera.getPhoto({
+        quality: 90,
+        allowEditing: false,
+        resultType: CameraResultType.DataUrl,
+        source: CameraSource.Camera // Abre la cámara
+      });
 
-  async crear(registroForm: NgForm){
-    if (registroForm.valid && this.foto_usuario) {
-    this.db.crearUsuario(this.rut, this.nombre, this.apellido, this.foto_usuario, this.direccion,this.correo, this.telefono, this.contrasena, this.id_rol);
-    this.router.navigate(['/login']);
-    } else {
+      // Asigna la imagen capturada a la propiedad foto_usuario
+      this.foto_usuario = image.dataUrl;
+      this.fotoIngresada = true; // Marca que se ha ingresado una foto
+    } catch (error) {
       const toast = await this.toastController.create({
-        message: 'Verifique los datos ingresados nuevamente.',
-        duration: 3000, // Duración en milisegundos
-        color: 'danger' // Color del Toast
+        message: 'Error al tomar la foto. Intenta nuevamente.',
+        duration: 3000,
+        color: 'danger'
       });
       toast.present();
-  
     }
-  }
-
-
-
-  ngOnInit() {
-  }
-
-  takePicture = async () => {
-    const image2 = await Camera.getPhoto({
-      quality: 90,
-      allowEditing: false,
-      resultType: CameraResultType.DataUrl, 
-      source:CameraSource.Prompt
-    });
-  
-    // image.webPath will contain a path that can be set as an image src.
-    // You can access the original file using image.path, which can be
-    // passed to the Filesystem API to read the raw data of the image,
-    // if desired (or pass resultType: CameraResultType.Base64 to getPhoto)
-    this.foto_usuario = image2.dataUrl;
-    this.fotoIngresada = true;
-
   };
 
+  ngOnInit() {}
 }
-
-

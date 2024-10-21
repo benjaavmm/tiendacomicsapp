@@ -1,7 +1,7 @@
 export class Comic {
     id_comic = "";
     nombre_comic = "";
-    precio = ""; // Puedes cambiar esto a number si prefieres
+    precio = ""; 
     stock = "";
     descripcion = "";
     foto_comic  = "";
