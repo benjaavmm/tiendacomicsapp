@@ -35,6 +35,9 @@ export class ServicebdService {
   //variables de insert por defecto en la Base de Datos
   registroRol: string = "INSERT or IGNORE INTO tablaRol(id_rol, nombre_rol) VALUES (1, 'Usuario')";
   registroRol2: string = "INSERT or IGNORE INTO tablaRol(id_rol, nombre_rol) VALUES (2, 'Admin')";
+  
+  //creacion de usuarios
+  registroUsuario1: string = "INSERT or IGNORE INTO tablaUsuario(id_usuario, rut, nombre, apellidos, foto_usuario, correo, direccion, telefono, clave, id_rol) VALUES (1, '12345678-9', 'John', 'Doe', 'assets/img/antman.jpg', 'john.doe@example.com', '123 Main St, City', '123456789', 'password123', 2)";
 
  //variables para guardar los registros resultantes de un select
  listaRol = new BehaviorSubject([]);
@@ -103,6 +106,9 @@ export class ServicebdService {
       await this.database.executeSql(this.tablaReseña,[]);
 
 
+      
+
+
 
       //ejecuto los registros
 
@@ -111,8 +117,8 @@ export class ServicebdService {
 
       await this.database.executeSql(this.registroRol2, []);
     
-
-      
+      //Ejecucion de la inserción de usuarios
+      await this.database.executeSql(this.registroUsuario1, []);
 
       // Actualizar el estatus de la BD
     this.isDBReady.next(true);
