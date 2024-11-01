@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { NavController } from '@ionic/angular'; 
-import { AlertController } from '@ionic/angular'; 
+import { NavController, AlertController } from '@ionic/angular';
+import { ServicebdService } from '../../services/servicebd.service';
 
 @Component({
   selector: 'app-login',
@@ -9,49 +9,68 @@ import { AlertController } from '@ionic/angular';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage {
-  // Inicializa las propiedades
   username: string = '';
   password: string = '';
 
-  // Simulación de un usuario
-  private users = [
-    { username: 'benja@gmail.com', password: '12345678' }, // Usuario válido
-    { username: 'fefito@gmail.com', password: '12345678' }, // Otro usuario válido
-    { username: 'admin@admin.com', password: 'admin123' }, // Usuario administrador
-  ];
+  constructor(
+    private navCtrl: NavController,
+    private alertCtrl: AlertController,
+    private dbService: ServicebdService
+  ) {}
 
-  constructor(private navCtrl: NavController, private alertCtrl: AlertController) {}
-
-  // Método onSubmit
   async onSubmit(form: NgForm) {
     if (form.valid) {
-      const user = this.users.find(u => u.username === this.username && u.password === this.password);
-      if (user) {
-        // Verificar si es un administrador
-        if (this.username.includes('@admin')) {
-          this.navCtrl.navigateRoot('/admin'); // Redirige a la página de administración
+      // Simulación de validación para el administrador
+      if (this.username === 'admin@admin.com' && this.password === 'admin123') {
+        const alert = await this.alertCtrl.create({
+          header: 'Bienvenido Administrador',
+          message: '¡Inicio de sesión exitoso!',
+          buttons: [{
+            text: 'OK',
+            handler: () => {
+              this.navCtrl.navigateRoot('/admin');
+            }
+          }]
+        });
+        await alert.present();
+      } else {
+        // Validar usuario normal desde el servicio
+        const usuario = await this.dbService.login(this.username, this.password);
+        
+        if (usuario) {
+          if (Number(usuario.id_rol) === 2) { // Admin
+            const alert = await this.alertCtrl.create({
+              header: 'Bienvenido Administrador',
+              message: '¡Inicio de sesión exitoso!',
+              buttons: [{
+                text: 'OK',
+                handler: () => {
+                  this.navCtrl.navigateRoot('/admin');
+                }
+              }]
+            });
+            await alert.present();
+          } else { // Usuario normal
+            const alert = await this.alertCtrl.create({
+              header: 'Bienvenido',
+              message: '¡Inicio de sesión exitoso!',
+              buttons: [{
+                text: 'OK',
+                handler: () => {
+                  this.navCtrl.navigateRoot('/home');
+                }
+              }]
+            });
+            await alert.present();
+          }
         } else {
-          // Si las credenciales son correctas
           const alert = await this.alertCtrl.create({
-            header: 'Bienvenido',
-            message: '¡Bienvenido a la tienda!',
-            buttons: [{
-              text: 'Aceptar',
-              handler: () => {
-                this.navCtrl.navigateRoot('/home'); // Redirige a la página principal
-              }
-            }]
+            header: 'Error',
+            message: 'Usuario o contraseña incorrectos',
+            buttons: ['OK']
           });
           await alert.present();
         }
-      } else {
-        // Si las credenciales son incorrectas
-        const alert = await this.alertCtrl.create({
-          header: 'Error',
-          message: 'Nombre de usuario o contraseña incorrectos.',
-          buttons: ['Aceptar']
-        });
-        await alert.present();
       }
     }
   }

@@ -135,11 +135,7 @@ const routes: Routes = [
 
   },
 
-  {
-    path: 'verificar',
-    loadChildren: () => import('./verificar/verificar.module').then( m => m.VerificarPageModule)
-  },
-
+  
   {
     path: '**',
     loadChildren: () => import('./notfound/notfound.module').then( m => m.NotfoundPageModule)

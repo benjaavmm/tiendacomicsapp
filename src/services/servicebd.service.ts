@@ -3,176 +3,232 @@ import { SQLite, SQLiteObject } from '@awesome-cordova-plugins/sqlite/ngx';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { AlertController, Platform } from '@ionic/angular';
 import { Usuario } from './usuario';
-import { Comic } from './comic';
-import { Venta } from './venta';
-
 
 @Injectable({
   providedIn: 'root'
 })
-
 export class ServicebdService {
-    //variable de conexión a la Base de Datos
-    public database!: SQLiteObject;
+  private database!: SQLiteObject;
+  private isDBReady = new BehaviorSubject<boolean>(false);
+  public listaUsuarios = new BehaviorSubject<Usuario[]>([]);
 
-    // Variables de creación de tablas
-  tablaRol: string = "CREATE TABLE IF NOT EXISTS rol (id_rol INTEGER PRIMARY KEY AUTOINCREMENT, nombre_rol VARCHAR);";
-  
-  tablaUsuario: string = "CREATE TABLE IF NOT EXISTS usuario (id_usuario INTEGER PRIMARY KEY AUTOINCREMENT, rut VARCHAR, nombre VARCHAR, apellidos VARCHAR, foto_usuario BLOB, correo VARCHAR, direccion VARCHAR, telefono VARCHAR, clave VARCHAR, id_rol INTEGER, FOREIGN KEY (id_rol) REFERENCES rol (id_rol));";
+  // Definiciones de tablas
+  private tablaRol = `
+    CREATE TABLE IF NOT EXISTS rol (
+      id_rol INTEGER PRIMARY KEY AUTOINCREMENT,
+      nombre_rol VARCHAR(50) NOT NULL
+    );`;
 
-  tablaVenta: string = "CREATE TABLE IF NOT EXISTS venta (id_venta INTEGER PRIMARY KEY AUTOINCREMENT, f_venta DATE, id_usuario INTEGER, total NUMERIC, id_estado INTEGER, FOREIGN KEY (id_usuario) REFERENCES usuario (id_usuario), FOREIGN KEY (id_estado) REFERENCES estados (id_estado));";
+  private tablaUsuario = `
+    CREATE TABLE IF NOT EXISTS usuario (
+      id_usuario INTEGER PRIMARY KEY AUTOINCREMENT,
+      rut VARCHAR(12) NOT NULL UNIQUE,
+      nombre VARCHAR(50) NOT NULL,
+      apellidos VARCHAR(50) NOT NULL,
+      foto_usuario BLOB,
+      correo VARCHAR(100) NOT NULL UNIQUE,
+      direccion VARCHAR(200) NOT NULL,
+      telefono VARCHAR(20) NOT NULL,
+      clave VARCHAR(100) NOT NULL,
+      id_rol INTEGER,
+      FOREIGN KEY (id_rol) REFERENCES rol (id_rol)
+    );`;
 
-  tablaEstados: string = "CREATE TABLE IF NOT EXISTS estados (id_estado INTEGER PRIMARY KEY AUTOINCREMENT, num_venta NUMERIC, carrito VARCHAR);";
+  private tablaVenta = `
+    CREATE TABLE IF NOT EXISTS venta (
+      id_venta INTEGER PRIMARY KEY AUTOINCREMENT,
+      f_venta DATE,
+      id_usuario INTEGER,
+      total NUMERIC,
+      id_estado INTEGER,
+      FOREIGN KEY (id_usuario) REFERENCES usuario (id_usuario),
+      FOREIGN KEY (id_estado) REFERENCES estados (id_estado)
+    );`;
 
-  tablaComics: string = "CREATE TABLE IF NOT EXISTS comics (id_comic INTEGER PRIMARY KEY AUTOINCREMENT, nombre_comic VARCHAR, precio NUMERIC, stock NUMERIC, descripcion VARCHAR, foto_comic BLOB, id_categoria INTEGER, estatus VARCHAR, FOREIGN KEY (id_categoria) REFERENCES categoria (id_categoria));";
+  private tablaEstados = `
+    CREATE TABLE IF NOT EXISTS estados (
+      id_estado INTEGER PRIMARY KEY AUTOINCREMENT,
+      num_venta NUMERIC,
+      carrito VARCHAR
+    );`;
 
-  tablaDetalle: string = "CREATE TABLE IF NOT EXISTS detalle (id_detalle INTEGER PRIMARY KEY AUTOINCREMENT, id_venta INTEGER, id_comic INTEGER, cantidad NUMERIC, subtotal NUMERIC, FOREIGN KEY (id_venta) REFERENCES venta (id_venta), FOREIGN KEY (id_comic) REFERENCES comics (id_comic));";
+  private tablaComics = `
+    CREATE TABLE IF NOT EXISTS comics (
+      id_comic INTEGER PRIMARY KEY AUTOINCREMENT,
+      nombre_comic VARCHAR(100) NOT NULL,
+      precio NUMERIC NOT NULL,
+      stock NUMERIC NOT NULL,
+      descripcion TEXT,
+      foto_comic BLOB,
+      id_categoria INTEGER,
+      estatus VARCHAR(20),
+      FOREIGN KEY (id_categoria) REFERENCES categoria (id_categoria)
+    );`;
 
-  tablaCategoria: string = "CREATE TABLE IF NOT EXISTS categoria (id_categoria INTEGER PRIMARY KEY AUTOINCREMENT, nombre_categoria VARCHAR);";
+  constructor(
+    private sqlite: SQLite,
+    private platform: Platform,
+    private alertController: AlertController
+  ) {
+    this.initializeDatabase();
+  }
 
-  tablaReseña: string = "CREATE TABLE IF NOT EXISTS reseña (id_reseña INTEGER PRIMARY KEY AUTOINCREMENT, descripcion_reseña VARCHAR, puntos NUMERIC, fecha_reseña DATE, id_usuario INTEGER, id_comic INTEGER, FOREIGN KEY (id_usuario) REFERENCES usuario (id_usuario), FOREIGN KEY (id_comic) REFERENCES comics (id_comic));";
-
-  //variables de insert por defecto en la Base de Datos
-  registroRol: string = "INSERT or IGNORE INTO tablaRol(id_rol, nombre_rol) VALUES (1, 'Usuario')";
-  registroRol2: string = "INSERT or IGNORE INTO tablaRol(id_rol, nombre_rol) VALUES (2, 'Admin')";
-  
-  //creacion de usuarios
-  registroUsuario1: string = "INSERT or IGNORE INTO tablaUsuario(id_usuario, rut, nombre, apellidos, foto_usuario, correo, direccion, telefono, clave, id_rol) VALUES (1, '12345678-9', 'John', 'Doe', 'assets/img/antman.jpg', 'john.doe@example.com', '123 Main St, City', '123456789', 'password123', 2)";
-
- //variables para guardar los registros resultantes de un select
- listaRol = new BehaviorSubject([]);
- listaUsuario = new BehaviorSubject([]);
- listaVenta = new BehaviorSubject([]);
- listaEstados = new BehaviorSubject([]);
- listaComics = new BehaviorSubject([]);
- listaDetalle = new BehaviorSubject([]);
- listaCategoria = new BehaviorSubject([]);
- listaReseña = new BehaviorSubject([]);
-
-
- //variable para manipular el estado de la Base de Datos
- private isDBReady: BehaviorSubject<boolean> = new BehaviorSubject(false);
-
- constructor(private sqlite: SQLite, private platform: Platform, private alertController: AlertController) {
-    this.crearBD();
-   }
-
-    //función para suscribirme al observable
-   dbState(){
+  // Obtener estado de la base de datos
+  dbState() {
     return this.isDBReady.asObservable();
   }
 
-  fetchUsuario(): Observable<Usuario[]> {
-    return this.listaUsuario.asObservable();
+  // Obtener lista de usuarios
+  getUsuarios(): Observable<Usuario[]> {
+    return this.listaUsuarios.asObservable();
   }
 
-  crearBD(){
-    //verificar la plataforma
-    this.platform.ready().then(()=>{
-      //procedemos a crear la Base de Datos
+  private async initializeDatabase() {
+    try {
+      await this.platform.ready();
       this.sqlite.create({
         name: 'tienda.db',
-        location:'default'
-      }).then((db: SQLiteObject)=>{
-        //capturar y guardar la conexión a la Base de Datos
-        this.database = db;
-        //llamar a la función de creación de tablas
-        this.crearTablas();
-        //modificar el observable del status de la base de datos
-        this.isDBReady.next(true);
-      }).catch(e=>{
-        this.presentAlert("Creación de BD", "Error creando la BD: " + JSON.stringify(e));
+        location: 'default'
       })
-    })
+      .then((db: SQLiteObject) => {
+        this.database = db;
+        this.setupDatabase();
+      })
+      .catch(e => this.presentAlert('Error', 'Error al crear la base de datos: ' + e));
+    } catch (error) {
+      this.presentAlert('Error', 'Error en la inicialización: ' + error);
+    }
   }
 
-  async crearTablas() {
+  private async setupDatabase() {
     try {
-      //ejecutar la creacion de tablas
-      await this.database.executeSql(this.tablaRol,[]);
-
-      await this.database.executeSql(this.tablaUsuario,[]);
+      // Crear tablas
+      await this.database.executeSql(this.tablaRol, []);
+      await this.database.executeSql(this.tablaUsuario, []);
+      await this.database.executeSql(this.tablaVenta, []);
+      await this.database.executeSql(this.tablaEstados, []);
+      await this.database.executeSql(this.tablaComics, []);
       
-      await this.database.executeSql(this.tablaVenta,[]);
-  
-      await this.database.executeSql(this.tablaEstados,[]);
-
-      await this.database.executeSql(this.tablaComics,[]);
-    
-      await this.database.executeSql(this.tablaDetalle,[]);
- 
-      await this.database.executeSql(this.tablaCategoria,[]);
-
-      await this.database.executeSql(this.tablaReseña,[]);
-
-
+      // Insertar roles por defecto
+      await this.database.executeSql(
+        'INSERT OR IGNORE INTO rol (id_rol, nombre_rol) VALUES (?, ?)',
+        [1, 'Usuario']
+      );
+      await this.database.executeSql(
+        'INSERT OR IGNORE INTO rol (id_rol, nombre_rol) VALUES (?, ?)',
+        [2, 'Admin']
+      );
       
-
-
-
-      //ejecuto los registros
-
-      // Ejecución de la inserción de roles
-      await this.database.executeSql(this.registroRol, []);
-
-      await this.database.executeSql(this.registroRol2, []);
-    
-      //Ejecucion de la inserción de usuarios
-      await this.database.executeSql(this.registroUsuario1, []);
-
-      // Actualizar el estatus de la BD
-    this.isDBReady.next(true);
-    this.buscarUsuario();
-  } catch (e) {
-    // Capturar y mostrar el error en la creación de las tablas
-    this.presentAlert("Error en Crear tablas", "Error: " + JSON.stringify(e));
+      this.isDBReady.next(true);
+      await this.cargarUsuarios();
+    } catch (error) {
+      this.presentAlert('Error', 'Error en la configuración de la base de datos: ' + error);
+    }
   }
-}
 
-  buscarUsuario() {
-    return this.database.executeSql('SELECT * FROM usuario', []).then(res => {
-      //variable para almacenar la consulta
-      let items: Usuario[] = [];
-      //validar si existen registros
+  // Cargar usuarios desde la base de datos
+  async cargarUsuarios() {
+    try {
+      const res = await this.database.executeSql('SELECT * FROM usuario', []);
+      const usuarios: Usuario[] = [];
+      
       if (res.rows.length > 0) {
-        //procedo a recorrer y guardar
-        for (var i = 0; i < res.rows.length; i++) {
-          //agrego los datos a mi variable
-          items.push({
+        for (let i = 0; i < res.rows.length; i++) {
+          usuarios.push({
             id_usuario: res.rows.item(i).id_usuario,
             rut: res.rows.item(i).rut,
             nombre: res.rows.item(i).nombre,
             apellidos: res.rows.item(i).apellidos,
             foto_usuario: res.rows.item(i).foto_usuario,
-            direccion: res.rows.item(i).direccion,
             correo: res.rows.item(i).correo,
+            direccion: res.rows.item(i).direccion,
             telefono: res.rows.item(i).telefono,
             clave: res.rows.item(i).clave,
             id_rol: res.rows.item(i).id_rol
-          })
+          });
         }
       }
-      //actualizar mi observable
-      this.listaUsuario.next(items as any);
-
-    })
+      this.listaUsuarios.next(usuarios);
+    } catch (error) {
+      this.presentAlert('Error', 'Error al cargar usuarios: ' + error);
+    }
   }
 
-  private async presentAlert(header: string, msj: string) {
+  // Registrar nuevo usuario
+  async registrarUsuario(usuario: Usuario): Promise<boolean> {
+    try {
+      // Verificar si el RUT ya existe
+      const checkRUTQuery = 'SELECT * FROM usuario WHERE rut = ?';
+      const checkRUTResult = await this.database.executeSql(checkRUTQuery, [usuario.rut]);
+      if (checkRUTResult.rows.length > 0) {
+        await this.presentAlert('Error', 'El RUT ya está registrado.');
+        return false;
+      }
+
+      // Verificar si el correo ya existe
+      const checkEmailQuery = 'SELECT * FROM usuario WHERE correo = ?';
+      const checkEmailResult = await this.database.executeSql(checkEmailQuery, [usuario.correo]);
+      if (checkEmailResult.rows.length > 0) {
+        await this.presentAlert('Error', 'El correo ya está registrado.');
+        return false;
+      }
+
+      const query = `
+        INSERT INTO usuario (
+          rut, nombre, apellidos, foto_usuario, correo,
+          direccion, telefono, clave, id_rol
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `;
+      
+      await this.database.executeSql(query, [
+        usuario.rut,
+        usuario.nombre,
+        usuario.apellidos,
+        usuario.foto_usuario,
+        usuario.correo,
+        usuario.direccion,
+        usuario.telefono,
+        usuario.clave,
+        usuario.id_rol || '1'
+      ]);
+      
+      await this.cargarUsuarios();
+      return true;
+    } catch (error: any) { // Aquí se usa "any" para evitar el error
+      let errorMessage = 'Error al registrar usuario: ';
+      if (error.message) {
+        errorMessage += error.message;
+      } else {
+        errorMessage += JSON.stringify(error);
+      }
+      this.presentAlert('Error', errorMessage);
+      return false;
+    }
+  }
+
+  // Login de usuario
+  async login(correo: string, clave: string): Promise<Usuario | null> {
+    try {
+      const query = 'SELECT * FROM usuario WHERE correo = ? AND clave = ?';
+      const result = await this.database.executeSql(query, [correo, clave]);
+      
+      if (result.rows.length > 0) {
+        return result.rows.item(0);
+      }
+      return null;
+    } catch (error) {
+      this.presentAlert('Error', 'Error en el login: ' + error);
+      return null;
+    }
+  }
+
+  private async presentAlert(header: string, message: string) {
     const alert = await this.alertController.create({
-      header: 'Error',
-      message: msj,
-      buttons: ['Aceptar']
+      header,
+      message,
+      buttons: ['OK']
     });
     await alert.present();
   }
-
-
-  crearUsuario(rut: any,  nombre: any, apellido: any, foto_usuario: any, direccion: any, correo: any, telefono: any, clave: any, id_rol: any,) {
-    return this.database.executeSql('INSERT INTO usuario(rut,nombre,apellido,foto_usuario,direccion,correo,telefono,clave,id_rol) VALUES (?,?,?,?,?,?,?,?,?)', [rut,nombre,apellido,foto_usuario,direccion,correo,telefono,clave,id_rol]).then(res => {
-      this.buscarUsuario();
-    })
-  }
-
-
-}   
+}
