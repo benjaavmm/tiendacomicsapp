@@ -11,6 +11,7 @@ export class ServicebdService {
   private database!: SQLiteObject;
   private isDBReady = new BehaviorSubject<boolean>(false);
   public listaUsuarios = new BehaviorSubject<Usuario[]>([]);
+  private currentUser = new BehaviorSubject<Usuario | null>(null);
 
   // Definiciones de tablas
   private tablaRol = `
@@ -65,13 +66,17 @@ export class ServicebdService {
       FOREIGN KEY (id_categoria) REFERENCES categoria (id_categoria)
     );`;
 
-  constructor(
-    private sqlite: SQLite,
-    private platform: Platform,
-    private alertController: AlertController
-  ) {
-    this.initializeDatabase();
-  }
+    constructor(
+      private sqlite: SQLite,
+      private platform: Platform,
+      private alertController: AlertController
+    ) {
+      this.initializeDatabase();
+      const storedUser = localStorage.getItem('currentUser');
+      if (storedUser) {
+        this.currentUser.next(JSON.parse(storedUser)); // Cargar usuario desde localStorage
+      }
+    }
 
   // Obtener estado de la base de datos
   dbState() {
@@ -81,6 +86,11 @@ export class ServicebdService {
   // Obtener lista de usuarios
   getUsuarios(): Observable<Usuario[]> {
     return this.listaUsuarios.asObservable();
+  }
+
+  // Obtener usuario actual
+  getCurrentUser(): Observable<Usuario | null> {
+    return this.currentUser.asObservable();
   }
 
   private async initializeDatabase() {
@@ -195,7 +205,7 @@ export class ServicebdService {
       
       await this.cargarUsuarios();
       return true;
-    } catch (error: any) { // Aquí se usa "any" para evitar el error
+    } catch (error: any) {
       let errorMessage = 'Error al registrar usuario: ';
       if (error.message) {
         errorMessage += error.message;
@@ -207,20 +217,29 @@ export class ServicebdService {
     }
   }
 
-  // Login de usuario
-  async login(correo: string, clave: string): Promise<Usuario | null> {
+   // Login de usuario
+   async login(correo: string, clave: string): Promise<Usuario | null> {
     try {
       const query = 'SELECT * FROM usuario WHERE correo = ? AND clave = ?';
       const result = await this.database.executeSql(query, [correo, clave]);
       
       if (result.rows.length > 0) {
-        return result.rows.item(0);
+        const usuario = result.rows.item(0);
+        this.currentUser.next(usuario); // Almacena el usuario actual
+        localStorage.setItem('currentUser', JSON.stringify(usuario)); // Guardar en localStorage
+        return usuario;
       }
       return null;
     } catch (error) {
       this.presentAlert('Error', 'Error en el login: ' + error);
       return null;
     }
+  }
+
+  // Cerrar sesión
+  logout() {
+    this.currentUser.next(null); // Limpiar el usuario actual
+    localStorage.removeItem('currentUser'); // Eliminar del localStorage
   }
 
   private async presentAlert(header: string, message: string) {
@@ -232,3 +251,4 @@ export class ServicebdService {
     await alert.present();
   }
 }
+

@@ -13,31 +13,32 @@
       <ion-card-title>Información del Perfil</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <!-- Ícono de Perfil -->
       <div class="profile-icon-container">
-        <ion-icon name="person-circle-outline" class="profile-icon"></ion-icon>
+        <ion-img [src]="user?.foto_usuario" class="profile-icon" *ngIf="user?.foto_usuario"></ion-img>
+        <ion-icon name="person-circle-outline" class="profile-icon" *ngIf="!user?.foto_usuario"></ion-icon>
       </div>
-      <!-- Nombre -->
       <ion-item>
         <ion-label>Nombre:</ion-label>
-        <ion-text>{{ user.name }}</ion-text>
+        <ion-text>{{ user?.nombre }} {{ user?.apellidos }}</ion-text>
       </ion-item>
-      <!-- Email -->
       <ion-item>
         <ion-label>Email:</ion-label>
-        <ion-text>{{ user.email }}</ion-text>
+        <ion-text>{{ user?.correo }}</ion-text>
       </ion-item>
-      <!-- Rol -->
       <ion-item>
-        <ion-label>Rol:</ion-label>
-        <ion-text>{{ user.role }}</ion-text>
+        <ion-label>Teléfono:</ion-label>
+        <ion-text>{{ user?.telefono }}</ion-text>
+      </ion-item>
+      <ion-item>
+        <ion-label>Dirección:</ion-label>
+        <ion-text>{{ user?.direccion }}</ion-text>
       </ion-item>
     </ion-card-content>
   </ion-card>
 
-  <!-- Botones con colores personalizados -->
   <div class="button-container">
     <ion-button expand="full" class="edit-button" (click)="editProfile()">Editar Perfil</ion-button>
     <ion-button expand="full" class="change-password-button" (click)="changePassword()">Modificar Contraseña</ion-button>
+    <ion-button expand="full" color="danger" (click)="logout()">Cerrar Sesión</ion-button>
   </div>
 </ion-content>
