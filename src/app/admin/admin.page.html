@@ -9,7 +9,7 @@
 
 <ion-content>
   <ion-grid>
-    <!-- formulario para agregar o editar un cómic -->
+    <!-- Formulario para agregar o editar un cómic -->
     <ion-row>
       <ion-col>
         <ion-card>
@@ -28,8 +28,9 @@
               </ion-item>
               <div *ngIf="priceError" class="error-message" style="color: red;">{{ priceError }}</div>
               <ion-item>
-                <ion-label position="floating">Imagen (URL)</ion-label>
-                <ion-input type="text" name="image" [(ngModel)]="comic.image" required></ion-input>
+                <ion-label position="floating">Imagen</ion-label>
+                <img [src]="comic.image" *ngIf="comic.image" alt="{{ comic.title }}" style="width: 50px; height: 50px; margin-right: 10px;">
+                <ion-button (click)="presentActionSheet()">Añadir Imagen</ion-button>
               </ion-item>
               <ion-item>
                 <ion-label position="floating">Link</ion-label>
@@ -42,7 +43,7 @@
       </ion-col>
     </ion-row>
 
-    <!-- lista de cómics con opciones para editar/eliminar -->
+    <!-- Lista de cómics con opciones para editar/eliminar -->
     <ion-row>
       <ion-col>
         <ion-list>

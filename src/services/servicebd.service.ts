@@ -66,17 +66,17 @@ export class ServicebdService {
       FOREIGN KEY (id_categoria) REFERENCES categoria (id_categoria)
     );`;
 
-    constructor(
-      private sqlite: SQLite,
-      private platform: Platform,
-      private alertController: AlertController
-    ) {
-      this.initializeDatabase();
-      const storedUser = localStorage.getItem('currentUser');
-      if (storedUser) {
-        this.currentUser.next(JSON.parse(storedUser)); // Cargar usuario desde localStorage
-      }
+  constructor(
+    private sqlite: SQLite,
+    private platform: Platform,
+    private alertController: AlertController
+  ) {
+    this.initializeDatabase();
+    const storedUser = localStorage.getItem('currentUser');
+    if (storedUser) {
+      this.currentUser.next(JSON.parse(storedUser)); // Cargar usuario desde localStorage
     }
+  }
 
   // Obtener estado de la base de datos
   dbState() {
@@ -217,8 +217,8 @@ export class ServicebdService {
     }
   }
 
-   // Login de usuario
-   async login(correo: string, clave: string): Promise<Usuario | null> {
+  // Login de usuario
+  async login(correo: string, clave: string): Promise<Usuario | null> {
     try {
       const query = 'SELECT * FROM usuario WHERE correo = ? AND clave = ?';
       const result = await this.database.executeSql(query, [correo, clave]);
@@ -242,6 +242,29 @@ export class ServicebdService {
     localStorage.removeItem('currentUser'); // Eliminar del localStorage
   }
 
+  async updateUserProfile(userId: number, nombre: string, telefono: string, direccion: string, fotoPerfil: string, apellidos: string): Promise<void> {
+    try {
+      const query = `
+        UPDATE usuario
+        SET nombre = ?, apellidos = ?, telefono = ?, direccion = ?, foto_usuario = ?
+        WHERE id_usuario = ?
+      `;
+      await this.database.executeSql(query, [nombre, apellidos, telefono, direccion, fotoPerfil, userId]);
+      // Actualizar el usuario actual en el BehaviorSubject
+      const currentUser = await this.getUserById(userId);
+      this.currentUser.next(currentUser);
+    } catch (error) {
+      this.presentAlert('Error', 'Error al actualizar el perfil: ' + error);
+    }
+  }
+
+  // Método para obtener usuario por ID
+  private async getUserById(userId: number): Promise<Usuario | null> {
+    const query = 'SELECT * FROM usuario WHERE id_usuario = ?';
+    const result = await this.database.executeSql(query, [userId]);
+    return result.rows.length > 0 ? result.rows.item(0) : null;
+  }
+
   private async presentAlert(header: string, message: string) {
     const alert = await this.alertController.create({
       header,
@@ -251,4 +274,3 @@ export class ServicebdService {
     await alert.present();
   }
 }
-

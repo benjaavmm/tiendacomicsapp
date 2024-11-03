@@ -19,6 +19,10 @@ export class PerfilPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.loadUser();
+  }
+
+  loadUser() {
     this.servicebd.getCurrentUser().subscribe(usuario => {
       this.user = usuario;
     });
