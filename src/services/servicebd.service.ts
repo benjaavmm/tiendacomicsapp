@@ -242,6 +242,7 @@ export class ServicebdService {
     localStorage.removeItem('currentUser'); // Eliminar del localStorage
   }
 
+  // Actualizar perfil de usuario
   async updateUserProfile(userId: number, nombre: string, telefono: string, direccion: string, fotoPerfil: string, apellidos: string): Promise<void> {
     try {
       const query = `
@@ -263,6 +264,19 @@ export class ServicebdService {
     const query = 'SELECT * FROM usuario WHERE id_usuario = ?';
     const result = await this.database.executeSql(query, [userId]);
     return result.rows.length > 0 ? result.rows.item(0) : null;
+  }
+
+  // Validar la contraseña actual del usuario
+  async validateCurrentPassword(userId: number, currentPassword: string): Promise<boolean> {
+    const query = 'SELECT * FROM usuario WHERE id_usuario = ? AND clave = ?';
+    const result = await this.database.executeSql(query, [userId, currentPassword]);
+    return result.rows.length > 0;
+  }
+
+  // Actualizar la contraseña del usuario
+  async updatePassword(userId: number, newPassword: string): Promise<void> {
+    const query = 'UPDATE usuario SET clave = ? WHERE id_usuario = ?';
+    await this.database.executeSql(query, [newPassword, userId]);
   }
 
   private async presentAlert(header: string, message: string) {
