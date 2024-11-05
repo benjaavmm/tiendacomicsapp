@@ -1,6 +1,7 @@
 export class Venta {
-    id_venta = "";
-    f_venta = "";
-    id_usuario = ""; 
-    id_estado = ""; 
+    id_venta: string = "";
+    f_venta: string = "";
+    id_usuario: string = ""; 
+    total: number = 0; //
+    id_estado: string = ""; 
 }

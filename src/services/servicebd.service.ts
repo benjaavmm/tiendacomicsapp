@@ -74,7 +74,7 @@ export class ServicebdService {
     this.initializeDatabase();
     const storedUser = localStorage.getItem('currentUser');
     if (storedUser) {
-      this.currentUser.next(JSON.parse(storedUser)); // Cargar usuario desde localStorage
+      this.currentUser.next(JSON.parse(storedUser));
     }
   }
 
@@ -277,6 +277,42 @@ export class ServicebdService {
   async updatePassword(userId: number, newPassword: string): Promise<void> {
     const query = 'UPDATE usuario SET clave = ? WHERE id_usuario = ?';
     await this.database.executeSql(query, [newPassword, userId]);
+  }
+  
+  // Método para guardar una venta
+  async guardarVenta(f_venta: string, id_usuario: number, total: number, id_estado: number = 1): Promise<void> {
+    await this.database.executeSql(
+      'INSERT INTO venta (f_venta, id_usuario, total, id_estado) VALUES (?, ?, ?, ?)',
+      [f_venta, id_usuario, total, id_estado]
+    );
+  }
+
+  // Obtener historial de compras
+  getHistorialCompras(): Observable<any[]> {
+    return new Observable(observer => {
+      this.getCurrentUser().subscribe(async currentUser => {
+        const userId = currentUser?.id_usuario;
+
+        if (userId) {
+          const query = 'SELECT * FROM venta WHERE id_usuario = ?';
+          try {
+            const result = await this.database.executeSql(query, [userId]);
+            const compras = [];
+
+            for (let i = 0; i < result.rows.length; i++) {
+              compras.push(result.rows.item(i));
+            }
+
+            observer.next(compras);
+            observer.complete();
+          } catch (error) {
+            observer.error('Error al obtener el historial de compras: ' + error);
+          }
+        } else {
+          observer.error('No se encontró el usuario actual.');
+        }
+      });
+    });
   }
 
   private async presentAlert(header: string, message: string) {

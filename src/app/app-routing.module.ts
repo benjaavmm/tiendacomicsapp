@@ -136,11 +136,16 @@ const routes: Routes = [
   },
 
   
+  
+  {
+    path: 'historialcompras',
+    loadChildren: () => import('./historialcompras/historialcompras.module').then( m => m.HistorialcomprasModule)
+  },
+
   {
     path: '**',
     loadChildren: () => import('./notfound/notfound.module').then( m => m.NotfoundPageModule)
   },
-
 
 
 

@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
-import { CartService, Comic } from '../services/cart.service'; 
+import { CartService, Comic } from '../services/cart.service';
+import { AlertController } from '@ionic/angular';
+import { ServicebdService } from '../../services/servicebd.service';
 
 @Component({
   selector: 'app-carrito',
@@ -7,39 +9,87 @@ import { CartService, Comic } from '../services/cart.service';
   styleUrls: ['./carrito.page.scss'],
 })
 export class CarritoPage {
-  cartItems: Comic[]; 
+  cartItems: Comic[];
 
-  constructor(private cartService: CartService) {
-    this.cartItems = this.cartService.getCartItems(); 
+  constructor(
+    private cartService: CartService,
+    private alertController: AlertController,
+    private servicebd: ServicebdService
+  ) {
+    this.cartItems = this.cartService.getCartItems();
   }
 
-  // Método para calcular el precio total del carrito
   get totalPrice() {
     return this.cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
   }
 
-  // Método para eliminar un ítem del carrito
   removeItem(item: Comic) {
-    this.cartService.removeItem(item); // Llama al método del servicio para eliminar
-    this.cartItems = this.cartService.getCartItems(); // Actualiza la lista de items en el carrito
+    this.cartService.removeItem(item);
+    this.cartItems = this.cartService.getCartItems();
   }
 
-  // Método de checkout (puedes implementarlo más adelante)
-  checkout() {
-    // INNECESARIO por ahora :)
+  async checkout() {
+    const alert = await this.alertController.create({
+      header: 'Confirmar Pago',
+      message: '¿Está seguro de querer comprar?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+        },
+        {
+          text: 'Sí',
+          handler: () => {
+            this.processPayment();
+          },
+        },
+      ],
+    });
+
+    await alert.present();
   }
 
-  // Método para aumentar la cantidad de un ítem
+  async processPayment() {
+    const total = this.totalPrice;
+    const currentUser = await this.servicebd.getCurrentUser().toPromise();
+    const userId = currentUser?.id_usuario;
+
+    if (userId) {
+      const userIdNumber = Number(userId); // Convertir a número
+      const fechaVenta = new Date().toISOString().split('T')[0];
+      const id_estado = 1; // Establece un estado predeterminado
+
+      await this.servicebd.guardarVenta(fechaVenta, userIdNumber, total);
+      
+      this.cartService.clearCart();
+      this.cartItems = this.cartService.getCartItems();
+
+      const successAlert = await this.alertController.create({
+        header: 'Pago Exitoso',
+        message: 'Su compra ha sido realizada con éxito.',
+        buttons: ['OK'],
+      });
+
+      await successAlert.present();
+    } else {
+      const errorAlert = await this.alertController.create({
+        header: 'Error',
+        message: 'No se pudo obtener el usuario actual.',
+        buttons: ['OK'],
+      });
+      await errorAlert.present();
+    }
+  }
+
   increaseQuantity(item: Comic) {
     if (item.quantity < 10) {
-      item.quantity += 1; // Incrementa la cantidad
+      item.quantity += 1;
     }
   }
 
-  // Método para disminuir la cantidad de un ítem
   decreaseQuantity(item: Comic) {
     if (item.quantity > 1) {
-      item.quantity -= 1; // Decrementa la cantidad
+      item.quantity -= 1;
     }
-  }
+}
 }

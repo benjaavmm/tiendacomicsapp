@@ -41,6 +41,10 @@ export class PerfilPage implements OnInit {
     this.router.navigate(['/login']); // Redirigir a la página de inicio
   }
 
+  viewPurchases() {
+    this.router.navigate(['/historialcompras']); // Redirigir a la página de historial de compras
+  }
+
   async presentAlert(header: string, message: string) {
     const alert = await this.alertController.create({
       header,
