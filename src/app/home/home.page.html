@@ -1,5 +1,5 @@
 <ion-app>
-  <!-- menú lateral -->
+  <!-- Menú lateral -->
   <ion-menu side="start" menuId="first" contentId="main" swipeGesture="false">
     <ion-header>
       <ion-toolbar>
@@ -31,16 +31,12 @@
           <ion-button routerLink="/carrito">
             <ion-icon slot="icon-only" name="cart"></ion-icon> <!-- Botón de Carrito -->
           </ion-button>
-          <!-- Ícono de Perfil -->
           <ion-button routerLink="/perfil">
             <ion-icon slot="icon-only" name="person-circle-outline"></ion-icon>
           </ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
-
-    <!-- Router Outlet para Navegación -->
-    <ion-router-outlet></ion-router-outlet>
 
     <!-- Contenido de la página -->
     <ion-content>
@@ -62,26 +58,22 @@
         </ion-row>
       </ion-grid>
 
-      <!-- inicio carrusel -->
+      <!-- Carrusel -->
       <div class="carousel-container">
-        <div class="carousel-slide" *ngFor="let image of carouselImages; let i = index"
-             [class.active]="i === currentSlide">
+        <div class="carousel-slide" *ngFor="let image of carouselImages; let i = index" [class.active]="i === currentSlide">
           <img [src]="image.src" alt="Carrusel" (click)="navigateToPage(image.link)">
         </div>
       </div>
-      <div class="carousel-controls">
-      </div>
-      <!-- carrusel -->
 
-      <!-- productos destacados -->
+      <!-- Productos destacados -->
       <ion-grid>
         <ion-row>
           <ion-col size="6" size-md="3" *ngFor="let comic of filteredComics">
             <ion-card class="comic-card">
-              <img [src]="comic.image" [alt]="comic.title" (click)="navigateToComic(comic)">
+              <img [src]="comic.foto_comic" [alt]="comic.nombre_comic" (click)="navigateToComic(comic)">
               <ion-card-header>
-                <ion-card-title>{{ comic.title }}</ion-card-title>
-                <ion-card-subtitle>${{ comic.price }}</ion-card-subtitle>
+                <ion-card-title>{{ comic.nombre_comic }}</ion-card-title>
+                <ion-card-subtitle>${{ comic.precio }}</ion-card-subtitle>
               </ion-card-header>
               <div class="quantity-box">
                 <label for="quantity" class="quantity-label">Cantidad</label>
@@ -97,7 +89,7 @@
         </ion-row>
       </ion-grid>
 
-      <!-- información de la tienda -->
+      <!-- Información de la tienda -->
       <ion-grid class="store-features mt-5">
         <ion-row>
           <ion-col size="12" size-md="4">
@@ -130,7 +122,7 @@
         </ion-row>
       </ion-grid>
       
-      <!-- footer -->
+      <!-- Footer -->
       <footer class="footer bg-dark text-white">
         <ion-button expand="full" color="primary" routerLink="/verificar" class="mt-3" style="margin-top: 20px;">
           Ver Usuarios
@@ -145,19 +137,14 @@
               <p>Ayúdanos a ser la mejor tienda de cómics en Chile. Tenemos un enorme catálogo y el despacho más rápido de Chile. ¡Somos tu tienda favorita!</p>
             </ion-col>
             <ion-col size="12" size-md="3">
+              <!-- Espacio vacío -->
             </ion-col>
             <ion-col size="12" size-md="3">
               <h5>Términos y Condiciones</h5>
               <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam et lorem eu dolor viverra porta.</p>
             </ion-col>
           </ion-row>
-          <ion-row>
-            <ion-col size="12" class="text-center">
-              <p>&copy; 2024 Zona de Comics. Todos los derechos reservados.</p>
-            </ion-col>
-          </ion-row>
         </ion-grid>
-        
       </footer>
     </ion-content>
   </div>

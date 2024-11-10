@@ -22,14 +22,14 @@
   <ion-card>
     <ion-img src="assets/img/atackontitan.jpg"></ion-img>
     <ion-card-header>
-      <ion-card-title>Attack On Titan</ion-card-title>
+      <ion-card-title>{{ comic.nombre_comic }}</ion-card-title>
       <ion-card-subtitle>Descripción:</ion-card-subtitle>
-      <p>"El Escuadrón de Reconocimiento planea una jugada arriesgada; que Eren, en forma de Titán, intente reparar la Muralla Rose, reclamando, por primera vez en un siglo, territorio para los humanos. Pero el control que tiene Eren como Titán dista mucho de ser perfecto y, cuando se descontrola, ¡ni siquiera Armin puede detenerlo! Con el peso de la supervivencia de la humanidad sobre sus enormes hombros, ¿podrá Eren recuperar la razón? ¿O se perderá para siempre?"</p>
+      <p>{{ comic.descripcion }}</p>
     </ion-card-header>
     <ion-card-content>
       <div class="comic-details">
         <h3>Detalles</h3>
-        <p>Precio: $12.990</p>
+        <p>Precio: {{ comic.precio | currency }}</p>
         <ion-item>
           <ion-label position="floating">Cantidad</ion-label>
           <ion-input type="number" min="1" [(ngModel)]="quantity"></ion-input>

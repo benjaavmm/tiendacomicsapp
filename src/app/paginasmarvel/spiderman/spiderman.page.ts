@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
-import { CartService, Comic } from '../../services/cart.service'; // Asegúrate de que la ruta sea correcta
+import { CartService, Comic } from '../../services/cart.service';
 
 @Component({
   selector: 'app-spiderman',
@@ -8,14 +8,18 @@ import { CartService, Comic } from '../../services/cart.service'; // Asegúrate 
   styleUrls: ['./spiderman.page.scss'],
 })
 export class SpidermanPage implements OnInit {
-  quantity: number = 1; // Define la propiedad quantity con un valor inicial
+  quantity: number = 1;
 
-  // Define el objeto Comic
   comic: Comic = {
-    title: 'The Amazing Spider-Man',
-    price: 18990,
-    image: 'assets/img/spiderman.jpg',
-    quantity: 0 // Este valor se actualizará al añadir al carrito
+    id_comic: '8',
+    nombre_comic: 'The Amazing Spider-Man',
+    precio: 18990,
+    stock: 100,
+    descripcion: '"The Amazing Spider-Man, un pilar del universo Marvel Comics, sigue las hazañas de Peter Parker, un estudiante de secundaria que adquiere habilidades arácnidas tras ser mordido por una araña radioactiva. Enfrentando desafíos personales y supervillanos icónicos, Spider-Man lucha contra el crimen en Nueva York mientras equilibra su vida como héroe y su identidad secreta."',
+    foto_comic: 'assets/img/spiderman.jpg',
+    id_categoria: 'marvel',
+    quantity: 0,
+    link: ''
   };
 
   constructor(private alertCtrl: AlertController, private cartService: CartService) { }
@@ -24,12 +28,11 @@ export class SpidermanPage implements OnInit {
   }
 
   async addToCart() {
-    // Añade el cómic al carrito
     this.cartService.addToCart({ ...this.comic, quantity: this.quantity });
 
     const alert = await this.alertCtrl.create({
       header: 'Añadido al Carro',
-      message: `Has añadido ${this.quantity} de ${this.comic.title} al carrito.`,
+      message: `Has añadido ${this.quantity} de ${this.comic.nombre_comic} al carrito.`,
       buttons: ['OK']
     });
     await alert.present();

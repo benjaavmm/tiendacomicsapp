@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { MenuController, AlertController } from '@ionic/angular';
 import { CartService } from '../services/cart.service'; // Asegúrate de que la ruta sea correcta
 import { Router } from '@angular/router';
+import { Comic } from '../../services/comic'; // Asegúrate de que la ruta sea correcta
 
 @Component({
   selector: 'app-comicsdc',
@@ -9,66 +10,113 @@ import { Router } from '@angular/router';
   styleUrls: ['./comicsdc.page.scss'],
 })
 export class ComicsdcPage {
-  comics = [
-    {
-      title: 'The Flash N°52',
-      price: 21990, 
-      image: 'assets/img/flash.jpg',
-      link: '/flash1',
-      quantity: 1
-    },
-    {
-      title: 'Green Lantern: Tales of the Sinestro Corps',
-      price: 19990, 
-      image: 'assets/img/linternaverde.jpg',
-      link: '/linternaverde1',
-      quantity: 1
-    },
-    {
-      title: 'Detective Comics #400: El Desafío del Hombre Murciélago',
-      price: 23990, 
-      image: 'assets/img/batman1.jpg',
-      link: '/batman1',
-      quantity: 1
-    },
-    {
-      title: 'Aquaman #14: La Marea del Terror',
-      price: 18890, 
-      image: 'assets/img/aquaman1.jpg',
-      link: '/aquaman1',
-      quantity: 1
-    },
-    {
-      title: 'Liga De La Justicia #27: Legado',
-      price: 20890, 
-      image: 'assets/img/ligadelajusticia1.jpg',
-      link: '/ligadelajusticia1',
-      quantity: 1
-    },
-    {
-      title: 'Supergirl #3: El Reinado de los Superhombres Cibernéticos',
-      price: 17000, 
-      image: 'assets/img/Supergirl.jpg',
-      link: '/supergirl1',
-      quantity: 1
-    },
-    {
-      title: 'Superman #264: El Secreto del Mariscal de Campo Fantasma',
-      price: 18800, 
-      image: 'assets/img/superman1.jpg',
-      link: '/superman1',
-      quantity: 1
-    },
-    {
-      title: 'Jóvenes Titanes #1: El Reinado de los Superhombres Cibernéticos',
-      price: 19900, 
-      image: 'assets/img/titans.png',
-      link: '/titans1',
-      quantity: 1
-    }
+  comics: Comic[] = [
+    // Cómic: The Flash N°52
+    new Comic(
+      '1', // ID único del cómic
+      1, // Cantidad inicial en el carrito
+      'The Flash N°52', // Nombre del cómic
+      21990, // Precio del cómic
+      100, // Cantidad disponible en stock
+      'Descripción del cómic', // Descripción del cómic
+      'assets/img/flash.jpg', // Ruta de la imagen del cómic
+      'dc', // Categoría del cómic
+      '/flash1' // Enlace para navegación a la página del cómic
+    ),
+
+    // Cómic: Green Lantern: Tales of the Sinestro Corps
+    new Comic(
+      '2', // ID único del cómic
+      1, // Cantidad inicial en el carrito
+      'Green Lantern: Tales of the Sinestro Corps', // Nombre del cómic
+      19990, // Precio del cómic
+      100, // Cantidad disponible en stock
+      'Descripción del cómic', // Descripción del cómic
+      'assets/img/linternaverde.jpg', // Ruta de la imagen del cómic
+      'dc', // Categoría del cómic
+      '/linternaverde1' // Enlace para navegación a la página del cómic
+    ),
+
+    // Cómic: Detective Comics #400: El Desafío del Hombre Murciélago
+    new Comic(
+      '3', // ID único del cómic
+      1, // Cantidad inicial en el carrito
+      'Detective Comics #400: El Desafío del Hombre Murciélago', // Nombre del cómic
+      23990, // Precio del cómic
+      100, // Cantidad disponible en stock
+      'Descripción del cómic', // Descripción del cómic
+      'assets/img/batman1.jpg', // Ruta de la imagen del cómic
+      'dc', // Categoría del cómic
+      '/batman1' // Enlace para navegación a la página del cómic
+    ),
+
+    // Cómic: Aquaman #14: La Marea del Terror
+    new Comic(
+      '17', // ID único del cómic
+      1, // Cantidad inicial en el carrito
+      'Aquaman #14: La Marea del Terror', // Nombre del cómic
+      18890, // Precio del cómic
+      100, // Cantidad disponible en stock
+      'Descripción del cómic', // Descripción del cómic
+      'assets/img/aquaman1.jpg', // Ruta de la imagen del cómic
+      'dc', // Categoría del cómic
+      '/aquaman1' // Enlace para navegación a la página del cómic
+    ),
+
+    // Cómic: Liga De La Justicia #27: Legado
+    new Comic(
+      '18', // ID único del cómic
+      1, // Cantidad inicial en el carrito
+      'Liga De La Justicia #27: Legado', // Nombre del cómic
+      20890, // Precio del cómic
+      100, // Cantidad disponible en stock
+      'Descripción del cómic', // Descripción del cómic
+      'assets/img/ligadelajusticia1.jpg', // Ruta de la imagen del cómic
+      'dc', // Categoría del cómic
+      '/ligadelajusticia1' // Enlace para navegación a la página del cómic
+    ),
+
+    // Cómic: Supergirl #3: El Reinado de los Superhombres Cibernéticos
+    new Comic(
+      '19', // ID único del cómic
+      1, // Cantidad inicial en el carrito
+      'Supergirl #3: El Reinado de los Superhombres Cibernéticos', // Nombre del cómic
+      17000, // Precio del cómic
+      100, // Cantidad disponible en stock
+      'Descripción del cómic', // Descripción del cómic
+      'assets/img/Supergirl.jpg', // Ruta de la imagen del cómic
+      'dc', // Categoría del cómic
+      '/supergirl1' // Enlace para navegación a la página del cómic
+    ),
+
+    // Cómic: Superman #264: El Secreto del Mariscal de Campo Fantasma
+    new Comic(
+      '20', // ID único del cómic
+      1, // Cantidad inicial en el carrito
+      'Superman #264: El Secreto del Mariscal de Campo Fantasma', // Nombre del cómic
+      18800, // Precio del cómic
+      100, // Cantidad disponible en stock
+      'Descripción del cómic', // Descripción del cómic
+      'assets/img/superman1.jpg', // Ruta de la imagen del cómic
+      'dc', // Categoría del cómic
+      '/superman1' // Enlace para navegación a la página del cómic
+    ),
+
+    // Cómic: Jóvenes Titanes #1: El Reinado de los Superhombres Cibernéticos
+    new Comic(
+      '21', // ID único del cómic
+      1, // Cantidad inicial en el carrito
+      'Jóvenes Titanes #1: El Reinado de los Superhombres Cibernéticos', // Nombre del cómic
+      19900, // Precio del cómic
+      100, // Cantidad disponible en stock
+      'Descripción del cómic', // Descripción del cómic
+      'assets/img/titans.png', // Ruta de la imagen del cómic
+      'dc', // Categoría del cómic
+      '/titans1' // Enlace para navegación a la página del cómic
+    )
   ];
 
-  filteredComics = [...this.comics];  // inicializar con todos los cómics
+  filteredComics: Comic[] = [...this.comics];  // Inicializar con todos los cómics
 
   constructor(private menu: MenuController, private alertCtrl: AlertController, private cartService: CartService, private router: Router) {}
 
@@ -76,21 +124,21 @@ export class ComicsdcPage {
     this.menu.open('first');
   }
 
-  async addToCart(comic: any) {
+  async addToCart(comic: Comic) {
     this.cartService.addToCart({ ...comic });
     const alert = await this.alertCtrl.create({
       header: 'Añadido al Carro',
-      message: `Has añadido ${comic.quantity} de ${comic.title} al carrito.`,
+      message: `Has añadido ${comic.quantity} de ${comic.nombre_comic} al carrito.`,
       buttons: ['OK']
     });
     await alert.present();
   }
 
-  increment(comic: any) {
+  increment(comic: Comic) {
     comic.quantity++;  // Aumenta la cantidad del cómic
   }
 
-  decrement(comic: any) {
+  decrement(comic: Comic) {
     if (comic.quantity > 1) { // Evita que la cantidad sea menor que 1
       comic.quantity--;  // Disminuye la cantidad del cómic
     }
@@ -105,7 +153,7 @@ export class ComicsdcPage {
 
     if (searchTerm && searchTerm.trim() !== '') {
       this.filteredComics = this.comics.filter((comic) => {
-        return comic.title.toLowerCase().includes(searchTerm);
+        return comic.nombre_comic.toLowerCase().includes(searchTerm);
       });
     } else {
       this.filteredComics = [...this.comics];

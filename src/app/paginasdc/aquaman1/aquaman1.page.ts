@@ -1,13 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
-import { CartService } from '../../services/cart.service';
-
-interface Comic { // Asegúrate de que esta interfaz esté definida correctamente
-  title: string;
-  price: number; // Asegúrate de que sea un número
-  image: string;
-  quantity: number;
-}
+import { CartService, Comic } from '../../services/cart.service';
 
 @Component({
   selector: 'app-aquaman1',
@@ -17,25 +10,28 @@ interface Comic { // Asegúrate de que esta interfaz esté definida correctament
 export class Aquaman1Page implements OnInit {
   quantity: number = 1;
 
-  comic: Comic = { // Definición del comic
-    title: 'Aquaman #14: La Marea del Terror',
-    price: 18890, 
-    image: 'assets/img/aquaman1.jpg',
-    quantity: this.quantity
+  comic: Comic = {
+    id_comic: '17',
+    nombre_comic: 'Aquaman #14: La Marea del Terror',
+    precio: 18890,
+    stock: 100,
+    descripcion: '"En las profundidades de los océanos de la Tierra, Aquaman se enfrenta a una nueva ola de terror en el número 14 de su serie."',
+    foto_comic: 'assets/img/aquaman1.jpg',
+    id_categoria: 'dc',
+    quantity: 0,
+    link: ''
   };
 
   constructor(private alertCtrl: AlertController, private cartService: CartService) { }
 
-  ngOnInit() {
-    // Aquí puedes agregar lógica adicional si es necesario
-  }
+  ngOnInit() {}
 
   async addToCart() {
     this.cartService.addToCart({ ...this.comic, quantity: this.quantity });
-    
+
     const alert = await this.alertCtrl.create({
       header: 'Añadido al Carro',
-      message: `Has añadido ${this.quantity} de ${this.comic.title} al carrito.`,
+      message: `Has añadido ${this.quantity} de ${this.comic.nombre_comic} al carrito.`,
       buttons: ['OK']
     });
     await alert.present();

@@ -22,14 +22,14 @@
   <ion-card>
     <ion-img src="assets/img/thor.jpg"></ion-img>
     <ion-card-header>
-      <ion-card-title>The Mighty Thor: The Wrath Of Odin!</ion-card-title>
+      <ion-card-title>{{ comic.nombre_comic }}</ion-card-title>
       <ion-card-subtitle>Descripción:</ion-card-subtitle>
-      <p>"The Mighty Thor: The Wrath of Odin!" sumerge a los lectores en una saga épica que sigue las hazañas del poderoso dios nórdico del trueno. Cuando el reino de Asgard se ve amenazado por una fuerza oscura ancestral, Thor se embarca en una búsqueda desesperada para salvar su hogar y proteger a los nueve reinos."</p>
+      <p>{{ comic.descripcion }}</p>
     </ion-card-header>
     <ion-card-content>
       <div class="comic-details">
         <h3>Detalles</h3>
-        <p>Precio: $21.990</p>
+        <p>Precio: {{ comic.precio | currency }}</p>
         <ion-item>
           <ion-label position="floating">Cantidad</ion-label>
           <ion-input type="number" min="1" [(ngModel)]="quantity"></ion-input>

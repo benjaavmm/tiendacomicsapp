@@ -22,14 +22,14 @@
   <ion-card>
     <ion-img src="assets/img/antman.jpg"></ion-img>
     <ion-card-header>
-      <ion-card-title>The Astonishing Ant-Man</ion-card-title>
+      <ion-card-title>{{ comic.nombre_comic }}</ion-card-title>
       <ion-card-subtitle>Descripción:</ion-card-subtitle>
-      <p>"The Astonishing Ant-Man sigue las aventuras de Scott Lang, un exconvicto y experto en tecnología que asume el papel del héroe diminuto, Ant-Man. Con un traje que le permite encogerse hasta el tamaño de una hormiga y aumentar su fuerza, Scott enfrenta desafíos tanto dentro como fuera del traje mientras equilibra su vida como padre soltero y superhéroe."</p>
+      <p>{{ comic.descripcion }}</p>
     </ion-card-header>
     <ion-card-content>
       <div class="comic-details">
         <h3>Detalles</h3>
-        <p>Precio: $23.990</p>
+        <p>Precio: {{ comic.precio | currency }}</p>
         <ion-item>
           <ion-label position="floating">Cantidad</ion-label>
           <ion-input type="number" min="1" [(ngModel)]="quantity"></ion-input>

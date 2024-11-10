@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
-import { CartService, Comic } from '../../services/cart.service'; // Asegúrate de que la ruta sea correcta
+import { CartService, Comic } from '../../services/cart.service';
 
 @Component({
   selector: 'app-capitanamerica',
@@ -8,14 +8,18 @@ import { CartService, Comic } from '../../services/cart.service'; // Asegúrate 
   styleUrls: ['./capitanamerica.page.scss'],
 })
 export class CapitanamericaPage implements OnInit {
-  quantity: number = 1; // Define la propiedad quantity con un valor inicial
+  quantity: number = 1;
 
-  // Define el objeto Comic
   comic: Comic = {
-    title: 'The Avengers: Captain America Lives Again!',
-    price: 22990,
-    image: 'assets/img/capitanamerica.jpg',
-    quantity: 0 // Este valor se actualizará al añadir al carrito
+    id_comic: '12',
+    nombre_comic: 'The Avengers: Captain America Lives Again!',
+    precio: 22990,
+    stock: 100,
+    descripcion: '"The Avengers: Captain America Lives Again!" presenta el emocionante regreso del legendario Capitán América a las filas de los Vengadores. En esta historia épica, después de décadas de estar atrapado en un estado de animación suspendida, el Capitán América despierta en el mundo moderno para enfrentarse a una nueva era de desafíos.',
+    foto_comic: 'assets/img/capitanamerica.jpg',
+    id_categoria: 'marvel',
+    quantity: 0,
+    link: ''
   };
 
   constructor(private alertCtrl: AlertController, private cartService: CartService) { }
@@ -24,12 +28,11 @@ export class CapitanamericaPage implements OnInit {
   }
 
   async addToCart() {
-    // Añade el cómic al carrito
     this.cartService.addToCart({ ...this.comic, quantity: this.quantity });
 
     const alert = await this.alertCtrl.create({
       header: 'Añadido al Carro',
-      message: `Has añadido ${this.quantity} de ${this.comic.title} al carrito.`,
+      message: `Has añadido ${this.quantity} de ${this.comic.nombre_comic} al carrito.`,
       buttons: ['OK']
     });
     await alert.present();

@@ -1,32 +1,37 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
-import { CartService } from '../../services/cart.service';
+import { CartService, Comic } from '../../services/cart.service';
 
 @Component({
   selector: 'app-batman1',
   templateUrl: './batman1.page.html',
   styleUrls: ['./batman1.page.scss'],
 })
-export class Batman1Page {
-  quantity: number = 1; // Define la cantidad inicial
+export class Batman1Page implements OnInit {
+  quantity: number = 1;
 
-  // Información del cómic específico
-  comic = {
-    title: 'Detective Comics #400: El Desafío del Hombre Murciélago',
-    price: 23990,
-    image: 'assets/img/batman1.jpg',
+  comic: Comic = {
+    id_comic: '3',
+    nombre_comic: 'Detective Comics #400: El Desafío del Hombre Murciélago',
+    precio: 23990,
+    stock: 100,
+    descripcion: '"En esta edición histórica, sumérgete en la oscuridad de Gotham City con Batman enfrentando una de las amenazas más inusuales: el Hombre Murciélago."',
+    foto_comic: 'assets/img/batman1.jpg',
+    id_categoria: 'dc',
+    quantity: 0,
+    link: ''
   };
 
   constructor(private alertCtrl: AlertController, private cartService: CartService) { }
 
+  ngOnInit() {}
+
   async addToCart() {
-    // Agrega el cómic al carrito usando el servicio
     this.cartService.addToCart({ ...this.comic, quantity: this.quantity });
-    
-    // Muestra una alerta de confirmación
+
     const alert = await this.alertCtrl.create({
       header: 'Añadido al Carro',
-      message: `Has añadido ${this.quantity} de ${this.comic.title} al carrito.`,
+      message: `Has añadido ${this.quantity} de ${this.comic.nombre_comic} al carrito.`,
       buttons: ['OK']
     });
     await alert.present();

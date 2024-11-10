@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
-import { CartService, Comic } from '../../services/cart.service'; // Asegúrate de que la ruta sea correcta
+import { CartService, Comic } from '../../services/cart.service';
 
 @Component({
   selector: 'app-secretwars',
@@ -8,14 +8,18 @@ import { CartService, Comic } from '../../services/cart.service'; // Asegúrate 
   styleUrls: ['./secretwars.page.scss'],
 })
 export class SecretwarsPage implements OnInit {
-  quantity: number = 1; // Define la propiedad quantity con un valor inicial
+  quantity: number = 1;
 
-  // Define el objeto Comic
   comic: Comic = {
-    title: 'Marvel Super Heroes: Secret Wars',
-    price: 20990,
-    image: 'assets/img/secretwars.jpg',
-    quantity: 0 // Este valor se actualizará al añadir al carrito
+    id_comic: '13',
+    nombre_comic: 'Marvel Super Heroes: Secret Wars',
+    precio: 20990,
+    stock: 100,
+    descripcion: '"Marvel Super Heroes: Secret Wars es una saga épica que reúne a los héroes y villanos más emblemáticos del Universo Marvel en una batalla cósmica sin precedentes."',
+    foto_comic: 'assets/img/secretwars.jpg',
+    id_categoria: 'marvel',
+    quantity: 0,
+    link: ''
   };
 
   constructor(private alertCtrl: AlertController, private cartService: CartService) { }
@@ -24,12 +28,11 @@ export class SecretwarsPage implements OnInit {
   }
 
   async addToCart() {
-    // Añade el cómic al carrito
     this.cartService.addToCart({ ...this.comic, quantity: this.quantity });
 
     const alert = await this.alertCtrl.create({
       header: 'Añadido al Carro',
-      message: `Has añadido ${this.quantity} de ${this.comic.title} al carrito.`,
+      message: `Has añadido ${this.quantity} de ${this.comic.nombre_comic} al carrito.`,
       buttons: ['OK']
     });
     await alert.present();

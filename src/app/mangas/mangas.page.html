@@ -56,10 +56,10 @@
         <ion-col size="6" size-md="3" *ngFor="let comic of filteredComics">
           <ion-card class="comic-card"> <!-- Añadir la clase aquí -->
             <!-- Al hacer click en la imagen lleva a la página del cómic -->
-            <ion-img [src]="comic.image" [alt]="comic.title" (click)="navigateToComic(comic.link)"></ion-img>
+            <ion-img [src]="comic.foto_comic" [alt]="comic.nombre_comic" (click)="navigateToComic(comic.link)"></ion-img>
             <ion-card-header>
-              <ion-card-title>{{ comic.title }}</ion-card-title>
-              <ion-card-subtitle>{{ '$' + comic.price }}</ion-card-subtitle> <!-- Aquí se añadió el símbolo de dólar -->
+              <ion-card-title>{{ comic.nombre_comic }}</ion-card-title>
+              <ion-card-subtitle>{{ '$' + comic.precio }}</ion-card-subtitle> <!-- Aquí se añadió el símbolo de dólar -->
             </ion-card-header>
             <ion-card-content>
               <div class="quantity-box">

@@ -3,6 +3,7 @@ import { SQLite, SQLiteObject } from '@awesome-cordova-plugins/sqlite/ngx';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { AlertController, Platform } from '@ionic/angular';
 import { Usuario } from './usuario';
+import { Comic } from './comic'; 
 
 @Injectable({
   providedIn: 'root'
@@ -46,6 +47,16 @@ export class ServicebdService {
       FOREIGN KEY (id_estado) REFERENCES estados (id_estado)
     );`;
 
+  private tablaDetallesVenta = `
+    CREATE TABLE IF NOT EXISTS detalles_venta (
+      id_detalle INTEGER PRIMARY KEY AUTOINCREMENT,
+      id_venta INTEGER,
+      id_comic INTEGER,
+      cantidad INTEGER,
+      FOREIGN KEY (id_venta) REFERENCES venta (id_venta),
+      FOREIGN KEY (id_comic) REFERENCES comics (id_comic)
+    );`;
+
   private tablaEstados = `
     CREATE TABLE IF NOT EXISTS estados (
       id_estado INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -63,6 +74,7 @@ export class ServicebdService {
       foto_comic BLOB,
       id_categoria INTEGER,
       estatus VARCHAR(20),
+      link VARCHAR(200), // Nueva propiedad añadida
       FOREIGN KEY (id_categoria) REFERENCES categoria (id_categoria)
     );`;
 
@@ -116,6 +128,7 @@ export class ServicebdService {
       await this.database.executeSql(this.tablaRol, []);
       await this.database.executeSql(this.tablaUsuario, []);
       await this.database.executeSql(this.tablaVenta, []);
+      await this.database.executeSql(this.tablaDetallesVenta, []); // Nueva tabla
       await this.database.executeSql(this.tablaEstados, []);
       await this.database.executeSql(this.tablaComics, []);
       
@@ -279,12 +292,21 @@ export class ServicebdService {
     await this.database.executeSql(query, [newPassword, userId]);
   }
   
-  // Método para guardar una venta
-  async guardarVenta(f_venta: string, id_usuario: number, total: number, id_estado: number = 1): Promise<void> {
+  // Método para guardar una venta y sus detalles
+  async guardarVenta(f_venta: string, id_usuario: number, total: number, comics: Comic[], id_estado: number = 1): Promise<void> {
     await this.database.executeSql(
       'INSERT INTO venta (f_venta, id_usuario, total, id_estado) VALUES (?, ?, ?, ?)',
       [f_venta, id_usuario, total, id_estado]
     );
+
+    const id_venta = await this.database.executeSql('SELECT last_insert_rowid()', []).then(res => res.rows.item(0)['last_insert_rowid()']);
+
+    for (const comic of comics) {
+      await this.database.executeSql(
+        'INSERT INTO detalles_venta (id_venta, id_comic, cantidad) VALUES (?, ?, ?)',
+        [id_venta, comic.id_comic, comic.quantity]
+      );
+    }
   }
 
   // Obtener historial de compras
@@ -294,7 +316,11 @@ export class ServicebdService {
         const userId = currentUser?.id_usuario;
 
         if (userId) {
-          const query = 'SELECT * FROM venta WHERE id_usuario = ?';
+          const query = `
+            SELECT v.*, dc.id_comic, dc.cantidad 
+            FROM venta v 
+            LEFT JOIN detalles_venta dc ON v.id_venta = dc.id_venta 
+            WHERE v.id_usuario = ?`;
           try {
             const result = await this.database.executeSql(query, [userId]);
             const compras = [];

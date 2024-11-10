@@ -1,3 +1,4 @@
+// carrito.page.ts
 import { Component } from '@angular/core';
 import { CartService, Comic } from '../services/cart.service';
 import { AlertController } from '@ionic/angular';
@@ -20,7 +21,7 @@ export class CarritoPage {
   }
 
   get totalPrice() {
-    return this.cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
+    return this.cartItems.reduce((total, item) => total + (item.precio * item.quantity), 0);
   }
 
   removeItem(item: Comic) {
@@ -55,22 +56,32 @@ export class CarritoPage {
     const userId = currentUser?.id_usuario;
 
     if (userId) {
-      const userIdNumber = Number(userId); // Convertir a número
+      const userIdNumber = Number(userId);
       const fechaVenta = new Date().toISOString().split('T')[0];
-      const id_estado = 1; // Establece un estado predeterminado
+      const id_estado = 1;
 
-      await this.servicebd.guardarVenta(fechaVenta, userIdNumber, total);
-      
-      this.cartService.clearCart();
-      this.cartItems = this.cartService.getCartItems();
+      try {
+        await this.servicebd.guardarVenta(fechaVenta, userIdNumber, total, this.cartItems, id_estado);
+        
+        this.cartService.clearCart();
+        this.cartItems = this.cartService.getCartItems();
 
-      const successAlert = await this.alertController.create({
-        header: 'Pago Exitoso',
-        message: 'Su compra ha sido realizada con éxito.',
-        buttons: ['OK'],
-      });
+        const successAlert = await this.alertController.create({
+          header: 'Pago Exitoso',
+          message: 'Su compra ha sido realizada con éxito.',
+          buttons: ['OK'],
+        });
 
-      await successAlert.present();
+        await successAlert.present();
+      } catch (error) {
+        console.error('Error al procesar el pago:', error);
+        const errorAlert = await this.alertController.create({
+          header: 'Error',
+          message: 'Hubo un problema al procesar su pago. Por favor, inténtelo de nuevo más tarde.',
+          buttons: ['OK'],
+        });
+        await errorAlert.present();
+      }
     } else {
       const errorAlert = await this.alertController.create({
         header: 'Error',

@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { MenuController, AlertController } from '@ionic/angular';
-import { CartService } from '../services/cart.service'; // Asegúrate de que la ruta sea correcta
+import { CartService } from '../services/cart.service'; 
 import { Router } from '@angular/router';
+import { Comic } from '../../services/comic'; 
 
 @Component({
   selector: 'app-comicsmarvel',
@@ -9,66 +10,114 @@ import { Router } from '@angular/router';
   styleUrls: ['./comicsmarvel.page.scss'],
 })
 export class ComicsmarvelPage {
-  comics = [
-    {
-      title: 'The Incredible Hulk And Now The Wolverine!',
-      price: 22990, 
-      image: 'assets/img/hulk.png',
-      link: '/hulk',
-      quantity: 1
-    },
-    {
-      title: 'The Amazing Spider-Man',
-      price: 18990, 
-      image: 'assets/img/spiderman.jpg',
-      link: '/spiderman',
-      quantity: 1
-    },
-    {
-      title: 'The Astonishing Ant-Man',
-      price: 23990, 
-      image: 'assets/img/antman.jpg',
-      link: '/antman',
-      quantity: 1
-    },
-    {
-      title: 'The Avengers: Captain America Lives Again!',
-      price: 22990, 
-      image: 'assets/img/capitanamerica.jpg',
-      link: '/capitanamerica',
-      quantity: 1
-    },
-    {
-      title: 'Marvel Super Heroes: Secret Wars',
-      price: 20990, 
-      image: 'assets/img/secretwars.jpg',
-      link: '/secretwars',
-      quantity: 1
-    },
-    {
-      title: 'The Invincible Iron Man: Cry Revolution!',
-      price: 24990, 
-      image: 'assets/img/ironman.jpg',
-      link: '/ironman',
-      quantity: 1
-    },
-    {
-      title: 'The Mighty Thor: The Wrath Of Odin!',
-      price: 21990, 
-      image: 'assets/img/thor.jpg',
-      link: '/thor',
-      quantity: 1
-    },
-    {
-      title: "Black Widow: Widow's Sting",
-      price: 24990, 
-      image: 'assets/img/blackwidow.jpg',
-      link: '/blackwidow',
-      quantity: 1
-    }
-  ];
+  comics: Comic[] = [
+    // Cómic: The Incredible Hulk And Now The Wolverine!
+    new Comic(
+        '9', // ID único del cómic
+        1, // Cantidad inicial en el carrito
+        'The Incredible Hulk And Now The Wolverine!', // Nombre del cómic
+        22990, // Precio del cómic
+        100, // Cantidad disponible en stock
+        'Descripción del cómic', // Descripción del cómic
+        'assets/img/hulk.png', // Ruta de la imagen del cómic
+        'marvel', // Categoría del cómic
+        '/hulk' // Enlace para navegación a la página del cómic
+    ),
+
+    // Cómic: The Amazing Spider-Man
+    new Comic(
+        '8', // ID único del cómic
+        1, // Cantidad inicial en el carrito
+        'The Amazing Spider-Man', // Nombre del cómic
+        18990, // Precio del cómic
+        100, // Cantidad disponible en stock
+        'Descripción del cómic', // Descripción del cómic
+        'assets/img/spiderman.jpg', // Ruta de la imagen del cómic
+        'marvel', // Categoría del cómic
+        '/spiderman' // Enlace para navegación a la página del cómic
+    ),
+
+    // Cómic: The Astonishing Ant-Man
+    new Comic(
+        '11', // ID único del cómic
+        1, // Cantidad inicial en el carrito
+        'The Astonishing Ant-Man', // Nombre del cómic
+        23990, // Precio del cómic
+        100, // Cantidad disponible en stock
+        'Descripción del cómic', // Descripción del cómic
+        'assets/img/antman.jpg', // Ruta de la imagen del cómic
+        'marvel', // Categoría del cómic
+        '/antman' // Enlace para navegación a la página del cómic
+    ),
+
+    // Cómic: The Avengers: Captain America Lives Again!
+    new Comic(
+        '12', // ID único del cómic
+        1, // Cantidad inicial en el carrito
+        'The Avengers: Captain America Lives Again!', // Nombre del cómic
+        22990, // Precio del cómic
+        100, // Cantidad disponible en stock
+        'Descripción del cómic', // Descripción del cómic
+        'assets/img/capitanamerica.jpg', // Ruta de la imagen del cómic
+        'marvel', // Categoría del cómic
+        '/capitanamerica' // Enlace para navegación a la página del cómic
+    ),
+
+    // Cómic: Marvel Super Heroes: Secret Wars
+    new Comic(
+        '13', // ID único del cómic
+        1, // Cantidad inicial en el carrito
+        'Marvel Super Heroes: Secret Wars', // Nombre del cómic
+        20990, // Precio del cómic
+        100, // Cantidad disponible en stock
+        'Descripción del cómic', // Descripción del cómic
+        'assets/img/secretwars.jpg', // Ruta de la imagen del cómic
+        'marvel', // Categoría del cómic
+        '/secretwars' // Enlace para navegación a la página del cómic
+    ),
+
+    // Cómic: The Invincible Iron Man: Cry Revolution!
+    new Comic(
+        '14', // ID único del cómic
+        1, // Cantidad inicial en el carrito
+        'The Invincible Iron Man: Cry Revolution!', // Nombre del cómic
+        24990, // Precio del cómic
+        100, // Cantidad disponible en stock
+        'Descripción del cómic', // Descripción del cómic
+        'assets/img/ironman.jpg', // Ruta de la imagen del cómic
+        'marvel', // Categoría del cómic
+        '/ironman' // Enlace para navegación a la página del cómic
+    ),
+
+    // Cómic: The Mighty Thor: The Wrath Of Odin!
+    new Comic(
+        '15', // ID único del cómic
+        1, // Cantidad inicial en el carrito
+        'The Mighty Thor: The Wrath Of Odin!', // Nombre del cómic
+        21990, // Precio del cómic
+        100, // Cantidad disponible en stock
+        'Descripción del cómic', // Descripción del cómic
+        'assets/img/thor.jpg', // Ruta de la imagen del cómic
+        'marvel', // Categoría del cómic
+        '/thor' // Enlace para navegación a la página del cómic
+    ),
+
+    // Cómic: Black Widow: Widow's Sting
+    new Comic(
+        '16', // ID único del cómic
+        1, // Cantidad inicial en el carrito
+        "Black Widow: Widow's Sting", // Nombre del cómic
+        24990, // Precio del cómic
+        100, // Cantidad disponible en stock
+        'Descripción del cómic', // Descripción del cómic
+        'assets/img/blackwidow.jpg', // Ruta de la imagen del cómic
+        'marvel', // Categoría del cómic
+        '/blackwidow' // Enlace para navegación a la página del cómic
+    )
+];
+
   
-  filteredComics = [...this.comics];  // inicializar con todos los cómics
+  filteredComics: Comic[] = [...this.comics];  // Inicializar con todos los cómics
 
   constructor(private menu: MenuController, private alertCtrl: AlertController, private cartService: CartService, private router: Router) {}
 
@@ -76,21 +125,21 @@ export class ComicsmarvelPage {
     this.menu.open('first');
   }
 
-  async addToCart(comic: any) {
+  async addToCart(comic: Comic) {
     this.cartService.addToCart({ ...comic });
     const alert = await this.alertCtrl.create({
       header: 'Añadido al Carro',
-      message: `Has añadido ${comic.quantity} de ${comic.title} al carrito.`,
+      message: `Has añadido ${comic.quantity} de ${comic.nombre_comic} al carrito.`,
       buttons: ['OK']
     });
     await alert.present();
   }
 
-  increment(comic: any) {
+  increment(comic: Comic) {
     comic.quantity++;  // Aumenta la cantidad del cómic
   }
 
-  decrement(comic: any) {
+  decrement(comic: Comic) {
     if (comic.quantity > 1) { // Evita que la cantidad sea menor que 1
       comic.quantity--;  // Disminuye la cantidad del cómic
     }
@@ -105,7 +154,7 @@ export class ComicsmarvelPage {
 
     if (searchTerm && searchTerm.trim() !== '') {
       this.filteredComics = this.comics.filter((comic) => {
-        return comic.title.toLowerCase().includes(searchTerm);
+        return comic.nombre_comic.toLowerCase().includes(searchTerm);
       });
     } else {
       this.filteredComics = [...this.comics];

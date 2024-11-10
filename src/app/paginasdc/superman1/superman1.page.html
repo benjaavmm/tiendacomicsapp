@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/comicsdc"></ion-back-button>
     </ion-buttons>
-    <ion-title>SuperMan</ion-title>
+    <ion-title>Superman</ion-title>
     <ion-buttons slot="end">
       <ion-button>
         <ion-icon slot="icon-only" name="search"></ion-icon> <!-- Botón de Búsqueda -->
@@ -22,14 +22,14 @@
   <ion-card>
     <ion-img src="assets/img/superman1.jpg"></ion-img>
     <ion-card-header>
-      <ion-card-title>Superman #264: El Secreto del Mariscal de Campo Fantasma</ion-card-title>
+      <ion-card-title>{{ comic.nombre_comic }}</ion-card-title>
       <ion-card-subtitle>Descripción:</ion-card-subtitle>
-      <p>"En este emocionante número, Superman se enfrenta a un enemigo inusual: el Mariscal de Campo Fantasma. Este cómic promete acción, misterio y heroísmo mientras Superman se enfrenta a un desafío que va más allá de la fuerza física. ¡Prepárate para descubrir el secreto del Mariscal de Campo Fantasma en esta emocionante entrega!"</p>
+      <p>{{ comic.descripcion }}</p>
     </ion-card-header>
     <ion-card-content>
       <div class="comic-details">
         <h3>Detalles</h3>
-        <p>Precio: $18.800</p>
+        <p>Precio: {{ comic.precio | currency }}</p>
         <ion-item>
           <ion-label position="floating">Cantidad</ion-label>
           <ion-input type="number" min="1" [(ngModel)]="quantity"></ion-input>

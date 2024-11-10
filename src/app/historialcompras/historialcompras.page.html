@@ -1,19 +1,29 @@
 <ion-header>
   <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/home"></ion-back-button>
-    </ion-buttons>
-    <ion-title>Historial de Compras</ion-title>
+    <ion-title>Carrito</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <ion-list>
-    <ion-item *ngFor="let compra of (historialCompras$ | async)">
+    <ion-item *ngFor="let item of cartItems">
       <ion-label>
-        <h2>Fecha: {{ compra.f_venta }}</h2>
-        <p>Total: {{ compra.total | currency }}</p>
+        <h2>{{ item.nombre_comic }}</h2>
+        <img [src]="item.foto_comic" alt="{{ item.nombre_comic }}">
+        <p>Precio: {{ item.precio | currency }}</p>
+        <p>Cantidad: {{ item.quantity }}</p>
+        <ion-button (click)="removeItem(item)">Eliminar</ion-button>
+        <ion-button (click)="increaseQuantity(item)">+</ion-button>
+        <ion-button (click)="decreaseQuantity(item)">-</ion-button>
       </ion-label>
     </ion-item>
   </ion-list>
+  <ion-footer>
+    <ion-toolbar>
+      <ion-title>Total: {{ totalPrice | currency }}</ion-title>
+      <ion-buttons slot="end">
+        <ion-button (click)="checkout()">Comprar</ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-footer>
 </ion-content>

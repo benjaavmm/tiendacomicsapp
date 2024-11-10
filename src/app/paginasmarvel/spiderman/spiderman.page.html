@@ -22,14 +22,14 @@
   <ion-card>
     <ion-img src="assets/img/spiderman.jpg"></ion-img>
     <ion-card-header>
-      <ion-card-title>The Amazing Spider-Man</ion-card-title>
+      <ion-card-title>{{ comic.nombre_comic }}</ion-card-title>
       <ion-card-subtitle>Descripción:</ion-card-subtitle>
-      <p>"The Amazing Spider-Man, un pilar del universo Marvel Comics, sigue las hazañas de Peter Parker, un estudiante de secundaria que adquiere habilidades arácnidas tras ser mordido por una araña radioactiva. Enfrentando desafíos personales y supervillanos icónicos, Spider-Man lucha contra el crimen en Nueva York mientras equilibra su vida como héroe y su identidad secreta."</p>
+      <p>{{ comic.descripcion }}</p>
     </ion-card-header>
     <ion-card-content>
       <div class="comic-details">
         <h3>Detalles</h3>
-        <p>Precio: $18.990</p>
+        <p>Precio: {{ comic.precio | currency }}</p>
         <ion-item>
           <ion-label position="floating">Cantidad</ion-label>
           <ion-input type="number" min="1" [(ngModel)]="quantity"></ion-input>

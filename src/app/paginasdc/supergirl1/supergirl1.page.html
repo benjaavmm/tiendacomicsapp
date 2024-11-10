@@ -3,16 +3,16 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/comicsdc"></ion-back-button>
     </ion-buttons>
-    <ion-title>SuperGirl</ion-title>
+    <ion-title>Supergirl</ion-title>
     <ion-buttons slot="end">
       <ion-button>
-        <ion-icon slot="icon-only" name="search"></ion-icon> <!-- Botón de Búsqueda -->
+        <ion-icon slot="icon-only" name="search"></ion-icon>
       </ion-button>
       <ion-button routerLink="/carrito">
-        <ion-icon slot="icon-only" name="cart"></ion-icon> <!-- Botón de Carrito -->
+        <ion-icon slot="icon-only" name="cart"></ion-icon>
       </ion-button>
       <ion-button routerLink="/perfil">
-        <ion-icon slot="icon-only" name="person-circle-outline"></ion-icon> <!-- Ícono de Perfil -->
+        <ion-icon slot="icon-only" name="person-circle-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -22,19 +22,19 @@
   <ion-card>
     <ion-img src="assets/img/Supergirl.jpg"></ion-img>
     <ion-card-header>
-      <ion-card-title>Supergirl #3: El Reinado de los Superhombres Cibernéticos</ion-card-title>
+      <ion-card-title>{{ comic.nombre_comic }}</ion-card-title>
       <ion-card-subtitle>Descripción:</ion-card-subtitle>
-      <p>"Descubre el emocionante capítulo de Supergirl #3, donde Kara Zor-El enfrenta una amenaza que golpea cerca del corazón..."</p>
+      <p>{{ comic.descripcion }}</p>
     </ion-card-header>
     <ion-card-content>
       <div class="comic-details">
         <h3>Detalles</h3>
-        <p>Precio: $17.000</p>
+        <p>Precio: {{ comic.precio | currency }}</p>
         <ion-item>
           <ion-label position="floating">Cantidad</ion-label>
           <ion-input type="number" min="1" [(ngModel)]="quantity"></ion-input>
         </ion-item>
-        <ion-button expand="full" class="add-to-cart" (click)="addToCart()">Añadir al Carrito</ion-button>
+        <ion-button expand="full" color="primary" (click)="addToCart()">Añadir al Carrito</ion-button>
       </div>
     </ion-card-content>
   </ion-card>

@@ -12,16 +12,21 @@ export class TokyorevengersPage implements OnInit {
 
   // Define el objeto Comic
   comic: Comic = {
-    title: 'Tokyo Revengers',
-    price: 12990,
-    image: 'assets/img/tokyorevengers.jpg',
+    id_comic: '8',
+    nombre_comic: 'Tokyo Revengers',
+    precio: 12990,
+    stock: 100,
+    descripcion: '"Takemichi, un fracasado que fue miembro de una banda en su juventud, salta 12 años atrás en el tiempo para volver al instituto y salvar a su exnovia, Hina, que en la actualidad ha sido asesinada por la organización criminal Tokyo Manjikai. Con cada viaje temporal, Takemichi influye en los que le rodean y poco a poco va cambiando el pasado… ¿pero eso será suficiente para salvar a Hina y evitar que la Tokyo Manjikai se convierta en una temida banda criminal?"',
+    foto_comic: 'assets/img/tokyorevengers.jpg',
+    id_categoria: '1',
     quantity: 0 // Este valor se actualizará al añadir al carrito
+    ,
+    link: ''
   };
 
-  constructor(private alertCtrl: AlertController, private cartService: CartService) { }
+  constructor(private alertCtrl: AlertController, private cartService: CartService) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   async addToCart() {
     // Añade el cómic al carrito
@@ -29,7 +34,7 @@ export class TokyorevengersPage implements OnInit {
 
     const alert = await this.alertCtrl.create({
       header: 'Añadido al Carro',
-      message: `Has añadido ${this.quantity} de ${this.comic.title} al carrito.`,
+      message: `Has añadido ${this.quantity} de ${this.comic.nombre_comic} al carrito.`,
       buttons: ['OK']
     });
     await alert.present();
