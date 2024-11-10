@@ -21,7 +21,7 @@ export class LoginPage {
   async onSubmit(form: NgForm) {
     if (form.valid) {
       // Simulación de validación para el administrador
-      if (this.username === 'admin@admin.com' && this.password === 'admin123') {
+      if (this.username === 'admin@admin.com' && this.password === 'Admin+123') {
         const alert = await this.alertCtrl.create({
           header: 'Bienvenido Administrador',
           message: '¡Inicio de sesión exitoso!',
