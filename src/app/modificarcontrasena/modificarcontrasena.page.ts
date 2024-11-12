@@ -30,7 +30,7 @@ export class ModificarContrasenaPage {
     if (!this.newPassword) {
       this.newPasswordError = 'La nueva contraseña es obligatoria.';
     } else if (!this.isPasswordValid(this.newPassword)) {
-      this.newPasswordError = 'Debe tener al menos 8 caracteres y una letra mayúscula.';
+      this.newPasswordError = 'Debe tener al menos 8 caracteres, una letra mayúscula y un caracter especial.';
     }
 
     // Validar confirmación de contraseña
@@ -55,8 +55,11 @@ export class ModificarContrasenaPage {
   private isPasswordValid(password: string): boolean {
     const minLength = 8;
     const hasUpperCase = /[A-Z]/.test(password);
-    return password.length >= minLength && hasUpperCase; // Validar longitud y mayúscula
+    const hasNumber = /\d/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password); // Verificar carácter especial
+    return password.length >= minLength && hasUpperCase && hasNumber && hasSpecialChar; // Validar longitud, mayúscula, número y carácter especial
   }
+  
 
   private async showSuccessAlert() {
     const alert = await this.alertCtrl.create({
