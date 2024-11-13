@@ -4,13 +4,13 @@ import { Injectable } from '@angular/core';
 export class Comic {
   id_comic: string;
   quantity: number;
-  nombre_comic: string; // Cambiado de 'title' a 'nombre_comic'
-  precio: number; // Cambiado de 'price' a 'precio'
+  nombre_comic: string;
+  precio: number; 
   stock: number;
   descripcion: string;
-  foto_comic: string; // Cambiado de 'image' a 'foto_comic'
+  foto_comic: string; 
   id_categoria: string;
-  link: string; // Nueva propiedad añadida
+  link: string;
 
   constructor(
     id_comic: string,
@@ -21,7 +21,7 @@ export class Comic {
     descripcion: string,
     foto_comic: string,
     id_categoria: string,
-    link: string // Añadido al constructor
+    link: string
   ) {
     this.id_comic = id_comic;
     this.quantity = quantity;
@@ -31,7 +31,7 @@ export class Comic {
     this.descripcion = descripcion;
     this.foto_comic = foto_comic;
     this.id_categoria = id_categoria;
-    this.link = link; // Asignación de la nueva propiedad
+    this.link = link;
   }
 }
 
@@ -39,7 +39,7 @@ export class Comic {
   providedIn: 'root'
 })
 export class CartService {
-  private cartItems: Comic[] = []; // Arreglo para almacenar los cómics en el carrito
+  private cartItems: Comic[] = []; 
 
   // Agregar un cómic al carrito
   addToCart(item: Comic) {
@@ -56,8 +56,8 @@ export class CartService {
         item.descripcion,
         item.foto_comic,
         item.id_categoria,
-        item.link // Asegúrate de incluir el link aquí
-      )); // Agregar nuevo cómic al carrito
+        item.link 
+      )); 
     }
   }
 

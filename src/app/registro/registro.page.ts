@@ -55,6 +55,13 @@ export class RegistroPage {
         return;
       }
 
+      // Validar formato de RUT
+      const rutPattern = /^[0-9]+-[0-9Kk]{1}$/;
+      if (!rutPattern.test(this.rut)) {
+        await this.presentAlert('Error', 'El RUT debe seguir el formato 12345678-9 o 12345678-K.');
+        return;
+      }
+
       // Verificar que el nombre no contenga números
       if (/\d/.test(this.nombre)) {
         await this.presentAlert('Error', 'El nombre no debe contener números.');
@@ -68,9 +75,9 @@ export class RegistroPage {
       }
 
       // Validar formato de teléfono
-      const phonePattern = /^\+?[0-9\s]+$/;
+      const phonePattern = /^\+569[0-9]{8}$/; // Asegurando que el teléfono tenga el formato correcto
       if (!phonePattern.test(this.telefono)) {
-        await this.presentAlert('Error', 'El teléfono solo puede contener números y el símbolo +.');
+        await this.presentAlert('Error', 'El teléfono debe tener el formato +569XXXXXXX.');
         return;
       }
 

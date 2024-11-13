@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { HistorialcomprasRoutingModule } from './historialcompras-routing.module';
-import { HistorialCompraPage } from './historialcompras.page';
+import { HistorialComprasPage } from './historialcompras.page';
 
 @NgModule({
   imports: [
@@ -12,6 +12,6 @@ import { HistorialCompraPage } from './historialcompras.page';
     IonicModule,
     HistorialcomprasRoutingModule
   ],
-  declarations: [HistorialCompraPage]
+  declarations: [HistorialComprasPage]
 })
 export class HistorialcomprasModule {}

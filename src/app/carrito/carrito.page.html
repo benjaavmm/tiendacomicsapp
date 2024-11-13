@@ -11,11 +11,11 @@
   <ion-list>
     <ion-item *ngFor="let item of cartItems">
       <ion-thumbnail slot="start">
-        <img [src]="item.foto_comic" alt="{{ item.nombre_comic }}"> <!-- Cambiado de 'image' a 'foto_comic' -->
+        <img [src]="item.foto_comic" alt="{{ item.nombre_comic }}"> 
       </ion-thumbnail>
       <ion-label>
-        <h2>{{ item.nombre_comic }}</h2> <!-- Cambiado de 'title' a 'nombre_comic' -->
-        <p>{{ item.precio | currency }}</p> <!-- Cambiado de 'price' a 'precio' -->
+        <h2>{{ item.nombre_comic }}</h2> 
+        <p>{{ item.precio | currency }}</p> 
         <div>
           <ion-button size="small" fill="outline" (click)="decreaseQuantity(item)" [disabled]="item.quantity <= 1">-</ion-button>
           <span>{{ item.quantity }}</span>

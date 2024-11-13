@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { HistorialCompraPage } from './historialcompras.page';
+import { HistorialComprasPage } from './historialcompras.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: HistorialCompraPage
+    component: HistorialComprasPage
   }
 ];
 

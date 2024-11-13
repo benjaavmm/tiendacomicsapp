@@ -1,8 +1,8 @@
-// carrito.page.ts
 import { Component } from '@angular/core';
 import { CartService, Comic } from '../services/cart.service';
 import { AlertController } from '@ionic/angular';
 import { ServicebdService } from '../../services/servicebd.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-carrito',
@@ -41,37 +41,64 @@ export class CarritoPage {
         {
           text: 'Sí',
           handler: () => {
+            console.log('Usuario ha confirmado el pago.');
             this.processPayment();
           },
         },
       ],
     });
-
+  
     await alert.present();
   }
 
   async processPayment() {
+    console.log('Iniciando proceso de pago...');
+  
+    // Verifica si hay cómics en el carrito
+    if (this.cartItems.length === 0) {
+      const alert = await this.alertController.create({
+        header: 'Carrito Vacío',
+        message: 'No hay cómics agregados en el carrito.',
+        buttons: ['OK'],
+      });
+      await alert.present();
+      return; // Salir del método si el carrito está vacío
+    }
+  
     const total = this.totalPrice;
-    const currentUser = await this.servicebd.getCurrentUser().toPromise();
+    const currentUser = await firstValueFrom(this.servicebd.getCurrentUser());
+    console.log('Usuario actual:', currentUser);
     const userId = currentUser?.id_usuario;
-
+  
     if (userId) {
       const userIdNumber = Number(userId);
-      const fechaVenta = new Date().toISOString().split('T')[0];
+      const fechaVenta = new Date().toISOString();
       const id_estado = 1;
-
+  
+      // Crear un array de objetos del tipo Comic
+      const comicsToSave: Comic[] = this.cartItems.map(item => ({
+        id_comic: item.id_comic,
+        nombre_comic: item.nombre_comic,
+        precio: item.precio,
+        foto_comic: item.foto_comic,
+        quantity: item.quantity,
+        stock: item.stock, // Asegúrate de incluir stock
+        descripcion: item.descripcion, // Asegúrate de incluir descripcion
+        id_categoria: item.id_categoria, // Asegúrate de incluir id_categoria
+        link: item.link // Asegúrate de incluir link
+      }));
+  
       try {
-        await this.servicebd.guardarVenta(fechaVenta, userIdNumber, total, this.cartItems, id_estado);
-        
+        console.log('Guardando venta...', { fechaVenta, userIdNumber, total, comicsToSave });
+        await this.servicebd.guardarVenta(fechaVenta, userIdNumber, total, comicsToSave, id_estado);
         this.cartService.clearCart();
         this.cartItems = this.cartService.getCartItems();
-
+  
         const successAlert = await this.alertController.create({
           header: 'Pago Exitoso',
           message: 'Su compra ha sido realizada con éxito.',
           buttons: ['OK'],
         });
-
         await successAlert.present();
       } catch (error) {
         console.error('Error al procesar el pago:', error);
@@ -83,6 +110,7 @@ export class CarritoPage {
         await errorAlert.present();
       }
     } else {
+      console.error('No se pudo obtener el usuario actual.');
       const errorAlert = await this.alertController.create({
         header: 'Error',
         message: 'No se pudo obtener el usuario actual.',
@@ -91,16 +119,16 @@ export class CarritoPage {
       await errorAlert.present();
     }
   }
-
+  
+  // Método para aumentar la cantidad de un artículo
   increaseQuantity(item: Comic) {
-    if (item.quantity < 10) {
-      item.quantity += 1;
-    }
+    item.quantity += 1; // Aumenta la cantidad en 1
   }
-
+  
+  // Método para disminuir la cantidad de un artículo
   decreaseQuantity(item: Comic) {
     if (item.quantity > 1) {
-      item.quantity -= 1;
+      item.quantity -= 1; // Disminuye la cantidad en 1
     }
-}
-}
+  }
+}  

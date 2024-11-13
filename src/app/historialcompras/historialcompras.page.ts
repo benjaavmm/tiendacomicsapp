@@ -1,16 +1,17 @@
 import { Component } from '@angular/core';
 import { ServicebdService } from '../../services/servicebd.service';
 import { Observable } from 'rxjs';
+import { Comic } from '../../services/comic'; // Asegúrate de importar la clase Comic
 
 @Component({
-  selector: 'app-historialcompra',
+  selector: 'app-historialcompras',
   templateUrl: './historialcompras.page.html',
   styleUrls: ['./historialcompras.page.scss'],
 })
-export class HistorialCompraPage {
+export class HistorialComprasPage {
   historialCompras$?: Observable<any[]>;
-  cartItems: any[] = []; // Agregar esta propiedad
-  totalPrice: number = 0; // Agregar esta propiedad
+  comprasPorFecha: { fecha: string; items: { comic: Comic; cantidad: number }[] }[] = [];
+  totalPrice: number = 0;
 
   constructor(private servicebd: ServicebdService) {
     this.loadHistorialCompras();
@@ -19,38 +20,29 @@ export class HistorialCompraPage {
   loadHistorialCompras() {
     this.historialCompras$ = this.servicebd.getHistorialCompras();
     this.historialCompras$.subscribe(items => {
-      this.cartItems = items; // Asignar los items al carrito
-      this.calculateTotal(); // Calcular el total
+      this.groupComprasPorFecha(items);
     });
   }
 
-  removeItem(item: any) {
-    this.cartItems = this.cartItems.filter(cartItem => cartItem.id_comic !== item.id_comic);
-    this.calculateTotal(); // Recalcular el total después de eliminar
-  }
+  groupComprasPorFecha(items: any[]) {
+    const grouped = items.reduce((acc, item) => {
+      const fecha = item.f_venta.split('T')[0]; // Formato de fecha ISO
+      if (!acc[fecha]) {
+        acc[fecha] = { fecha, items: [] };
+      }
+      // Suponiendo que 'item' tiene las propiedades del cómic y 'cantidad'
+      acc[fecha].items.push({ comic: item, cantidad: item.cantidad }); // Aquí se usa 'cantidad'
+      return acc;
+    }, {});
 
-  increaseQuantity(item: any) {
-    const cartItem = this.cartItems.find(cartItem => cartItem.id_comic === item.id_comic);
-    if (cartItem) {
-      cartItem.quantity++;
-      this.calculateTotal(); // Recalcular el total después de aumentar cantidad
-    }
-  }
-
-  decreaseQuantity(item: any) {
-    const cartItem = this.cartItems.find(cartItem => cartItem.id_comic === item.id_comic);
-    if (cartItem && cartItem.quantity > 1) {
-      cartItem.quantity--;
-      this.calculateTotal(); // Recalcular el total después de disminuir cantidad
-    }
+    this.comprasPorFecha = Object.values(grouped);
+    this.calculateTotal();
   }
 
   calculateTotal() {
-    this.totalPrice = this.cartItems.reduce((total, item) => total + (item.precio * item.quantity), 0);
-  }
-
-  checkout() {
-    // Implementa la lógica de compra aquí
-    console.log('Procediendo a la compra', this.cartItems);
+    this.totalPrice = this.comprasPorFecha.reduce((total, compra) => {
+      const compraTotal = compra.items.reduce((subtotal, item) => subtotal + (item.comic.precio * item.cantidad), 0);
+      return total + compraTotal;
+    }, 0);
   }
 }

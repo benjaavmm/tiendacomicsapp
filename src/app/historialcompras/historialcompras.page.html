@@ -1,29 +1,33 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Carrito</ion-title>
+    <ion-title>Historial de Compras</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <ion-list>
-    <ion-item *ngFor="let item of cartItems">
+    <ion-item *ngFor="let compra of comprasPorFecha">
       <ion-label>
-        <h2>{{ item.nombre_comic }}</h2>
-        <img [src]="item.foto_comic" alt="{{ item.nombre_comic }}">
-        <p>Precio: {{ item.precio | currency }}</p>
-        <p>Cantidad: {{ item.quantity }}</p>
-        <ion-button (click)="removeItem(item)">Eliminar</ion-button>
-        <ion-button (click)="increaseQuantity(item)">+</ion-button>
-        <ion-button (click)="decreaseQuantity(item)">-</ion-button>
+        <h2>Fecha de Compra: {{ compra.fecha }}</h2>
+        <ion-list>
+          <ion-item *ngFor="let item of compra.items">
+            <ion-thumbnail slot="start">
+              <img [src]="item.comic.foto_comic" alt="{{ item.comic.nombre_comic }}">
+            </ion-thumbnail>
+            <ion-label>
+              <h3>{{ item.comic.nombre_comic }}</h3>
+              <p>Cantidad: {{ item.cantidad }}</p>
+              <p>Precio: {{ item.comic.precio | currency }}</p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
       </ion-label>
     </ion-item>
   </ion-list>
+
   <ion-footer>
     <ion-toolbar>
-      <ion-title>Total: {{ totalPrice | currency }}</ion-title>
-      <ion-buttons slot="end">
-        <ion-button (click)="checkout()">Comprar</ion-button>
-      </ion-buttons>
+      <ion-title>Total de Compras: {{ totalPrice | currency }}</ion-title>
     </ion-toolbar>
   </ion-footer>
 </ion-content>

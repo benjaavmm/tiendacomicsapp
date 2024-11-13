@@ -56,7 +56,7 @@ export class ModificarContrasenaPage {
     const minLength = 8;
     const hasUpperCase = /[A-Z]/.test(password);
     const hasNumber = /\d/.test(password);
-    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password); // Verificar carácter especial
+    const hasSpecialChar = /[!@#$%^&*+(),.?":{}|<>]/.test(password); // Verificar carácter especial
     return password.length >= minLength && hasUpperCase && hasNumber && hasSpecialChar; // Validar longitud, mayúscula, número y carácter especial
   }
   

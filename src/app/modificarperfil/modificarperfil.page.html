@@ -29,21 +29,27 @@
 
       <ion-item>
         <ion-label position="floating">Teléfono</ion-label>
-        <ion-input type="text" name="telefono" [(ngModel)]="telefono" required #telefonoInput="ngModel"></ion-input>
+        <ion-input type="text" name="telefono" [(ngModel)]="telefono" required pattern="^\+569[0-9]{8}$" #telefonoInput="ngModel"></ion-input>
       </ion-item>
       <div *ngIf="telefonoInput.invalid && (telefonoInput.dirty || telefonoInput.touched)" class="error-message">
         <div *ngIf="telefonoInput.errors?.['required']">
           El teléfono es obligatorio.
         </div>
+        <div *ngIf="telefonoInput.errors?.['pattern']">
+          El teléfono debe tener el formato +569XXXXXXX .
+        </div>
       </div>
 
       <ion-item>
         <ion-label position="floating">Dirección</ion-label>
-        <ion-input type="text" name="direccion" [(ngModel)]="direccion" required #direccionInput="ngModel"></ion-input>
+        <ion-input type="text" name="direccion" [(ngModel)]="direccion" required pattern="^[A-Za-z0-9\s,]+$" #direccionInput="ngModel"></ion-input>
       </ion-item>
       <div *ngIf="direccionInput.invalid && (direccionInput.dirty || direccionInput.touched)" class="error-message">
         <div *ngIf="direccionInput.errors?.['required']">
           La dirección es obligatoria.
+        </div>
+        <div *ngIf="direccionInput.errors?.['pattern']">
+          La dirección no puede contener caracteres especiales.
         </div>
       </div>
 

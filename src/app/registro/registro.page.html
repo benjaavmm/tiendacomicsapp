@@ -15,10 +15,11 @@
     <form (ngSubmit)="onSubmit(registroForm)" #registroForm="ngForm" novalidate>
       <ion-item>
         <ion-label position="floating">RUT</ion-label>
-        <ion-input type="text" name="rut" [(ngModel)]="rut" required></ion-input>
+        <ion-input type="text" name="rut" [(ngModel)]="rut" required pattern="^[0-9]+-[0-9Kk]{1}$"></ion-input>
       </ion-item>
       <div *ngIf="registroForm.submitted || (registroForm.controls['rut']?.dirty && registroForm.controls['rut']?.invalid)">
         <ion-text color="danger" *ngIf="registroForm.controls['rut']?.errors?.['required']">El RUT es requerido.</ion-text>
+        <ion-text color="danger" *ngIf="registroForm.controls['rut']?.errors?.['pattern']">El RUT debe seguir el formato 12345678-9 o 12345678-K.</ion-text>
       </div>
 
       <ion-item>
@@ -58,11 +59,11 @@
 
       <ion-item>
         <ion-label position="floating">Teléfono</ion-label>
-        <ion-input type="tel" name="telefono" [(ngModel)]="telefono" required pattern="^\+?[0-9\s]+$"></ion-input>
+        <ion-input type="tel" name="telefono" [(ngModel)]="telefono" required pattern="^\+569[0-9]{8}$"></ion-input>
       </ion-item>
       <div *ngIf="registroForm.submitted || (registroForm.controls['telefono']?.dirty && registroForm.controls['telefono']?.invalid)">
         <ion-text color="danger" *ngIf="registroForm.controls['telefono']?.errors?.['required']">El teléfono es requerido.</ion-text>
-        <ion-text color="danger" *ngIf="registroForm.controls['telefono']?.errors?.['pattern']">El teléfono solo puede contener números y el símbolo +.</ion-text>
+        <ion-text color="danger" *ngIf="registroForm.controls['telefono']?.errors?.['pattern']">El teléfono debe tener el formato +569XXXXXXX.</ion-text>
       </div>
 
       <ion-item>
