@@ -34,6 +34,8 @@ export class ServicebdService {
       telefono VARCHAR(20) NOT NULL,
       clave VARCHAR(100) NOT NULL,
       id_rol INTEGER,
+      pregunta_seguridad VARCHAR(100) NOT NULL,
+      respuesta_seguridad VARCHAR(100) NOT NULL,
       FOREIGN KEY (id_rol) REFERENCES rol (id_rol)
     );`;
 
@@ -85,11 +87,6 @@ export class ServicebdService {
     private alertController: AlertController
   ) {
     this.initializeDatabase();
-    const storedUser = localStorage.getItem('currentUser');
-    console.log('Usuario almacenado en localStorage:', storedUser);
-    if (storedUser) {
-      this.currentUser.next(JSON.parse(storedUser));
-    }
   }
 
   // Obtener estado de la base de datos
@@ -105,6 +102,11 @@ export class ServicebdService {
   // Obtener usuario actual
   getCurrentUser(): Observable<Usuario | null> {
     return this.currentUser.asObservable();
+  }
+
+  // Obtener la instancia de la base de datos
+  getDatabase(): SQLiteObject {
+    return this.database;
   }
 
   private async initializeDatabase() {
@@ -126,17 +128,11 @@ export class ServicebdService {
     try {
       // Crear tablas
       await this.database.executeSql(this.tablaRol, []);
-      console.log('Tabla rol creada.');
       await this.database.executeSql(this.tablaUsuario, []);
-      console.log('Tabla usuario creada.');
       await this.database.executeSql(this.tablaVenta, []);
-      console.log('Tabla venta creada.');
       await this.database.executeSql(this.tablaDetallesVenta, []);
-      console.log('Tabla detalles_venta creada.');
       await this.database.executeSql(this.tablaEstados, []);
-      console.log('Tabla estados creada.');
       await this.database.executeSql(this.tablaComics, []);
-      console.log('Tabla comics creada.');
       
       // Insertar roles por defecto
       await this.database.executeSql(
@@ -173,7 +169,9 @@ export class ServicebdService {
             direccion: res.rows.item(i).direccion,
             telefono: res.rows.item(i).telefono,
             clave: res.rows.item(i).clave,
-            id_rol: res.rows.item(i).id_rol
+            id_rol: res.rows.item(i).id_rol,
+            pregunta_seguridad: res.rows.item(i).pregunta_seguridad,
+            respuesta_seguridad: res.rows.item(i).respuesta_seguridad
           });
         }
       }
@@ -186,7 +184,6 @@ export class ServicebdService {
   // Registrar nuevo usuario
   async registrarUsuario(usuario: Usuario): Promise<boolean> {
     try {
-      // Verificar si el RUT ya existe
       const checkRUTQuery = 'SELECT * FROM usuario WHERE rut = ?';
       const checkRUTResult = await this.database.executeSql(checkRUTQuery, [usuario.rut]);
       if (checkRUTResult.rows.length > 0) {
@@ -194,7 +191,6 @@ export class ServicebdService {
         return false;
       }
 
-      // Verificar si el correo ya existe
       const checkEmailQuery = 'SELECT * FROM usuario WHERE correo = ?';
       const checkEmailResult = await this.database.executeSql(checkEmailQuery, [usuario.correo]);
       if (checkEmailResult.rows.length > 0) {
@@ -205,9 +201,9 @@ export class ServicebdService {
       const query = `
         INSERT INTO usuario (
           rut, nombre, apellidos, foto_usuario, correo,
-          direccion, telefono, clave, id_rol
+          direccion, telefono, clave, id_rol, pregunta_seguridad, respuesta_seguridad
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `;
       
       await this.database.executeSql(query, [
@@ -219,7 +215,9 @@ export class ServicebdService {
         usuario.direccion,
         usuario.telefono,
         usuario.clave,
-        usuario.id_rol || '1'
+        usuario.id_rol || '1',
+        usuario.pregunta_seguridad,
+        usuario.respuesta_seguridad
       ]);
       
       await this.cargarUsuarios();
@@ -244,8 +242,11 @@ export class ServicebdService {
       
       if (result.rows.length > 0) {
         const usuario = result.rows.item(0);
+        
+        // Almacena el usuario actual sin la contraseña
+        const { clave, ...usuarioSinClave } = usuario;
         this.currentUser.next(usuario); // Almacena el usuario actual
-        localStorage.setItem('currentUser', JSON.stringify(usuario)); // Guardar en localStorage
+        localStorage.setItem('currentUser', JSON.stringify(usuarioSinClave)); // Guardar en localStorage
         return usuario;
       }
       return null;
@@ -270,7 +271,6 @@ export class ServicebdService {
         WHERE id_usuario = ?
       `;
       await this.database.executeSql(query, [nombre, apellidos, telefono, direccion, fotoPerfil, userId]);
-      // Actualizar el usuario actual en el BehaviorSubject
       const currentUser = await this.getUserById(userId);
       this.currentUser.next(currentUser);
     } catch (error) {
@@ -299,83 +299,69 @@ export class ServicebdService {
   }
   
   // Método para guardar una venta y sus detalles
-async guardarVenta(f_venta: string, id_usuario: number, total: number, comics: Comic[], id_estado: number = 1): Promise<void> {
-  console.log('Datos para guardar la venta:', { f_venta, id_usuario, total, id_estado, comics });
-
-  try {
-      // Guardar la venta
+  async guardarVenta(f_venta: string, id_usuario: number, total: number, comics: Comic[], id_estado: number = 1): Promise<void> {
+    try {
       await this.database.executeSql(
-          'INSERT INTO venta (f_venta, id_usuario, total, id_estado) VALUES (?, ?, ?, ?)',
-          [f_venta, id_usuario, total, id_estado]
+        'INSERT INTO venta (f_venta, id_usuario, total, id_estado) VALUES (?, ?, ?, ?)',
+        [f_venta, id_usuario, total, id_estado]
       );
 
-      // Obtener el ID de la última venta insertada
       const id_venta = await this.database.executeSql('SELECT last_insert_rowid()', []).then(res => res.rows.item(0)['last_insert_rowid()']);
-      console.log('ID de la venta guardada:', id_venta);
 
-      // Crear una instancia de Venta
-      const nuevaVenta = new Venta(id_venta, f_venta, id_usuario, total, id_estado);
-      console.log('Nueva venta creada:', nuevaVenta);
-
-      // Guardar los detalles de la venta
       for (const comic of comics) {
-          if (comic.id_comic && comic.quantity) { // Verificación de propiedades
-              console.log('Guardando detalle de venta para comic:', comic);
-              await this.database.executeSql(
-                  'INSERT INTO detalles_venta (id_venta, id_comic, cantidad) VALUES (?, ?, ?)',
-                  [nuevaVenta.id_venta, comic.id_comic, comic.quantity]
-              );
-          } else {
-              console.warn('Comic no válido:', comic);
-          }
+        if (comic.id_comic && comic.quantity) {
+          await this.database.executeSql(
+            'INSERT INTO detalles_venta (id_venta, id_comic, cantidad) VALUES (?, ?, ?)',
+            [id_venta, comic.id_comic, comic.quantity]
+          );
+        }
       }
-      console.log('Detalles de venta guardados exitosamente.');
-  } catch (error) {
+    } catch (error) {
       console.error('Error al guardar la venta:', error);
-      throw error; // Lanza el error para que pueda ser manejado en el método que llama a guardarVenta
+      throw error;
+    }
   }
-}
 
-// Obtener historial de compras
-getHistorialCompras(): Observable<any[]> {
-  return new Observable(observer => {
+  // Obtener historial de compras
+  getHistorialCompras(): Observable<any[]> {
+    return new Observable(observer => {
       this.getCurrentUser().subscribe(async currentUser => {
-          const userId = currentUser?.id_usuario;
+        const userId = currentUser?.id_usuario;
 
-          if (userId) {
-              const query = `
-                  SELECT v.*, dc.id_comic, dc.cantidad, c.nombre_comic, c.foto_comic, c.precio 
-                  FROM venta v 
-                  LEFT JOIN detalles_venta dc ON v.id_venta = dc.id_venta 
-                  LEFT JOIN comics c ON dc.id_comic = c.id_comic
-                  WHERE v.id_usuario = ? ORDER BY v.f_venta DESC`;
-              try {
-                  const result = await this.database.executeSql(query, [userId]);
-                  const compras = [];
+        if (userId) {
+          const query = `
+            SELECT v.*, dc.id_comic, dc.cantidad, c.nombre_comic, c.foto_comic, c.precio 
+            FROM venta v 
+            LEFT JOIN detalles_venta dc ON v.id_venta = dc.id_venta 
+            LEFT JOIN comics c ON dc.id_comic = c.id_comic
+            WHERE v.id_usuario = ? ORDER BY v.f_venta DESC`;
+          try {
+            const result = await this.database.executeSql(query, [userId]);
+            const compras = [];
 
-                  for (let i = 0; i < result.rows.length; i++) {
-                      compras.push(result.rows.item(i));
-                  }
+            for (let i = 0; i < result.rows.length; i++) {
+              compras.push(result.rows.item(i));
+            }
 
-                  observer.next(compras);
-                  observer.complete();
-              } catch (error) {
-                  observer.error('Error al obtener el historial de compras: ' + error);
-              }
-          } else {
-              observer.error('No se encontró el usuario actual.');
+            observer.next(compras);
+            observer.complete();
+          } catch (error) {
+            observer.error('Error al obtener el historial de compras: ' + error);
           }
+        } else {
+          observer.error('No se encontró el usuario actual.');
+        }
       });
-  });
-}
+    });
+  }
 
-// Presentar alertas
-private async presentAlert(header: string, message: string) {
-  const alert = await this.alertController.create({
+  // Presentar alertas
+  private async presentAlert(header: string, message: string) {
+    const alert = await this.alertController.create({
       header,
       message,
       buttons: ['OK']
-  });
-  await alert.present();
-}
+    });
+    await alert.present();
+  }
 }

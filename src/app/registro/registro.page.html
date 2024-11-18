@@ -84,6 +84,25 @@
         <ion-text color="danger" *ngIf="contrasena !== confirmarContrasena">Las contraseñas no coinciden.</ion-text>
       </div>
 
+      <!-- Pregunta de Seguridad -->
+      <ion-item>
+        <ion-label position="floating">Pregunta de Seguridad</ion-label>
+        <ion-select [(ngModel)]="preguntaSeguridad" name="preguntaSeguridad" required>
+          <ion-select-option *ngFor="let pregunta of preguntas" [value]="pregunta">{{ pregunta }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <div *ngIf="registroForm.submitted || (registroForm.controls['preguntaSeguridad']?.dirty && registroForm.controls['preguntaSeguridad']?.invalid)">
+        <ion-text color="danger" *ngIf="registroForm.controls['preguntaSeguridad']?.errors?.['required']">La pregunta de seguridad es requerida.</ion-text>
+      </div>
+
+      <ion-item>
+        <ion-label position="floating">Respuesta de Seguridad</ion-label>
+        <ion-input type="text" name="respuestaSeguridad" [(ngModel)]="respuestaSeguridad" required></ion-input>
+      </ion-item>
+      <div *ngIf="registroForm.submitted || (registroForm.controls['respuestaSeguridad']?.dirty && registroForm.controls['respuestaSeguridad']?.invalid)">
+        <ion-text color="danger" *ngIf="registroForm.controls['respuestaSeguridad']?.errors?.['required']">La respuesta de seguridad es requerida.</ion-text>
+      </div>
+
       <!-- Campo para cargar la foto del usuario -->
       <ion-item>
         <ion-label position="floating">Foto de Usuario</ion-label>

@@ -22,6 +22,16 @@ export class RegistroPage {
   foto_usuario: any = '';
   id_rol: string = '1';
   fotoIngresada: boolean = false;
+  preguntaSeguridad: string = '';
+  respuestaSeguridad: string = '';
+
+  preguntas: string[] = [
+    '¿Cuál es el nombre de tu primera mascota?',
+    '¿Cuál es tu color favorito?',
+    '¿En qué ciudad naciste?',
+    '¿Cuál es el nombre de tu madre?',
+    '¿Cuál es tu comida favorita?'
+  ];
 
   constructor(
     private alertCtrl: AlertController,
@@ -62,15 +72,9 @@ export class RegistroPage {
         return;
       }
 
-      // Verificar que el nombre no contenga números
-      if (/\d/.test(this.nombre)) {
-        await this.presentAlert('Error', 'El nombre no debe contener números.');
-        return;
-      }
-
-      // Verificar que el apellido no contenga números
-      if (/\d/.test(this.apellido)) {
-        await this.presentAlert('Error', 'El apellido no debe contener números.');
+      // Verificar que el nombre y apellido no contengan números
+      if (/\d/.test(this.nombre) || /\d/.test(this.apellido)) {
+        await this.presentAlert('Error', 'El nombre y el apellido no deben contener números.');
         return;
       }
 
@@ -79,6 +83,11 @@ export class RegistroPage {
       if (!phonePattern.test(this.telefono)) {
         await this.presentAlert('Error', 'El teléfono debe tener el formato +569XXXXXXX.');
         return;
+      }
+
+      // Validar respuesta de seguridad insensible a mayúsculas
+      if (this.respuestaSeguridad) {
+        this.respuestaSeguridad = this.respuestaSeguridad.trim().toLowerCase();
       }
 
       // Crear objeto de usuario
@@ -92,7 +101,9 @@ export class RegistroPage {
         direccion: this.direccion,
         telefono: this.telefono,
         clave: this.contrasena,
-        id_rol: this.id_rol
+        id_rol: this.id_rol,
+        pregunta_seguridad: this.preguntaSeguridad, 
+        respuesta_seguridad: this.respuestaSeguridad,
       };
 
       // Registrar usuario
@@ -110,6 +121,8 @@ export class RegistroPage {
           }]
         });
         await alert.present();
+      } else {
+        await this.presentAlert('Error', 'Ocurrió un error al registrar el usuario. Intenta nuevamente.');
       }
     } else {
       await this.presentAlert('Error', 'Por favor, completa todos los campos obligatorios.');

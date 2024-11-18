@@ -9,4 +9,7 @@ export class Usuario {
     telefono: string = '';
     clave: string = '';
     id_rol: string = '';
+    pregunta_seguridad: string = ''; 
+    respuesta_seguridad: string = ''; 
+       
 }
