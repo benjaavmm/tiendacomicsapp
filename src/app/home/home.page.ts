@@ -76,18 +76,18 @@ export class HomePage implements OnInit, OnDestroy {
         '/demonslayer' // Enlace para navegación a la página del cómic
     ),
 
-    // Cómic: Batman Beyond
+    // Cómic: Marvel Super Heroes: Secret Wars
     new Comic(
-        '6', // ID único del cómic
-        1, // Cantidad inicial en el carrito
-        'Batman Beyond', // Nombre del cómic
-        21990, // Precio del cómic
-        10, // Cantidad disponible en stock
-        'Descripción de Batman Beyond', // Descripción del cómic
-        'assets/img/batman2.jpg', // Ruta de la imagen del cómic
-        'dc', // Categoría del cómic
-        '/batmanbeyond' // Enlace para navegación a la página del cómic
-    ),
+      '13', // ID único del cómic
+      1, // Cantidad inicial en el carrito
+      'Marvel Super Heroes: Secret Wars', // Nombre del cómic
+      20990, // Precio del cómic
+      100, // Cantidad disponible en stock
+      'Descripción del cómic', // Descripción del cómic
+      'assets/img/secretwars.jpg', // Ruta de la imagen del cómic
+      'marvel', // Categoría del cómic
+      '/secretwars' // Enlace para navegación a la página del cómic
+  ),
 
     // Cómic: Naruto
     new Comic(
