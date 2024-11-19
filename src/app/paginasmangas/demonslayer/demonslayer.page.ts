@@ -26,11 +26,19 @@ export class DemonslayerPage implements OnInit {
 
   constructor(private alertCtrl: AlertController, private cartService: CartService) { }
 
-  ngOnInit() {
+  ngOnInit() {}
+
+  // Función para cambiar la cantidad
+  changeQuantity(amount: number) {
+    const newQuantity = this.quantity + amount;
+
+    // Asegurarse de que la cantidad esté entre 1 y 10
+    if (newQuantity >= 1 && newQuantity <= 10) {
+      this.quantity = newQuantity;
+    }
   }
 
   async addToCart() {
-    // Añade el cómic al carrito
     this.cartService.addToCart({ ...this.comic, quantity: this.quantity });
 
     const alert = await this.alertCtrl.create({

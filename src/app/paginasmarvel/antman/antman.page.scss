@@ -15,4 +15,33 @@ ion-icon[name="cart"] {
   ion-icon[name="person-circle-outline"] {
     color: #f35454; /* Rojo para el perfil */
   }
+
+ /* Estilos para el item que contiene los botones y el input de cantidad */
+ .quantity-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+/* Estilos para los botones de incrementar y decrementar */
+.quantity-btn {
+  --background: #ff0404; /* Rojo para los botones */
+  --color: #ffffff;
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  padding: 0;
+  border-radius: 50%;
+}
+
+/* Estilo para el input de cantidad */
+.quantity-input {
+  text-align: center;
+  width: 60px;
+  margin: 0 10px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+}
  
