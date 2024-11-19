@@ -1,3 +1,12 @@
+
+
+export interface CompraDetalle {
+  fecha: string;
+  total: number;
+  id_venta: number;
+  items: Comic[];
+}
+
 export class Comic {
     id_comic: string;
     quantity: number;
@@ -28,6 +37,6 @@ export class Comic {
         this.descripcion = descripcion;
         this.foto_comic = foto_comic;
         this.id_categoria = id_categoria;
-        this.link = link; 
+        this.link = link;
     }
 }
