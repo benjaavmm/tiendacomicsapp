@@ -22,9 +22,20 @@ export class Ligadelajusticia1Page implements OnInit {
     link: ''
   };
 
+  
   constructor(private alertCtrl: AlertController, private cartService: CartService) { }
 
   ngOnInit() {}
+
+  // Función para cambiar la cantidad
+  changeQuantity(amount: number) {
+    const newQuantity = this.quantity + amount;
+
+    // Asegurarse de que la cantidad esté entre 1 y 10
+    if (newQuantity >= 1 && newQuantity <= 10) {
+      this.quantity = newQuantity;
+    }
+  }
 
   async addToCart() {
     this.cartService.addToCart({ ...this.comic, quantity: this.quantity });

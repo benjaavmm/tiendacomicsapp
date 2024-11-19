@@ -30,10 +30,19 @@
       <div class="comic-details">
         <h3>Detalles</h3>
         <p>Precio: {{ comic.precio | currency }}</p>
-        <ion-item>
-          <ion-label position="floating">Cantidad</ion-label>
-          <ion-input type="number" min="1" [(ngModel)]="quantity"></ion-input>
-        </ion-item>
+       <!-- Sección de cantidad con botones + y - -->
+       <ion-item class="quantity-item">
+        <ion-button (click)="changeQuantity(-1)" fill="clear" [disabled]="quantity <= 1" class="quantity-btn">
+          -
+        </ion-button>
+        
+        <!-- Campo de cantidad en el centro -->
+        <ion-input [(ngModel)]="quantity" type="number" min="1" max="10" readonly class="quantity-input"></ion-input>
+        
+        <ion-button (click)="changeQuantity(1)" fill="clear" [disabled]="quantity >= 10" class="quantity-btn">
+          +
+        </ion-button>
+      </ion-item>
         <ion-button expand="full" (click)="addToCart()">Añadir al Carrito</ion-button>
       </div>
     </ion-card-content>

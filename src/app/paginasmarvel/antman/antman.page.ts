@@ -24,7 +24,16 @@ export class AntmanPage implements OnInit {
 
   constructor(private alertCtrl: AlertController, private cartService: CartService) { }
 
-  ngOnInit() {
+  ngOnInit() {}
+
+  // Función para cambiar la cantidad
+  changeQuantity(amount: number) {
+    const newQuantity = this.quantity + amount;
+
+    // Asegurarse de que la cantidad esté entre 1 y 10
+    if (newQuantity >= 1 && newQuantity <= 10) {
+      this.quantity = newQuantity;
+    }
   }
 
   async addToCart() {
@@ -38,3 +47,4 @@ export class AntmanPage implements OnInit {
     await alert.present();
   }
 }
+
