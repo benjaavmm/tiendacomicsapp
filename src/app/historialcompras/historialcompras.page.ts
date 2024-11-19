@@ -1,48 +1,40 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ServicebdService } from '../../services/servicebd.service';
-import { Observable } from 'rxjs';
-import { Comic } from '../../services/comic'; // Asegúrate de importar la clase Comic
+import { Comic, CompraDetalle } from '../../services/compradetalle'; 
 
 @Component({
   selector: 'app-historialcompras',
   templateUrl: './historialcompras.page.html',
   styleUrls: ['./historialcompras.page.scss'],
 })
-export class HistorialComprasPage {
-  historialCompras$?: Observable<any[]>;
-  comprasPorFecha: { fecha: string; items: { comic: Comic; cantidad: number }[] }[] = [];
-  totalPrice: number = 0;
+export class HistorialComprasPage implements OnInit {
+  compras: CompraDetalle[] = [];
+  isLoading: boolean = true;
+  error: string | null = null;
 
-  constructor(private servicebd: ServicebdService) {
+  constructor(private servicebd: ServicebdService) {}
+
+  ngOnInit() {
     this.loadHistorialCompras();
   }
 
-  loadHistorialCompras() {
-    this.historialCompras$ = this.servicebd.getHistorialCompras();
-    this.historialCompras$.subscribe(items => {
-      this.groupComprasPorFecha(items);
-    });
-  }
-
-  groupComprasPorFecha(items: any[]) {
-    const grouped = items.reduce((acc, item) => {
-      const fecha = item.f_venta.split('T')[0]; // Formato de fecha ISO
-      if (!acc[fecha]) {
-        acc[fecha] = { fecha, items: [] };
+  async loadHistorialCompras() {
+    this.isLoading = true; // Mover la carga aquí para mejor manejo
+    this.servicebd.getHistorialCompras().subscribe(
+      (items) => {
+        this.compras = items; // Asignar directamente los items devueltos
+        this.isLoading = false; // Cambiar el estado de carga
+      },
+      (error) => {
+        this.error = 'Error al cargar el historial de compras';
+        this.isLoading = false; // Cambiar el estado de carga
+        console.error('Error:', error);
       }
-      // Suponiendo que 'item' tiene las propiedades del cómic y 'cantidad'
-      acc[fecha].items.push({ comic: item, cantidad: item.cantidad }); // Aquí se usa 'cantidad'
-      return acc;
-    }, {});
-
-    this.comprasPorFecha = Object.values(grouped);
-    this.calculateTotal();
+    );
   }
 
-  calculateTotal() {
-    this.totalPrice = this.comprasPorFecha.reduce((total, compra) => {
-      const compraTotal = compra.items.reduce((subtotal, item) => subtotal + (item.comic.precio * item.cantidad), 0);
-      return total + compraTotal;
-    }, 0);
+  // Calcular el subtotal para cada compra
+  calcularSubtotal(items: Comic[]): number {
+    return items.reduce((acc, item) => acc + (item.precio * item.quantity), 0);
   }
 }

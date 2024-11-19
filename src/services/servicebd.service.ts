@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { AlertController, Platform } from '@ionic/angular';
 import { Usuario } from './usuario';
 import { Comic } from './comic'; 
-import { Venta } from './venta';
+import { CompraDetalle } from './compradetalle';
 
 @Injectable({
   providedIn: 'root'
@@ -322,38 +322,65 @@ export class ServicebdService {
     }
   }
 
-  // Obtener historial de compras
-  getHistorialCompras(): Observable<any[]> {
-    return new Observable(observer => {
-      this.getCurrentUser().subscribe(async currentUser => {
-        const userId = currentUser?.id_usuario;
+  
+// Obtener historial de compras
+getHistorialCompras(): Observable<CompraDetalle[]> {
+  return new Observable(observer => {
+    this.getCurrentUser().subscribe(async currentUser => {
+      const userId = currentUser?.id_usuario;
 
-        if (userId) {
-          const query = `
-            SELECT v.*, dc.id_comic, dc.cantidad, c.nombre_comic, c.foto_comic, c.precio 
-            FROM venta v 
-            LEFT JOIN detalles_venta dc ON v.id_venta = dc.id_venta 
-            LEFT JOIN comics c ON dc.id_comic = c.id_comic
-            WHERE v.id_usuario = ? ORDER BY v.f_venta DESC`;
-          try {
-            const result = await this.database.executeSql(query, [userId]);
-            const compras = [];
+      if (userId) {
+        const query = `
+          SELECT v.*, dc.id_comic, dc.cantidad, c.nombre_comic, c.foto_comic, c.precio 
+          FROM venta v 
+          LEFT JOIN detalles_venta dc ON v.id_venta = dc.id_venta 
+          LEFT JOIN comics c ON dc.id_comic = c.id_comic
+          WHERE v.id_usuario = ? ORDER BY v.f_venta DESC`;
+        try {
+          const result = await this.database.executeSql(query, [userId]);
+          const comprasMap = new Map<number, CompraDetalle>();
 
-            for (let i = 0; i < result.rows.length; i++) {
-              compras.push(result.rows.item(i));
+          for (let i = 0; i < result.rows.length; i++) {
+            const item = result.rows.item(i);
+            const id_venta = item.id_venta;
+
+            if (!comprasMap.has(id_venta)) {
+              comprasMap.set(id_venta, {
+                fecha: new Date(item.f_venta).toLocaleDateString(),
+                total: item.total,
+                id_venta: id_venta,
+                items: []
+              });
             }
 
-            observer.next(compras);
-            observer.complete();
-          } catch (error) {
-            observer.error('Error al obtener el historial de compras: ' + error);
+            const compra = comprasMap.get(id_venta);
+            if (compra) {
+              compra.items.push(new Comic( // Usa el constructor de Comic
+                item.id_comic,
+                item.cantidad,
+                item.nombre_comic,
+                item.precio,
+                0, // stock (puedes ajustar según tu lógica)
+                '', // descripcion (puedes ajustar según tu lógica)
+                item.foto_comic,
+                '', // id_categoria (puedes ajustar según tu lógica)
+                '' // link (puedes ajustar según tu lógica)
+              ));
+            }
           }
-        } else {
-          observer.error('No se encontró el usuario actual.');
+
+          observer.next(Array.from(comprasMap.values()));
+          observer.complete();
+        } catch (error) {
+          observer.error('Error al obtener el historial de compras: ' + error);
         }
-      });
+      } else {
+        observer.error('No se encontró el usuario actual.');
+      }
     });
-  }
+  });
+}
+
 
   // Presentar alertas
   private async presentAlert(header: string, message: string) {
