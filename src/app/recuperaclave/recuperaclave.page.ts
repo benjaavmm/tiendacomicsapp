@@ -4,7 +4,7 @@ import { RecoveryService } from '../../services/recovery.service.service';
 import { AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { ServicebdService } from '../../services/servicebd.service';
-import { Usuario } from '../../services/usuario'; // Asegúrate de que esta importación sea correcta
+import { Usuario } from '../../services/usuario';
 
 @Component({
   selector: 'app-recuperaclave',
@@ -18,13 +18,13 @@ export class RecuperaclavePage {
   respuestaSeguridad: string = '';
   nuevaPassword: string = '';
   confirmarPassword: string = '';
-  usuario: Usuario | null = null; // Variable para almacenar la información del usuario
+  usuario: Usuario | null = null;
 
   constructor(
     private recoveryService: RecoveryService,
     private alertController: AlertController,
     private router: Router,
-    private servicebd: ServicebdService // Inyectar el servicio
+    private servicebd: ServicebdService
   ) {}
 
   async onSubmit(form: NgForm) {
@@ -32,15 +32,49 @@ export class RecuperaclavePage {
 
     switch (this.paso) {
       case 1:
-        await this.verificarCorreo();
+        if (this.validarCamposPaso1()) {
+          await this.verificarCorreo();
+        }
         break;
       case 2:
-        await this.verificarPreguntaSeguridad();
+        if (this.validarCamposPaso2()) {
+          await this.verificarPreguntaSeguridad();
+        }
         break;
       case 3:
-        await this.cambiarPassword();
+        if (this.validarCamposPaso3()) {
+          await this.cambiarPassword();
+        }
         break;
     }
+  }
+
+  private validarCamposPaso1(): boolean {
+    if (this.email.trim() === '') {
+      this.mostrarAlerta('Error', 'El campo de correo electrónico no puede estar vacío.');
+      return false;
+    }
+    return true;
+  }
+
+  private validarCamposPaso2(): boolean {
+    if (this.respuestaSeguridad.trim() === '') {
+      this.mostrarAlerta('Error', 'La respuesta de seguridad no puede estar vacía.');
+      return false;
+    }
+    return true;
+  }
+
+  private validarCamposPaso3(): boolean {
+    if (this.nuevaPassword.trim() === '') {
+      this.mostrarAlerta('Error', 'El campo de nueva contraseña no puede estar vacío.');
+      return false;
+    }
+    if (this.confirmarPassword.trim() === '') {
+      this.mostrarAlerta('Error', 'El campo de confirmar contraseña no puede estar vacío.');
+      return false;
+    }
+    return true;
   }
 
   private async verificarCorreo() {
