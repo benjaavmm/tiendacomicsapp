@@ -137,11 +137,13 @@ export class MangasPage {
   }
 
   increment(comic: Comic) {
-    comic.quantity++;  // Aumenta la cantidad del cómic
+    if (comic.quantity < 10) { // Asegura que la cantidad no sea mayor a 10
+      comic.quantity++;  // Aumenta la cantidad del cómic
+    }
   }
 
   decrement(comic: Comic) {
-    if (comic.quantity > 1) { // Evita que la cantidad sea menor que 1
+    if (comic.quantity > 1) { // Asegura que la cantidad no sea menor a 1
       comic.quantity--;  // Disminuye la cantidad del cómic
     }
   }

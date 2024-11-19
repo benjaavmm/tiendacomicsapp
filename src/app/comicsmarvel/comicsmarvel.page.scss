@@ -222,3 +222,28 @@ ion-button.add-too-cart {
   text-decoration: none;
   color: #0066cc;
 }
+
+/* Estilos para los botones de cantidad */
+.quantity-button {
+  background-color: #00bfff; /* Color normal del botón */
+  color: rgb(0, 0, 0); /* Color del texto del botón */
+  width: 30px;
+  height: 30px;
+  border: none; /* Sin borde */
+  border-radius: 5px; /* Esquinas redondeadas */
+  padding: 5px 10px; /* Espaciado interno */
+  cursor: pointer; /* Cambia el cursor al pasar el mouse */
+  transition: background-color 0.3s; /* Transición suave */
+}
+
+/* Estilo para el botón deshabilitado */
+.disabled-button {
+  background-color: #e0e0e0 !important; /* Color de fondo más claro (gris claro) */
+  color: #d0d0d0 !important; /* Texto más gris (deshabilitado) */
+  cursor: not-allowed; /* Cambia el cursor a un "no permitido" */
+}
+
+/* Restante de los estilos anteriores */
+.quantity-button:hover {
+  background-color: #0099cc;
+}

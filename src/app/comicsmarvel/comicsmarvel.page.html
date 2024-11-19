@@ -65,9 +65,17 @@
               <div class="quantity-box">
                 <label for="quantity" class="quantity-label">Cantidad</label>
                 <div class="quantity-controls">
-                  <button class="quantity-button" (click)="decrement(comic)">-</button>
-                  <input type="number" id="quantity" class="quantity-input" [(ngModel)]="comic.quantity" min="1" readonly />
-                  <button class="quantity-button" (click)="increment(comic)">+</button>
+                  <button class="quantity-button" 
+                          (click)="decrement(comic)" 
+                          [ngClass]="{'disabled-button': comic.quantity <= 1}">
+                    -
+                  </button>
+                  <input type="number" id="quantity" class="quantity-input" [(ngModel)]="comic.quantity" min="1" max="10" readonly />
+                  <button class="quantity-button" 
+                          (click)="increment(comic)" 
+                          [ngClass]="{'disabled-button': comic.quantity >= 10}">
+                    +
+                  </button>
                 </div>
               </div>
               <ion-button expand="full" class="add-too-cart" (click)="addToCart(comic)">Añadir al Carro</ion-button>

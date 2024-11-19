@@ -126,7 +126,9 @@ export class ComicsmarvelPage {
   }
 
   async addToCart(comic: Comic) {
-    this.cartService.addToCart({ ...comic });
+    // Agregar el cómic al carrito
+    this.cartService.addToCart({ ...comic, quantity: comic.quantity });
+
     const alert = await this.alertCtrl.create({
       header: 'Añadido al Carro',
       message: `Has añadido ${comic.quantity} de ${comic.nombre_comic} al carrito.`,
@@ -136,14 +138,17 @@ export class ComicsmarvelPage {
   }
 
   increment(comic: Comic) {
-    comic.quantity++;  // Aumenta la cantidad del cómic
+    if (comic.quantity < 10) { // Asegura que la cantidad no sea mayor a 10
+      comic.quantity++;  // Aumenta la cantidad del cómic
+    }
   }
 
   decrement(comic: Comic) {
-    if (comic.quantity > 1) { // Evita que la cantidad sea menor que 1
+    if (comic.quantity > 1) { // Asegura que la cantidad no sea menor a 1
       comic.quantity--;  // Disminuye la cantidad del cómic
     }
   }
+
 
   navigateToComic(link: string) {
     this.router.navigate([link]);
