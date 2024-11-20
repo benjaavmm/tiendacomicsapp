@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
-import { CartService, Comic } from '../../services/cart.service'; // Asegúrate de que la ruta sea correcta
+import { CartService } from '../../services/cart.service';
+import { Comic } from '../../../services/comic';
 
 @Component({
   selector: 'app-attackontitan',
@@ -12,13 +13,13 @@ export class AttackontitanPage implements OnInit {
 
   // Define el objeto Comic
   comic: Comic = {
-    id_comic: '25', // Asegúrate de que este campo esté presente si es necesario
+    id_comic: 25, // Asegúrate de que este campo esté presente si es necesario
     nombre_comic: 'Attack On Titan',
     precio: 12990,
     stock: 100,
     descripcion: '"El Escuadrón de Reconocimiento planea una jugada arriesgada; que Eren, en forma de Titán, intente reparar la Muralla Rose, reclamando, por primera vez en un siglo, territorio para los humanos. Pero el control que tiene Eren como Titán dista mucho de ser perfecto y, cuando se descontrola, ¡ni siquiera Armin puede detenerlo! Con el peso de la supervivencia de la humanidad sobre sus enormes hombros, ¿podrá Eren recuperar la razón? ¿O se perderá para siempre?"',
     foto_comic: 'assets/img/atackontitan.jpg',
-    id_categoria: 'mangas',
+    id_categoria: 2,
     quantity: 0 // Este valor se actualizará al añadir al carrito
     ,
     link: ''

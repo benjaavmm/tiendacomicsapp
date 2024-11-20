@@ -1,101 +1,114 @@
 import { Injectable } from '@angular/core';
-
-// Clase para definir la estructura de un cómic
-export class Comic {
-  id_comic: string;
-  quantity: number;
-  nombre_comic: string;
-  precio: number; 
-  stock: number;
-  descripcion: string;
-  foto_comic: string; 
-  id_categoria: string;
-  link: string;
-
-  constructor(
-    id_comic: string,
-    quantity: number,
-    nombre_comic: string,
-    precio: number,
-    stock: number,
-    descripcion: string,
-    foto_comic: string,
-    id_categoria: string,
-    link: string
-  ) {
-    this.id_comic = id_comic;
-    this.quantity = quantity;
-    this.nombre_comic = nombre_comic;
-    this.precio = precio;
-    this.stock = stock;
-    this.descripcion = descripcion;
-    this.foto_comic = foto_comic;
-    this.id_categoria = id_categoria;
-    this.link = link;
-  }
-}
+import { BehaviorSubject } from 'rxjs';
+import { Comic } from '../../services/comic';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CartService {
-  private cartItems: Comic[] = []; 
+  private cartItems: Comic[] = [];
+  private cartItemCount = new BehaviorSubject(0);
+  private cartTotal = new BehaviorSubject(0);
 
-  // Agregar un cómic al carrito
-  addToCart(item: Comic) {
-    const existingItem = this.cartItems.find(i => i.id_comic === item.id_comic);
+  constructor() {
+    const savedCart = localStorage.getItem('cart');
+    if (savedCart) {
+      try {
+        const parsedCart = JSON.parse(savedCart);
+        // Asegurarse de que los id_comic sean números
+        this.cartItems = parsedCart.map((item: Comic) => ({
+          ...item,
+          id_comic: Number(item.id_comic)
+        }));
+        this.updateCartCount();
+        this.updateCartTotal();
+      } catch (error) {
+        console.error('Error parsing cart from localStorage:', error);
+        this.cartItems = [];
+      }
+    }
+  }
+
+  addToCart(comic: Comic) {
+    const existingItem = this.cartItems.find(item => item.id_comic === comic.id_comic);
+    
     if (existingItem) {
-      existingItem.quantity += item.quantity; // Aumentar cantidad si ya existe
+      existingItem.quantity = (existingItem.quantity || 0) + 1;
     } else {
-      this.cartItems.push(new Comic(
-        item.id_comic,
-        item.quantity,
-        item.nombre_comic,
-        item.precio,
-        item.stock,
-        item.descripcion,
-        item.foto_comic,
-        item.id_categoria,
-        item.link 
-      )); 
+      const newItem: Comic = {
+        ...comic,
+        id_comic: Number(comic.id_comic), // Asegurarse de que sea número
+        quantity: 1
+      };
+      this.cartItems.push(newItem);
     }
+
+    this.updateCartCount();
+    this.updateCartTotal();
+    this.saveCartToStorage();
   }
 
-  // Obtener todos los cómics en el carrito
-  getCartItems(): Comic[] {
-    return this.cartItems;
-  }
-
-  // Eliminar un cómic del carrito
-  removeItem(item: Comic) {
-    const index = this.cartItems.indexOf(item);
+  removeItem(comic: Comic) {
+    const index = this.cartItems.findIndex(item => item.id_comic === Number(comic.id_comic));
     if (index > -1) {
-      this.cartItems.splice(index, 1); // Eliminar cómic
+      this.cartItems.splice(index, 1);
+      this.updateCartCount();
+      this.updateCartTotal();
+      this.saveCartToStorage();
     }
   }
 
-  // Limpiar el carrito
+  updateItemQuantity(comic: Comic, quantity: number) {
+    const item = this.cartItems.find(item => item.id_comic === Number(comic.id_comic));
+    if (item) {
+      item.quantity = quantity;
+      this.updateCartCount();
+      this.updateCartTotal();
+      this.saveCartToStorage();
+    }
+  }
+
+  getCartItems(): Comic[] {
+    return [...this.cartItems];
+  }
+
+  getCartItemCount() {
+    return this.cartItemCount.asObservable();
+  }
+
+  getCartTotal() {
+    return this.cartTotal.asObservable();
+  }
+
   clearCart() {
-    this.cartItems = []; // Reiniciar carrito
+    this.cartItems = [];
+    this.updateCartCount();
+    this.updateCartTotal();
+    localStorage.removeItem('cart');
   }
 
-  // Obtener el total de cómics en el carrito
-  getTotalItems(): number {
-    return this.cartItems.reduce((total, item) => total + item.quantity, 0);
+  private updateCartCount() {
+    const count = this.cartItems.reduce((total, item) => total + (item.quantity || 0), 0);
+    this.cartItemCount.next(count);
   }
 
-  // Obtener el costo total de los cómics en el carrito
-  getTotalCost(): number {
-    return this.cartItems.reduce((total, item) => total + (item.precio * item.quantity), 0);
+  private updateCartTotal() {
+    const total = this.cartItems.reduce((sum, item) => sum + (item.precio * (item.quantity || 0)), 0);
+    this.cartTotal.next(total);
   }
 
-  // Verificar si el carrito está vacío
-  isCartEmpty(): boolean {
-    return this.cartItems.length === 0;
+  private saveCartToStorage() {
+    localStorage.setItem('cart', JSON.stringify(this.cartItems));
   }
 
-  // Buscar un cómic por ID
-  findItem(id_comic: string): Comic | undefined {
-    return this.cartItems.find(item => item.id_comic === id_comic);
+  isInCart(comicId: number | string): boolean {
+    // Convertir a número para la comparación
+    const numericId = Number(comicId);
+    return this.cartItems.some(item => item.id_comic === numericId);
+  }
+
+  getItemQuantity(comicId: number): number {
+    const item = this.cartItems.find(item => item.id_comic === comicId);
+    return item ? item.quantity || 0 : 0;
   }
 }

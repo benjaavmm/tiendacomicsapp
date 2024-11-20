@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
-import { CartService, Comic } from '../../services/cart.service';
+import { CartService } from '../../services/cart.service';
+import { Comic } from '../../../services/comic';
 
 @Component({
   selector: 'app-hulk',
@@ -11,13 +12,13 @@ export class HulkPage implements OnInit {
   quantity: number = 1;
 
   comic: Comic = {
-    id_comic: '9',
+    id_comic: 9,
     nombre_comic: 'The Incredible Hulk And Now The Wolverine!',
     precio: 22990,
     stock: 100,
     descripcion: '"The Incredible Hulk and Now the Wolverine es un cómic que presenta un emocionante crossover entre dos de los héroes más icónicos de Marvel Comics: Hulk y Wolverine. En esta historia épica, los lectores son testigos de un enfrentamiento titánico entre la increíble fuerza de Hulk y la ferocidad y habilidades regenerativas de Wolverine."',
     foto_comic: 'assets/img/hulk.png',
-    id_categoria: 'marvel',
+    id_categoria: 1,
     quantity: 0,
     link: ''
   };

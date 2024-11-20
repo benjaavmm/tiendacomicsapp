@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ServicebdService } from '../../services/servicebd.service';
-import { Comic, CompraDetalle } from '../../services/compradetalle'; 
+import { CompraDetalle } from '../../services/compradetalle';
+import { Comic } from '../../services/comic';
 
 @Component({
   selector: 'app-historialcompras',
@@ -19,22 +20,51 @@ export class HistorialComprasPage implements OnInit {
   }
 
   async loadHistorialCompras() {
-    this.isLoading = true; // Mover la carga aquí para mejor manejo
-    this.servicebd.getHistorialCompras().subscribe(
-      (items) => {
-        this.compras = items; // Asignar directamente los items devueltos
-        this.isLoading = false; // Cambiar el estado de carga
+    this.isLoading = true;
+    this.error = null;
+
+    this.servicebd.getHistorialCompras().subscribe({
+      next: (items) => {
+        this.compras = items.sort((a, b) => 
+          new Date(b.fecha).getTime() - new Date(a.fecha).getTime()
+        );
+        this.isLoading = false;
       },
-      (error) => {
-        this.error = 'Error al cargar el historial de compras';
-        this.isLoading = false; // Cambiar el estado de carga
-        console.error('Error:', error);
+      error: (error) => {
+        console.error('Error al cargar el historial:', error);
+        this.error = 'No se pudo cargar el historial de compras';
+        this.isLoading = false;
       }
-    );
+    });
   }
 
-  // Calcular el subtotal para cada compra
+  doRefresh(event: any) {
+    this.loadHistorialCompras().then(() => {
+      event.target.complete();
+    });
+  }
+
+  getEstadoColor(idEstado: number): string {
+    switch (idEstado) {
+      case 1: return 'success';  // Completado
+      case 2: return 'warning';  // Pendiente
+      case 3: return 'danger';   // Cancelado
+      default: return 'medium';
+    }
+  }
+
+  getEstadoText(idEstado: number): string {
+    switch (idEstado) {
+      case 1: return 'Completado';
+      case 2: return 'Pendiente';
+      case 3: return 'Cancelado';
+      default: return 'Desconocido';
+    }
+  }
+
   calcularSubtotal(items: Comic[]): number {
-    return items.reduce((acc, item) => acc + (item.precio * item.quantity), 0);
+    return items.reduce((acc, item) => 
+      acc + ((item.precio || 0) * (item.quantity || 0)), 0
+    );
   }
 }

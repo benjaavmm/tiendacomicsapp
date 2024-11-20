@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
-import { CartService, Comic } from '../../services/cart.service'; // Asegúrate de que la ruta sea correcta
+import { CartService } from '../../services/cart.service';
+import { Comic } from '../../../services/comic';
 
 @Component({
   selector: 'app-hxh',
@@ -12,13 +13,13 @@ export class HxhPage implements OnInit {
 
   // Define el objeto Comic
   comic: Comic = {
-    id_comic: '26',
+    id_comic: 26,
     nombre_comic: 'Hunter X Hunter',
     precio: 13990,
     stock: 100,
     descripcion: '"Empiezan las elecciones para elegir presidente, como dejó dicho Netero. Las elecciones se presentan movidas debido a las tretas de Pariston. Por su lado, Killua regresa a su casa para intentar salvar a Gon con la ayuda de Alluka. ¿¡Qué poderes tendrá Alluka!?"',
     foto_comic: 'assets/img/hxh.jpg',
-    id_categoria: 'mangas',
+    id_categoria: 2,
     quantity: 0 // Este valor se actualizará al añadir al carrito
     ,
     link: ''

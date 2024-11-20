@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
-import { CartService, Comic } from '../../services/cart.service';
+import { CartService } from '../../services/cart.service';
+import { Comic } from '../../../services/comic';
 
 @Component({
   selector: 'app-capitanamerica',
@@ -11,13 +12,13 @@ export class CapitanamericaPage implements OnInit {
   quantity: number = 1;
 
   comic: Comic = {
-    id_comic: '12',
+    id_comic: 12,
     nombre_comic: 'The Avengers: Captain America Lives Again!',
     precio: 22990,
     stock: 100,
     descripcion: '"The Avengers: Captain America Lives Again!" presenta el emocionante regreso del legendario Capitán América a las filas de los Vengadores. En esta historia épica, después de décadas de estar atrapado en un estado de animación suspendida, el Capitán América despierta en el mundo moderno para enfrentarse a una nueva era de desafíos.',
     foto_comic: 'assets/img/capitanamerica.jpg',
-    id_categoria: 'marvel',
+    id_categoria: 1,
     quantity: 0,
     link: ''
   };

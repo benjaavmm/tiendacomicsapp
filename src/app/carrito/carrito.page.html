@@ -1,35 +1,58 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/home"></ion-back-button>
+      <ion-back-button defaultHref="/tabs/tab1"></ion-back-button>
     </ion-buttons>
     <ion-title>Carrito de Compras</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-list>
+  <ion-list *ngIf="cartItems.length > 0">
     <ion-item *ngFor="let item of cartItems">
       <ion-thumbnail slot="start">
-        <img [src]="item.foto_comic" alt="{{ item.nombre_comic }}"> 
+        <ion-img [src]="item.foto_comic"></ion-img>
       </ion-thumbnail>
       <ion-label>
-        <h2>{{ item.nombre_comic }}</h2> 
-        <p>{{ item.precio | currency }}</p> 
-        <div>
-          <ion-button size="small" fill="outline" (click)="decreaseQuantity(item)" [disabled]="item.quantity <= 1">-</ion-button>
-          <span>{{ item.quantity }}</span>
-          <ion-button size="small" fill="outline" (click)="increaseQuantity(item)" [disabled]="item.quantity >= 10">+</ion-button>
-        </div>
+        <h2>{{ item.nombre_comic }}</h2>
+        <p>Precio: ${{ item.precio }}</p>
+        <p>Stock disponible: {{ item.stock }}</p>
       </ion-label>
-      <ion-button slot="end" color="danger" (click)="removeItem(item)">Eliminar</ion-button>
+      <div class="quantity-controls">
+        <ion-button fill="clear" (click)="decreaseQuantity(item)">
+          <ion-icon name="remove-circle-outline"></ion-icon>
+        </ion-button>
+        <span>{{ item.quantity || 1 }}</span>
+        <ion-button fill="clear" (click)="increaseQuantity(item)">
+          <ion-icon name="add-circle-outline"></ion-icon>
+        </ion-button>
+      </div>
+      <ion-button fill="clear" color="danger" (click)="removeItem(item)">
+        <ion-icon name="trash-outline"></ion-icon>
+      </ion-button>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>
+        <h2>Total</h2>
+      </ion-label>
+      <ion-note slot="end" color="primary">
+        ${{ totalPrice.toFixed(2) }}
+      </ion-note>
     </ion-item>
   </ion-list>
 
-  <ion-footer>
-    <ion-toolbar>
-      <ion-title>Total: {{ totalPrice | currency }}</ion-title>
-      <ion-button expand="full" color="primary" (click)="checkout()">Proceder al Pago</ion-button>
-    </ion-toolbar>
-  </ion-footer>
+  <div *ngIf="cartItems.length === 0" class="empty-cart">
+    <ion-text color="medium">
+      <h2>Tu carrito está vacío</h2>
+      <p>Agrega algunos cómics para comenzar</p>
+    </ion-text>
+  </div>
+
+  <ion-button expand="block" 
+              (click)="checkout()" 
+              [disabled]="cartItems.length === 0"
+              class="checkout-button">
+    Realizar Compra
+  </ion-button>
 </ion-content>

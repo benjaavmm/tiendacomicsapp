@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
-import { CartService, Comic } from '../../services/cart.service'; // Asegúrate de que la ruta sea correcta
+import { CartService } from '../../services/cart.service';
+import { Comic } from '../../../services/comic';
 
 @Component({
   selector: 'app-dragonball',
@@ -12,13 +13,13 @@ export class DragonballPage implements OnInit {
 
   // Define el objeto Comic
   comic: Comic = {
-    id_comic: '4',
+    id_comic: 4,
     nombre_comic: 'Dragon Ball #12: El Desafío de Goku y Vegeta',
     precio: 13990,
     stock: 100,
     descripcion: '"En esta emocionante entrega de Dragon Ball, los legendarios guerreros Goku y Vegeta se enfrentan a un enemigo formidable lo cual promete acción, poder y emociones intensas. ¡No te pierdas esta emocionante entrega de Dragon Ball!"',
     foto_comic: 'assets/img/dragonball.jpg',
-    id_categoria: 'mangas',
+    id_categoria: 2,
     quantity: 0 // Este valor se actualizará al añadir al carrito
     ,
     link: ''

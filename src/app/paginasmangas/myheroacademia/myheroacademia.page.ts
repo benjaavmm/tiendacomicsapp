@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
-import { CartService, Comic } from '../../services/cart.service'; // Asegúrate de que la ruta sea correcta
+import { CartService } from '../../services/cart.service';
+import { Comic } from '../../../services/comic';
 
 @Component({
   selector: 'app-myheroacademia',
@@ -12,13 +13,13 @@ export class MyheroacademiaPage implements OnInit {
 
   // Define el objeto Comic
   comic: Comic = {
-    id_comic: '24',
+    id_comic: 24,
     nombre_comic: 'My Hero Academia',
     precio: 13990,
     stock: 100,
     descripcion: '"Estamos en un mundo donde abundan los superhéroes (y los supervillanos). Los mejores humanos son entrenados en la Academia de Héroes para optimizar sus poderes. Entre la minoría normal, sin poder alguno, aparece Izuku Midoriya, dispuesto a ser una excepción y formarse en la Academia para convertirse en un héroe."',
     foto_comic: 'assets/img/myheroacademia.jpg',
-    id_categoria: 'mangas',
+    id_categoria: 2,
     quantity: 0 // Este valor se actualizará al añadir al carrito
     ,
     link: ''

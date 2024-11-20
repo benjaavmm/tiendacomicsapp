@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
-import { CartService, Comic } from '../../services/cart.service';
+import { CartService } from '../../services/cart.service';
+import { Comic } from '../../../services/comic';
 
 @Component({
   selector: 'app-ligadelajusticia1',
@@ -11,13 +12,13 @@ export class Ligadelajusticia1Page implements OnInit {
   quantity: number = 1;
 
   comic: Comic = {
-    id_comic: '18',
+    id_comic: 18,
     nombre_comic: 'Liga De La Justicia #27: Legado',
     precio: 29990,
     stock: 100,
     descripcion: '"La Liga de la Justicia enfrenta a su mayor amenaza en la historia: Legado, donde héroes y villanos colisionan."',
     foto_comic: 'assets/img/ligadelajusticia1.jpg',
-    id_categoria: 'dc',
+    id_categoria: 3,
     quantity: 0,
     link: ''
   };

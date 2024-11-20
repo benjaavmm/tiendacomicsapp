@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
-import { CartService, Comic } from '../../services/cart.service';
-
+import { CartService } from '../../services/cart.service';
+import { Comic } from '../../../services/comic';
 @Component({
   selector: 'app-secretwars',
   templateUrl: './secretwars.page.html',
@@ -11,13 +11,13 @@ export class SecretwarsPage implements OnInit {
   quantity: number = 1;
 
   comic: Comic = {
-    id_comic: '13',
+    id_comic: 13,
     nombre_comic: 'Marvel Super Heroes: Secret Wars',
     precio: 20990,
     stock: 100,
     descripcion: '"Marvel Super Heroes: Secret Wars es una saga épica que reúne a los héroes y villanos más emblemáticos del Universo Marvel en una batalla cósmica sin precedentes."',
     foto_comic: 'assets/img/secretwars.jpg',
-    id_categoria: 'marvel',
+    id_categoria: 1,
     quantity: 0,
     link: ''
   };

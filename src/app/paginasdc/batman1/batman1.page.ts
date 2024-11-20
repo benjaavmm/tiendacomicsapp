@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
-import { CartService, Comic } from '../../services/cart.service';
+import { CartService } from '../../services/cart.service';
+import { Comic } from '../../../services/comic';
 
 @Component({
   selector: 'app-batman1',
@@ -11,13 +12,13 @@ export class Batman1Page implements OnInit {
   quantity: number = 1;
 
   comic: Comic = {
-    id_comic: '3',
+    id_comic: 3,
     nombre_comic: 'Detective Comics #400: El Desafío del Hombre Murciélago',
     precio: 23990,
     stock: 100,
     descripcion: '"En esta edición histórica, sumérgete en la oscuridad de Gotham City con Batman enfrentando una de las amenazas más inusuales: el Hombre Murciélago."',
     foto_comic: 'assets/img/batman1.jpg',
-    id_categoria: 'dc',
+    id_categoria: 3,
     quantity: 0,
     link: ''
   };

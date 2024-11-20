@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
-import { CartService, Comic } from '../../services/cart.service';
+import { CartService } from '../../services/cart.service';
+import { Comic } from '../../../services/comic';
+
 
 @Component({
   selector: 'app-aquaman1',
@@ -11,13 +13,13 @@ export class Aquaman1Page implements OnInit {
   quantity: number = 1;
 
   comic: Comic = {
-    id_comic: '17',
+    id_comic: 17,
     nombre_comic: 'Aquaman #14: La Marea del Terror',
     precio: 18890,
     stock: 10,
     descripcion: '"En las profundidades de los océanos de la Tierra, Aquaman se enfrenta a una nueva ola de terror en el número 14 de su serie."',
     foto_comic: 'assets/img/aquaman1.jpg',
-    id_categoria: 'dc',
+    id_categoria: 3,
     quantity: 0,
     link: ''
   };

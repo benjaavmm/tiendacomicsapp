@@ -1,8 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MenuController, AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { CartService } from '../services/cart.service'; // Asegúrate de que la ruta es correcta
-import { Comic } from '../../services/comic'; // Asegúrate de que la ruta es correcta
+import { CartService } from '../services/cart.service';
+import { Comic } from '../../services/comic';
+import { ServicebdService } from '../../services/servicebd.service';
 
 @Component({
   selector: 'app-home',
@@ -12,112 +13,111 @@ import { Comic } from '../../services/comic'; // Asegúrate de que la ruta es co
 export class HomePage implements OnInit, OnDestroy {
   comics: Comic[] = [
     // Cómic: The Flash N°52
-    new Comic(
-        '1', // ID único del cómic
-        1, // Cantidad inicial en el carrito
-        'The Flash N°52', // Nombre del cómic
-        21990, // Precio del cómic
-        10, // Cantidad disponible en stock
-        'Descripción de The Flash', // Descripción del cómic
-        'assets/img/flash.jpg', // Ruta de la imagen del cómic
-        'dc', // Categoría del cómic
-        '/flash1' // Enlace para navegación a la página del cómic
-    ),
+    {
+      id_comic: 1,
+      quantity: 1,
+      nombre_comic: 'The Flash N°52',
+      precio: 21990,
+      stock: 100,
+      descripcion: 'Descripción del cómic',
+      foto_comic: 'assets/img/flash.jpg',
+      id_categoria: 3, // DC
+      link: '/flash1'
+    },
 
     // Cómic: Green Lantern: Tales of the Sinestro Corps
-    new Comic(
-        '2', // ID único del cómic
-        1, // Cantidad inicial en el carrito
-        'Green Lantern: Tales of the Sinestro Corps', // Nombre del cómic
-        19990, // Precio del cómic
-        10, // Cantidad disponible en stock
-        'Descripción de Green Lantern', // Descripción del cómic
-        'assets/img/linternaverde.jpg', // Ruta de la imagen del cómic
-        'dc', // Categoría del cómic
-        '/linternaverde1' // Enlace para navegación a la página del cómic
-    ),
+    {
+      id_comic: 2,
+      quantity: 1,
+      nombre_comic: 'Green Lantern: Tales of the Sinestro Corps',
+      precio: 19990,
+      stock: 100,
+      descripcion: 'Descripción del cómic',
+      foto_comic: 'assets/img/linternaverde.jpg',
+      id_categoria: 3, // DC
+      link: '/linternaverde1'
+    },
 
-    // Cómic: Detective Comics #400: El Desafío del Hombre Murciélago
-    new Comic(
-        '3', // ID único del cómic
-        1, // Cantidad inicial en el carrito
-        'Detective Comics #400: El Desafío del Hombre Murciélago', // Nombre del cómic
-        23990, // Precio del cómic
-        10, // Cantidad disponible en stock
-        'Descripción de Batman', // Descripción del cómic
-        'assets/img/batman1.jpg', // Ruta de la imagen del cómic
-        'dc', // Categoría del cómic
-        '/batman1' // Enlace para navegación a la página del cómic
-    ),
+    // Cómic: Detective Comics #400
+    {
+      id_comic: 3,
+      quantity: 1,
+      nombre_comic: 'Detective Comics #400: El Desafío del Hombre Murciélago',
+      precio: 23990,
+      stock: 100,
+      descripcion: 'Descripción del cómic',
+      foto_comic: 'assets/img/batman1.jpg',
+      id_categoria: 3, // DC
+      link: '/batman1'
+    },
 
-    // Cómic: Dragon Ball #12: El Desafío de Goku y Vegeta
-    new Comic(
-        '4', // ID único del cómic
-        1, // Cantidad inicial en el carrito
-        'Dragon Ball #12: El Desafío de Goku y Vegeta', // Nombre del cómic
-        13990, // Precio del cómic
-        10, // Cantidad disponible en stock
-        'Descripción de Dragon Ball', // Descripción del cómic
-        'assets/img/dragonball.jpg', // Ruta de la imagen del cómic
-        'mangas', // Categoría del cómic
-        '/dragonball' // Enlace para navegación a la página del cómic
-    ),
+    // Cómic: Dragon Ball #12
+    {
+      id_comic: 4,
+      quantity: 1,
+      nombre_comic: 'Dragon Ball #12: El Desafío de Goku y Vegeta',
+      precio: 13990,
+      stock: 100,
+      descripcion: 'Descripción del cómic',
+      foto_comic: 'assets/img/dragonball.jpg',
+      id_categoria: 2, // Manga
+      link: '/dragonball'
+    },
 
     // Cómic: Demon Slayer
-    new Comic(
-        '5', // ID único del cómic
-        1, // Cantidad inicial en el carrito
-        'Demon Slayer', // Nombre del cómic
-        11990, // Precio del cómic
-        10, // Cantidad disponible en stock
-        'Descripción de Demon Slayer', // Descripción del cómic
-        'assets/img/demonslayer.jpg', // Ruta de la imagen del cómic
-        'mangas', // Categoría del cómic
-        '/demonslayer' // Enlace para navegación a la página del cómic
-    ),
+    {
+      id_comic: 5,
+      quantity: 1,
+      nombre_comic: 'Demon Slayer',
+      precio: 11990,
+      stock: 100,
+      descripcion: 'Descripción del cómic',
+      foto_comic: 'assets/img/demonslayer.jpg',
+      id_categoria: 2, // Manga
+      link: '/demonslayer'
+    },
 
     // Cómic: Marvel Super Heroes: Secret Wars
-    new Comic(
-      '13', // ID único del cómic
-      1, // Cantidad inicial en el carrito
-      'Marvel Super Heroes: Secret Wars', // Nombre del cómic
-      20990, // Precio del cómic
-      100, // Cantidad disponible en stock
-      'Descripción del cómic', // Descripción del cómic
-      'assets/img/secretwars.jpg', // Ruta de la imagen del cómic
-      'marvel', // Categoría del cómic
-      '/secretwars' // Enlace para navegación a la página del cómic
-  ),
+    {
+      id_comic: 13,
+      quantity: 1,
+      nombre_comic: 'Marvel Super Heroes: Secret Wars',
+      precio: 20990,
+      stock: 100,
+      descripcion: 'Descripción del cómic',
+      foto_comic: 'assets/img/secretwars.jpg',
+      id_categoria: 1, // Marvel
+      link: '/secretwars'
+    },
 
     // Cómic: Naruto
-    new Comic(
-        '7', // ID único del cómic
-        1, // Cantidad inicial en el carrito
-        'Naruto', // Nombre del cómic
-        11990, // Precio del cómic
-        10, // Cantidad disponible en stock
-        'Descripción de Naruto', // Descripción del cómic
-        'assets/img/naruto.jpg', // Ruta de la imagen del cómic
-        'mangas', // Categoría del cómic
-        '/naruto' // Enlace para navegación a la página del cómic
-    ),
+    {
+      id_comic: 7,
+      quantity: 1,
+      nombre_comic: 'Naruto',
+      precio: 11990,
+      stock: 100,
+      descripcion: 'Descripción del cómic',
+      foto_comic: 'assets/img/naruto.jpg',
+      id_categoria: 2, // Manga
+      link: '/naruto'
+    },
 
     // Cómic: The Amazing Spiderman
-    new Comic(
-        '8', // ID único del cómic
-        1, // Cantidad inicial en el carrito
-        'The Amazing Spiderman', // Nombre del cómic
-        18990, // Precio del cómic
-        10, // Cantidad disponible en stock
-        'Descripción de Spiderman', // Descripción del cómic
-        'assets/img/spiderman.jpg', // Ruta de la imagen del cómic
-        'marvel', // Categoría del cómic
-        '/spiderman' // Enlace para navegación a la página del cómic
-    )
-];
+    {
+      id_comic: 8,
+      quantity: 1,
+      nombre_comic: 'The Amazing Spiderman',
+      precio: 18990,
+      stock: 100,
+      descripcion: 'Descripción del cómic',
+      foto_comic: 'assets/img/spiderman.jpg',
+      id_categoria: 1, // Marvel
+      link: '/spiderman'
+    }
+  ];
 
-
-  filteredComics: Comic[] = [...this.comics];
+  filteredComics: Comic[] = [];
   carouselImages = [
     { src: 'assets/img/marvel.png', link: '/comicsmarvel' },
     { src: 'assets/img/mangas.png', link: '/mangas' },
@@ -127,12 +127,40 @@ export class HomePage implements OnInit, OnDestroy {
   currentSlide = 0;
   slideInterval: any;
 
-  constructor(private menu: MenuController, private alertCtrl: AlertController, private router: Router, private cartService: CartService) {}
+  constructor(
+    private menu: MenuController,
+    private alertCtrl: AlertController,
+    private router: Router,
+    private cartService: CartService,
+    private serviceBD: ServicebdService
+  ) {}
 
-  ngOnInit() {
+  async ngOnInit() {
+    // Iniciar el carrusel
     this.slideInterval = setInterval(() => {
       this.nextSlide();
     }, 4000);
+
+    // Inicializar los cómics desde la base de datos
+    await this.initializeComics();
+    this.filteredComics = [...this.comics];
+  }
+
+  private async initializeComics() {
+    try {
+      // Primero insertamos los cómics en la base de datos
+      await this.serviceBD.insertarComics(this.comics);
+      
+      // Luego cargamos todos los cómics de todas las categorías
+      const marvelComics = await this.serviceBD.getComicsByCategoria(1);
+      const mangaComics = await this.serviceBD.getComicsByCategoria(2);
+      const dcComics = await this.serviceBD.getComicsByCategoria(3);
+      
+      // Combinamos todos los cómics
+      this.comics = [...marvelComics, ...mangaComics, ...dcComics];
+    } catch (error) {
+      console.error('Error al inicializar los cómics:', error);
+    }
   }
 
   openMenu() {
@@ -140,23 +168,32 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   async addToCart(comic: Comic) {
-    this.cartService.addToCart({ ...comic });
-    const alert = await this.alertCtrl.create({
-      header: 'Añadido al Carro',
-      message: `Has añadido ${comic.quantity} de ${comic.nombre_comic} al carrito.`,
-      buttons: ['OK']
-    });
-    await alert.present();
+    if (comic.quantity && comic.quantity <= comic.stock) {
+      this.cartService.addToCart({ ...comic });
+      const alert = await this.alertCtrl.create({
+        header: 'Añadido al Carro',
+        message: `Has añadido ${comic.quantity} de ${comic.nombre_comic} al carrito.`,
+        buttons: ['OK']
+      });
+      await alert.present();
+    } else {
+      const alert = await this.alertCtrl.create({
+        header: 'Error',
+        message: 'No hay suficiente stock disponible.',
+        buttons: ['OK']
+      });
+      await alert.present();
+    }
   }
 
   increment(comic: Comic) {
-    if (comic.quantity < comic.stock) { // Verifica que no exceda el stock
+    if (comic.quantity && comic.quantity < Math.min(10, comic.stock)) {
       comic.quantity++;
     }
   }
 
   decrement(comic: Comic) {
-    if (comic.quantity > 1) {
+    if (comic.quantity && comic.quantity > 1) {
       comic.quantity--;
     }
   }
@@ -171,7 +208,14 @@ export class HomePage implements OnInit, OnDestroy {
 
   filterComics(event: any) {
     const searchTerm = event.target.value.toLowerCase();
-    this.filteredComics = searchTerm ? this.comics.filter(comic => comic.nombre_comic.toLowerCase().includes(searchTerm)) : [...this.comics];
+    
+    if (searchTerm && searchTerm.trim() !== '') {
+      this.filteredComics = this.comics.filter((comic) => {
+        return comic.nombre_comic.toLowerCase().includes(searchTerm);
+      });
+    } else {
+      this.filteredComics = [...this.comics];
+    }
   }
 
   nextSlide() {

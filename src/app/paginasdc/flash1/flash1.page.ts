@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
-import { CartService, Comic } from '../../services/cart.service';
+import { CartService } from '../../services/cart.service';
+import { Comic } from '../../../services/comic';
 
 @Component({
   selector: 'app-flash1',
@@ -11,13 +12,13 @@ export class Flash1Page implements OnInit {
   quantity: number = 1;
 
   comic: Comic = {
-    id_comic: '1',
+    id_comic: 1,
     nombre_comic: 'The Flash N°52',
     precio: 21990,
     stock: 100,
     descripcion: '"El cómic de Flash sigue las aventuras de Barry Allen, un científico convertido en superhéroe después de ser alcanzado por un rayo."',
     foto_comic: 'assets/img/flash.jpg',
-    id_categoria: 'dc',
+    id_categoria: 3,
     quantity: 0,
     link: ''
   };

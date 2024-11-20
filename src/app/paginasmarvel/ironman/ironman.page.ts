@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
-import { CartService, Comic } from '../../services/cart.service';
-
+import { CartService } from '../../services/cart.service';
+import { Comic } from '../../../services/comic';
 @Component({
   selector: 'app-ironman',
   templateUrl: './ironman.page.html',
@@ -11,13 +11,13 @@ export class IronmanPage implements OnInit {
   quantity: number = 1;
 
   comic: Comic = {
-    id_comic: '14',
+    id_comic: 14,
     nombre_comic: 'The Invincible Iron Man: Cry Revolution!',
     precio: 24990,
     stock: 100,
     descripcion: '"The Invincible Iron Man: Cry Revolution!" narra la emocionante historia de Tony Stark, también conocido como Iron Man, mientras se enfrenta a una nueva amenaza que desafía su ingenio y su tecnología.',
     foto_comic: 'assets/img/ironman.jpg',
-    id_categoria: 'marvel',
+    id_categoria: 1,
     quantity: 0,
     link: ''
   };

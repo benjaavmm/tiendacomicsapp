@@ -15,7 +15,7 @@ export class ServicebdService {
   public listaUsuarios = new BehaviorSubject<Usuario[]>([]);
   private currentUser = new BehaviorSubject<Usuario | null>(null);
 
-  // Definiciones de tablas
+  // Definiciones de tablas actualizadas
   private tablaRol = `
     CREATE TABLE IF NOT EXISTS rol (
       id_rol INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -39,15 +39,33 @@ export class ServicebdService {
       FOREIGN KEY (id_rol) REFERENCES rol (id_rol)
     );`;
 
+  private tablaCategoria = `
+    CREATE TABLE IF NOT EXISTS categoria (
+      id_categoria INTEGER PRIMARY KEY AUTOINCREMENT,
+      nombre_categoria VARCHAR(50) NOT NULL
+    );`;
+
+  private tablaComics = `
+    CREATE TABLE IF NOT EXISTS comics (
+      id_comic INTEGER PRIMARY KEY AUTOINCREMENT,
+      nombre_comic VARCHAR(100) NOT NULL,
+      precio NUMERIC NOT NULL,
+      stock NUMERIC NOT NULL,
+      descripcion TEXT,
+      foto_comic VARCHAR(200),
+      id_categoria INTEGER,
+      link VARCHAR(200),
+      FOREIGN KEY (id_categoria) REFERENCES categoria (id_categoria)
+    );`;
+
   private tablaVenta = `
     CREATE TABLE IF NOT EXISTS venta (
       id_venta INTEGER PRIMARY KEY AUTOINCREMENT,
       f_venta DATE,
       id_usuario INTEGER,
       total NUMERIC,
-      id_estado INTEGER,
-      FOREIGN KEY (id_usuario) REFERENCES usuario (id_usuario),
-      FOREIGN KEY (id_estado) REFERENCES estados (id_estado)
+      id_estado INTEGER DEFAULT 1,
+      FOREIGN KEY (id_usuario) REFERENCES usuario (id_usuario)
     );`;
 
   private tablaDetallesVenta = `
@@ -60,27 +78,6 @@ export class ServicebdService {
       FOREIGN KEY (id_comic) REFERENCES comics (id_comic)
     );`;
 
-  private tablaEstados = `
-    CREATE TABLE IF NOT EXISTS estados (
-      id_estado INTEGER PRIMARY KEY AUTOINCREMENT,
-      num_venta NUMERIC,
-      carrito VARCHAR
-    );`;
-
-  private tablaComics = `
-    CREATE TABLE IF NOT EXISTS comics (
-      id_comic INTEGER PRIMARY KEY AUTOINCREMENT,
-      nombre_comic VARCHAR(100) NOT NULL,
-      precio NUMERIC NOT NULL,
-      stock NUMERIC NOT NULL,
-      descripcion TEXT,
-      foto_comic BLOB,
-      id_categoria INTEGER,
-      estatus VARCHAR(20),
-      link VARCHAR(200),
-      FOREIGN KEY (id_categoria) REFERENCES categoria (id_categoria)
-    );`;
-
   constructor(
     private sqlite: SQLite,
     private platform: Platform,
@@ -89,22 +86,19 @@ export class ServicebdService {
     this.initializeDatabase();
   }
 
-  // Obtener estado de la base de datos
+  // Métodos de estado de la base de datos
   dbState() {
     return this.isDBReady.asObservable();
   }
 
-  // Obtener lista de usuarios
   getUsuarios(): Observable<Usuario[]> {
     return this.listaUsuarios.asObservable();
   }
 
-  // Obtener usuario actual
   getCurrentUser(): Observable<Usuario | null> {
     return this.currentUser.asObservable();
   }
 
-  // Obtener la instancia de la base de datos
   getDatabase(): SQLiteObject {
     return this.database;
   }
@@ -128,11 +122,11 @@ export class ServicebdService {
     try {
       // Crear tablas
       await this.database.executeSql(this.tablaRol, []);
+      await this.database.executeSql(this.tablaCategoria, []);
       await this.database.executeSql(this.tablaUsuario, []);
+      await this.database.executeSql(this.tablaComics, []);
       await this.database.executeSql(this.tablaVenta, []);
       await this.database.executeSql(this.tablaDetallesVenta, []);
-      await this.database.executeSql(this.tablaEstados, []);
-      await this.database.executeSql(this.tablaComics, []);
       
       // Insertar roles por defecto
       await this.database.executeSql(
@@ -143,6 +137,20 @@ export class ServicebdService {
         'INSERT OR IGNORE INTO rol (id_rol, nombre_rol) VALUES (?, ?)',
         [2, 'Admin']
       );
+
+      // Insertar categorías por defecto
+      await this.database.executeSql(
+        'INSERT OR IGNORE INTO categoria (id_categoria, nombre_categoria) VALUES (?, ?)',
+        [1, 'Marvel']
+      );
+      await this.database.executeSql(
+        'INSERT OR IGNORE INTO categoria (id_categoria, nombre_categoria) VALUES (?, ?)',
+        [2, 'Manga']
+      );
+      await this.database.executeSql(
+        'INSERT OR IGNORE INTO categoria (id_categoria, nombre_categoria) VALUES (?, ?)',
+        [3, 'DC']
+      );
       
       this.isDBReady.next(true);
       await this.cargarUsuarios();
@@ -151,7 +159,7 @@ export class ServicebdService {
     }
   }
 
-  // Cargar usuarios desde la base de datos
+  // Métodos de usuario
   async cargarUsuarios() {
     try {
       const res = await this.database.executeSql('SELECT * FROM usuario', []);
@@ -181,6 +189,162 @@ export class ServicebdService {
     }
   }
 
+  // Métodos de cómics
+  async insertarComics(comics: Comic[]) {
+    try {
+      for (const comic of comics) {
+        const query = `
+          INSERT OR IGNORE INTO comics (
+            id_comic, nombre_comic, precio, stock, descripcion, 
+            foto_comic, id_categoria, link
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        `;
+        
+        await this.database.executeSql(query, [
+          comic.id_comic,
+          comic.nombre_comic,
+          comic.precio,
+          comic.stock,
+          comic.descripcion,
+          comic.foto_comic,
+          comic.id_categoria,
+          comic.link
+        ]);
+      }
+    } catch (error) {
+      this.presentAlert('Error', 'Error al insertar cómics: ' + error);
+    }
+  }
+
+  async getComicsByCategoria(id_categoria: number): Promise<Comic[]> {
+    try {
+      const query = 'SELECT * FROM comics WHERE id_categoria = ?';
+      const result = await this.database.executeSql(query, [id_categoria]);
+      const comics: Comic[] = [];
+
+      for (let i = 0; i < result.rows.length; i++) {
+        const item = result.rows.item(i);
+        comics.push({
+          id_comic: item.id_comic,
+          quantity: 1,
+          nombre_comic: item.nombre_comic,
+          precio: item.precio,
+          stock: item.stock,
+          descripcion: item.descripcion,
+          foto_comic: item.foto_comic,
+          id_categoria: item.id_categoria,
+          link: item.link
+        });
+      }
+
+      return comics;
+    } catch (error) {
+      this.presentAlert('Error', 'Error al obtener cómics: ' + error);
+      return [];
+    }
+  }
+
+  // Métodos de venta actualizados
+  async guardarVenta(f_venta: string, id_usuario: number, total: number, comics: Comic[], id_estado: number): Promise<void> {
+    try {
+      await this.database.executeSql(
+        'INSERT INTO venta (f_venta, id_usuario, total) VALUES (?, ?, ?)',
+        [f_venta, id_usuario, total]
+      );
+
+      const result = await this.database.executeSql('SELECT last_insert_rowid() as id', []);
+      const id_venta = result.rows.item(0).id;
+
+      for (const comic of comics) {
+        if (comic.id_comic && comic.quantity) {
+          await this.database.executeSql(
+            'INSERT INTO detalles_venta (id_venta, id_comic, cantidad) VALUES (?, ?, ?)',
+            [id_venta, comic.id_comic, comic.quantity]
+          );
+
+          // Actualizar stock
+          await this.database.executeSql(
+            'UPDATE comics SET stock = stock - ? WHERE id_comic = ?',
+            [comic.quantity, comic.id_comic]
+          );
+        }
+      }
+    } catch (error) {
+      console.error('Error al guardar la venta:', error);
+      throw error;
+    }
+  }
+
+  // Método para obtener el historial de compras actualizado
+  getHistorialCompras(): Observable<CompraDetalle[]> {
+    return new Observable(observer => {
+      this.getCurrentUser().subscribe(async currentUser => {
+        if (!currentUser?.id_usuario) {
+          observer.error('No se encontró el usuario actual.');
+          return;
+        }
+
+        try {
+          const query = `
+            SELECT 
+              v.id_venta,
+              v.f_venta,
+              v.total,
+              v.id_estado,
+              dc.id_comic,
+              dc.cantidad,
+              c.nombre_comic,
+              c.foto_comic,
+              c.precio,
+              c.id_categoria
+            FROM venta v 
+            LEFT JOIN detalles_venta dc ON v.id_venta = dc.id_venta 
+            LEFT JOIN comics c ON dc.id_comic = c.id_comic
+            WHERE v.id_usuario = ?
+            ORDER BY v.f_venta DESC
+          `;
+
+          const result = await this.database.executeSql(query, [currentUser.id_usuario]);
+          const comprasMap = new Map<number, CompraDetalle>();
+
+          for (let i = 0; i < result.rows.length; i++) {
+            const item = result.rows.item(i);
+            if (!comprasMap.has(item.id_venta)) {
+              comprasMap.set(item.id_venta, {
+                id_venta: item.id_venta,
+                fecha: new Date(item.f_venta).toLocaleDateString(),
+                total: item.total,
+                id_estado: item.id_estado,
+                items: []
+              });
+            }
+
+            const compra = comprasMap.get(item.id_venta);
+            if (compra && item.id_comic) {
+              compra.items.push({
+                id_comic: item.id_comic,
+                quantity: item.cantidad,
+                nombre_comic: item.nombre_comic,
+                precio: item.precio,
+                stock: 0,
+                descripcion: '',
+                foto_comic: item.foto_comic,
+                id_categoria: item.id_categoria,
+                link: ''
+              });
+            }
+          }
+
+          observer.next(Array.from(comprasMap.values()));
+          observer.complete();
+        } catch (error) {
+          observer.error('Error al obtener el historial de compras: ' + error);
+        }
+      });
+    });
+  }
+
+   
   // Registrar nuevo usuario
   async registrarUsuario(usuario: Usuario): Promise<boolean> {
     try {
@@ -298,91 +462,8 @@ export class ServicebdService {
     await this.database.executeSql(query, [newPassword, userId]);
   }
   
-  // Método para guardar una venta y sus detalles
-  async guardarVenta(f_venta: string, id_usuario: number, total: number, comics: Comic[], id_estado: number = 1): Promise<void> {
-    try {
-      await this.database.executeSql(
-        'INSERT INTO venta (f_venta, id_usuario, total, id_estado) VALUES (?, ?, ?, ?)',
-        [f_venta, id_usuario, total, id_estado]
-      );
-
-      const id_venta = await this.database.executeSql('SELECT last_insert_rowid()', []).then(res => res.rows.item(0)['last_insert_rowid()']);
-
-      for (const comic of comics) {
-        if (comic.id_comic && comic.quantity) {
-          await this.database.executeSql(
-            'INSERT INTO detalles_venta (id_venta, id_comic, cantidad) VALUES (?, ?, ?)',
-            [id_venta, comic.id_comic, comic.quantity]
-          );
-        }
-      }
-    } catch (error) {
-      console.error('Error al guardar la venta:', error);
-      throw error;
-    }
-  }
-
   
-// Obtener historial de compras
-getHistorialCompras(): Observable<CompraDetalle[]> {
-  return new Observable(observer => {
-    this.getCurrentUser().subscribe(async currentUser => {
-      const userId = currentUser?.id_usuario;
 
-      if (userId) {
-        const query = `
-          SELECT v.*, dc.id_comic, dc.cantidad, c.nombre_comic, c.foto_comic, c.precio 
-          FROM venta v 
-          LEFT JOIN detalles_venta dc ON v.id_venta = dc.id_venta 
-          LEFT JOIN comics c ON dc.id_comic = c.id_comic
-          WHERE v.id_usuario = ? ORDER BY v.f_venta DESC`;
-        try {
-          const result = await this.database.executeSql(query, [userId]);
-          const comprasMap = new Map<number, CompraDetalle>();
-
-          for (let i = 0; i < result.rows.length; i++) {
-            const item = result.rows.item(i);
-            const id_venta = item.id_venta;
-
-            if (!comprasMap.has(id_venta)) {
-              comprasMap.set(id_venta, {
-                fecha: new Date(item.f_venta).toLocaleDateString(),
-                total: item.total,
-                id_venta: id_venta,
-                items: []
-              });
-            }
-
-            const compra = comprasMap.get(id_venta);
-            if (compra) {
-              compra.items.push(new Comic( // Usa el constructor de Comic
-                item.id_comic,
-                item.cantidad,
-                item.nombre_comic,
-                item.precio,
-                0, // stock (puedes ajustar según tu lógica)
-                '', // descripcion (puedes ajustar según tu lógica)
-                item.foto_comic,
-                '', // id_categoria (puedes ajustar según tu lógica)
-                '' // link (puedes ajustar según tu lógica)
-              ));
-            }
-          }
-
-          observer.next(Array.from(comprasMap.values()));
-          observer.complete();
-        } catch (error) {
-          observer.error('Error al obtener el historial de compras: ' + error);
-        }
-      } else {
-        observer.error('No se encontró el usuario actual.');
-      }
-    });
-  });
-}
-
-
-  // Presentar alertas
   private async presentAlert(header: string, message: string) {
     const alert = await this.alertController.create({
       header,

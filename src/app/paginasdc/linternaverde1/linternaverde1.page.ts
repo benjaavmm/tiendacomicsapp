@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
-import { CartService, Comic } from '../../services/cart.service';
+import { CartService } from '../../services/cart.service';
+import { Comic } from '../../../services/comic';
 
 @Component({
   selector: 'app-linternaverde1',
@@ -11,13 +12,13 @@ export class Linternaverde1Page implements OnInit {
   quantity: number = 1;
 
   comic: Comic = {
-    id_comic: '2',
+    id_comic: 2,
     nombre_comic: 'Green Lantern: Tales of the Sinestro Corps',
     precio: 19990,
     stock: 100,
     descripcion: '"Linterna Verde: La Noche Más Oscura es una historia épica que explora los límites del poder y la voluntad."',
     foto_comic: 'assets/img/linternaverde.jpg',
-    id_categoria: 'dc',
+    id_categoria: 3,
     quantity: 0,
     link: ''
   };

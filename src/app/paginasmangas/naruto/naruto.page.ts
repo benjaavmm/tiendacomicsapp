@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
-import { CartService, Comic } from '../../services/cart.service'; // Asegúrate de que la ruta sea correcta
+import { CartService } from '../../services/cart.service';
+import { Comic } from '../../../services/comic';
 
 @Component({
   selector: 'app-naruto',
@@ -12,13 +13,13 @@ export class NarutoPage implements OnInit {
 
   // Define el objeto Comic
   comic: Comic = {
-    id_comic: '7',
+    id_comic: 7,
     nombre_comic: 'Naruto',
     precio: 11990,
     stock: 100,
     descripcion: '"Uno de los clones de Naruto se topa frente a frente con Sasuke, con lo que el grupo que ha salido en su búsqueda logra recuperar finalmente su rastro. Mientras tanto, Jiraiya se infiltra con éxito en Amegakure y comienza sus indagaciones acerca del líder de Akatsuki, pero este descubre su presencia y está decidido a eliminarlo. Nagato y Konan se enfrentan con Jiraiya, su antiguo maestro, quien ante el inmenso poder de sus ahora enemigos decide luchar ¡en modo sennin!"',
     foto_comic: 'assets/img/naruto.jpg',
-    id_categoria: 'mangas',
+    id_categoria: 2,
     quantity: 0 // Este valor se actualizará al añadir al carrito
     ,
     link: ''

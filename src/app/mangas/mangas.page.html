@@ -54,12 +54,15 @@
     <ion-grid>
       <ion-row>
         <ion-col size="6" size-md="3" *ngFor="let comic of filteredComics">
-          <ion-card class="comic-card"> <!-- Añadir la clase aquí -->
-            <!-- Al hacer click en la imagen lleva a la página del cómic -->
-            <ion-img [src]="comic.foto_comic" [alt]="comic.nombre_comic" (click)="navigateToComic(comic.link)"></ion-img>
+          <ion-card class="comic-card">
+            <ion-img 
+              [src]="comic.foto_comic" 
+              [alt]="comic.nombre_comic" 
+              (click)="navigateToComic(comic.link)">
+            </ion-img>
             <ion-card-header>
               <ion-card-title>{{ comic.nombre_comic }}</ion-card-title>
-              <ion-card-subtitle>{{ '$' + comic.precio }}</ion-card-subtitle> <!-- Aquí se añadió el símbolo de dólar -->
+              <ion-card-subtitle>{{ '$' + comic.precio }}</ion-card-subtitle>
             </ion-card-header>
             <ion-card-content>
               <div class="quantity-box">
@@ -67,18 +70,27 @@
                 <div class="quantity-controls">
                   <button class="quantity-button" 
                           (click)="decrement(comic)" 
-                          [ngClass]="{'disabled-button': comic.quantity <= 1}">
+                          [disabled]="comic.quantity <= 1">
                     -
                   </button>
-                  <input type="number" id="quantity" class="quantity-input" [(ngModel)]="comic.quantity" min="1" max="10" readonly />
+                  <input type="number" 
+                         class="quantity-input" 
+                         [(ngModel)]="comic.quantity" 
+                         min="1" 
+                         max="10" 
+                         readonly />
                   <button class="quantity-button" 
                           (click)="increment(comic)" 
-                          [ngClass]="{'disabled-button': comic.quantity >= 10}">
+                          [disabled]="comic.quantity >= 10">
                     +
                   </button>
                 </div>
               </div>
-              <ion-button expand="full" class="add-to-carttt" (click)="addToCart(comic)">Añadir al Carro</ion-button>
+              <ion-button expand="full" 
+                        class="add-to-cart" 
+                        (click)="addToCart(comic)">
+                Añadir al Carro
+              </ion-button>
             </ion-card-content>
           </ion-card>
         </ion-col>

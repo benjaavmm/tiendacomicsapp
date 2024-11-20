@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
-import { CartService, Comic } from '../../services/cart.service';
-
+import { CartService } from '../../services/cart.service';
+import { Comic } from '../../../services/comic';
 @Component({
   selector: 'app-antman',
   templateUrl: './antman.page.html',
@@ -11,13 +11,13 @@ export class AntmanPage implements OnInit {
   quantity: number = 1;
 
   comic: Comic = {
-    id_comic: '11',
+    id_comic: 11,
     nombre_comic: 'The Astonishing Ant-Man',
     precio: 23990,
     stock: 100,
     descripcion: 'The Astonishing Ant-Man sigue las aventuras de Scott Lang, un exconvicto y experto en tecnología que asume el papel del héroe diminuto, Ant-Man. Con un traje que le permite encogerse hasta el tamaño de una hormiga y aumentar su fuerza, Scott enfrenta desafíos tanto dentro como fuera del traje mientras equilibra su vida como padre soltero y superhéroe.',
     foto_comic: 'assets/img/antman.jpg',
-    id_categoria: 'marvel',
+    id_categoria: 1,
     quantity: 0,
     link: ''
   };

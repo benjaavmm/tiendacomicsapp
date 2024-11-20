@@ -1,5 +1,4 @@
 <ion-app>
-  <!-- menú lateral -->
   <ion-menu side="start" menuId="first" contentId="main" swipeGesture="false">
     <ion-header>
       <ion-toolbar>
@@ -22,44 +21,43 @@
     </ion-content>
   </ion-menu>
 
-  <!-- Primera barra con la barra de búsqueda, carrito y perfil -->
   <ion-header>
     <ion-toolbar>
       <ion-buttons slot="start">
-        <ion-menu-button></ion-menu-button> <!-- botón de menú -->
+        <ion-menu-button></ion-menu-button>
       </ion-buttons>
-      <!-- Barra de búsqueda -->
       <ion-searchbar slot="end" (ionInput)="filterComics($event)" placeholder="Buscar cómics"></ion-searchbar>
       <ion-buttons slot="end">
         <ion-button routerLink="/carrito">
-          <ion-icon slot="icon-only" name="cart"></ion-icon> <!-- Botón de Carrito -->
+          <ion-icon slot="icon-only" name="cart"></ion-icon>
         </ion-button>
-        <!-- Ícono de Perfil -->
         <ion-button routerLink="/perfil">
           <ion-icon slot="icon-only" name="person-circle-outline"></ion-icon>
         </ion-button>
       </ion-buttons>
     </ion-toolbar>
 
-    <!-- Segunda barra con la flecha de retroceso y el título de la página -->
     <ion-toolbar>
       <ion-buttons slot="start">
-        <ion-back-button defaultHref="/home"></ion-back-button> <!-- Flecha de retroceso -->
+        <ion-back-button defaultHref="/home"></ion-back-button>
       </ion-buttons>
       <ion-title>Comics DC</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <!-- contenido principal -->
   <ion-content id="main">
     <ion-grid>
       <ion-row>
         <ion-col size="6" size-md="3" *ngFor="let comic of filteredComics">
-          <ion-card class="comic-card"> <!-- Añadir la clase aquí -->
-            <img [src]="comic.foto_comic" [alt]="comic.nombre_comic" (click)="navigateToComic(comic.link)">
+          <ion-card class="comic-card">
+            <ion-img 
+              [src]="comic.foto_comic" 
+              [alt]="comic.nombre_comic" 
+              (click)="navigateToComic(comic.link)">
+            </ion-img>
             <ion-card-header>
               <ion-card-title>{{ comic.nombre_comic }}</ion-card-title>
-              <ion-card-subtitle>{{ '$' + comic.precio }}</ion-card-subtitle> <!-- Aquí se añadió el símbolo de dólar -->
+              <ion-card-subtitle>{{ '$' + comic.precio }}</ion-card-subtitle>
             </ion-card-header>
             <ion-card-content>
               <div class="quantity-box">
@@ -67,18 +65,27 @@
                 <div class="quantity-controls">
                   <button class="quantity-button" 
                           (click)="decrement(comic)" 
-                          [ngClass]="{'disabled-button': comic.quantity <= 1}">
+                          [disabled]="comic.quantity <= 1">
                     -
                   </button>
-                  <input type="number" id="quantity" class="quantity-input" [(ngModel)]="comic.quantity" min="1" max="10" readonly />
+                  <input type="number" 
+                         class="quantity-input" 
+                         [(ngModel)]="comic.quantity" 
+                         min="1" 
+                         max="10" 
+                         readonly />
                   <button class="quantity-button" 
                           (click)="increment(comic)" 
-                          [ngClass]="{'disabled-button': comic.quantity >= 10}">
+                          [disabled]="comic.quantity >= 10">
                     +
                   </button>
                 </div>
               </div>
-              <ion-button expand="full" class="add-to-cartt" (click)="addToCart(comic)">Añadir al Carro</ion-button>
+              <ion-button expand="full" 
+                        class="add-to-cart" 
+                        (click)="addToCart(comic)">
+                Añadir al Carro
+              </ion-button>
             </ion-card-content>
           </ion-card>
         </ion-col>

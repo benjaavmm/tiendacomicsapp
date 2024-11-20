@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { MenuController, AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { CartService } from '../services/cart.service'; // Asegúrate de que la ruta es correcta
-import { Comic } from '../../services/comic'; // Asegúrate de que la ruta es correcta
+import { CartService } from '../services/cart.service';
+import { Comic } from '../../services/comic';
 
 @Component({
   selector: 'app-mangas',
@@ -12,121 +12,126 @@ import { Comic } from '../../services/comic'; // Asegúrate de que la ruta es co
 export class MangasPage {
   comics: Comic[] = [
     // Cómic: Naruto
-    new Comic(
-        '7', // ID único del cómic
-        1, // Cantidad inicial en el carrito
-        'Naruto', // Nombre del cómic
-        11990, // Precio del cómic
-        10, // Cantidad disponible en stock
-        'Descripción de Naruto', // Descripción del cómic
-        'assets/img/naruto.jpg', // Ruta de la imagen del cómic
-        'mangas', // Categoría del cómic
-        '/naruto' // Enlace para navegación a la página del cómic
-    ),
+    {
+      id_comic: 7,
+      quantity: 1,
+      nombre_comic: 'Naruto',
+      precio: 11990,
+      stock: 10,
+      descripcion: 'Descripción de Naruto',
+      foto_comic: 'assets/img/naruto.jpg',
+      id_categoria: 2,
+      link: '/naruto'
+    },
 
     // Cómic: Demon Slayer
-    new Comic(
-        '5', // ID único del cómic
-        1, // Cantidad inicial en el carrito
-        'Demon Slayer', // Nombre del cómic
-        11990, // Precio del cómic
-        10, // Cantidad disponible en stock
-        'Descripción de Demon Slayer', // Descripción del cómic
-        'assets/img/demonslayer.jpg', // Ruta de la imagen del cómic
-        'mangas', // Categoría del cómic
-        '/demonslayer' // Enlace para navegación a la página del cómic
-    ),
+    {
+      id_comic: 5,
+      quantity: 1,
+      nombre_comic: 'Demon Slayer',
+      precio: 11990,
+      stock: 10,
+      descripcion: 'Descripción de Demon Slayer',
+      foto_comic: 'assets/img/demonslayer.jpg',
+      id_categoria: 2,
+      link: '/demonslayer'
+    },
 
-    // Cómic: Dragon Ball #12: El Desafío de Goku y Vegeta
-    new Comic(
-        '4', // ID único del cómic
-        1, // Cantidad inicial en el carrito
-        'Dragon Ball #12: El Desafío de Goku y Vegeta', // Nombre del cómic
-        13990, // Precio del cómic
-        10, // Cantidad disponible en stock
-        'Descripción de Dragon Ball', // Descripción del cómic
-        'assets/img/dragonball.jpg', // Ruta de la imagen del cómic
-        'mangas', // Categoría del cómic
-        '/dragonball' // Enlace para navegación a la página del cómic
-    ),
+    // Cómic: Dragon Ball #12
+    {
+      id_comic: 4,
+      quantity: 1,
+      nombre_comic: 'Dragon Ball #12: El Desafío de Goku y Vegeta',
+      precio: 13990,
+      stock: 10,
+      descripcion: 'Descripción de Dragon Ball',
+      foto_comic: 'assets/img/dragonball.jpg',
+      id_categoria: 2,
+      link: '/dragonball'
+    },
 
     // Cómic: Jujutsu Kaisen
-    new Comic(
-        '22', // ID único del cómic
-        1, // Cantidad inicial en el carrito
-        'Jujutsu Kaisen', // Nombre del cómic
-        13990, // Precio del cómic
-        10, // Cantidad disponible en stock
-        'Descripción de Jujutsu Kaisen', // Descripción del cómic
-        'assets/img/jujutsukaisen.jpg', // Ruta de la imagen del cómic
-        'mangas', // Categoría del cómic
-        '/jujutsukaisen' // Enlace para navegación a la página del cómic
-    ),
+    {
+      id_comic: 22,
+      quantity: 1,
+      nombre_comic: 'Jujutsu Kaisen',
+      precio: 13990,
+      stock: 10,
+      descripcion: 'Descripción de Jujutsu Kaisen',
+      foto_comic: 'assets/img/jujutsukaisen.jpg',
+      id_categoria: 2,
+      link: '/jujutsukaisen'
+    },
 
     // Cómic: Tokyo Revengers
-    new Comic(
-        '23', // ID único del cómic
-        1, // Cantidad inicial en el carrito
-        'Tokyo Revengers', // Nombre del cómic
-        12990, // Precio del cómic
-        10, // Cantidad disponible en stock
-        'Descripción de Tokyo Revengers', // Descripción del cómic
-        'assets/img/tokyorevengers.jpg', // Ruta de la imagen del cómic
-        'mangas', // Categoría del cómic
-        '/tokyorevengers' // Enlace para navegación a la página del cómic
-    ),
+    {
+      id_comic: 23,
+      quantity: 1,
+      nombre_comic: 'Tokyo Revengers',
+      precio: 12990,
+      stock: 10,
+      descripcion: 'Descripción de Tokyo Revengers',
+      foto_comic: 'assets/img/tokyorevengers.jpg',
+      id_categoria: 2,
+      link: '/tokyorevengers'
+    },
 
     // Cómic: My Hero Academia
-    new Comic(
-        '24', // ID único del cómic
-        1, // Cantidad inicial en el carrito
-        'My Hero Academia', // Nombre del cómic
-        13990, // Precio del cómic
-        10, // Cantidad disponible en stock
-        'Descripción de My Hero Academia', // Descripción del cómic
-        'assets/img/myheroacademia.jpg', // Ruta de la imagen del cómic
-        'mangas', // Categoría del cómic
-        '/myheroacademia' // Enlace para navegación a la página del cómic
-    ),
+    {
+      id_comic: 24,
+      quantity: 1,
+      nombre_comic: 'My Hero Academia',
+      precio: 13990,
+      stock: 10,
+      descripcion: 'Descripción de My Hero Academia',
+      foto_comic: 'assets/img/myheroacademia.jpg',
+      id_categoria: 2,
+      link: '/myheroacademia'
+    },
 
     // Cómic: Attack On Titan
-    new Comic(
-        '25', // ID único del cómic
-        1, // Cantidad inicial en el carrito
-        'Attack On Titan', // Nombre del cómic
-        12990, // Precio del cómic
-        10, // Cantidad disponible en stock
-        'Descripción de Attack On Titan', // Descripción del cómic
-        'assets/img/atackontitan.jpg', // Ruta de la imagen del cómic
-        'mangas', // Categoría del cómic
-        '/attackontitan' // Enlace para navegación a la página del cómic
-    ),
+    {
+      id_comic: 25,
+      quantity: 1,
+      nombre_comic: 'Attack On Titan',
+      precio: 12990,
+      stock: 10,
+      descripcion: 'Descripción de Attack On Titan',
+      foto_comic: 'assets/img/atackontitan.jpg',
+      id_categoria: 2,
+      link: '/attackontitan'
+    },
 
     // Cómic: Hunter X Hunter
-    new Comic(
-        '26', // ID único del cómic
-        1, // Cantidad inicial en el carrito
-        'Hunter X Hunter', // Nombre del cómic
-        13990, // Precio del cómic
-        10, // Cantidad disponible en stock
-        'Descripción de Hunter X Hunter', // Descripción del cómic
-        'assets/img/hxh.jpg', // Ruta de la imagen del cómic
-        'mangas', // Categoría del cómic
-        '/hxh' // Enlace para navegación a la página del cómic
-    )
-];
-  
-  filteredComics = [...this.comics];  // Inicializar con todos los cómics
+    {
+      id_comic: 26,
+      quantity: 1,
+      nombre_comic: 'Hunter X Hunter',
+      precio: 13990,
+      stock: 10,
+      descripcion: 'Descripción de Hunter X Hunter',
+      foto_comic: 'assets/img/hxh.jpg',
+      id_categoria: 2,
+      link: '/hxh'
+    }
+  ];
 
-  constructor(private menu: MenuController, private alertCtrl: AlertController, private router: Router, private cartService: CartService) {}
+  filteredComics: Comic[] = [...this.comics];
+
+  constructor(
+    private menu: MenuController,
+    private alertCtrl: AlertController,
+    private router: Router,
+    private cartService: CartService
+  ) {}
 
   openMenu() {
     this.menu.open('first');
   }
 
   async addToCart(comic: Comic) {
-    // Agregar el cómic al carrito
-    this.cartService.addToCart({ ...comic, quantity: comic.quantity });
+    const comicToAdd = { ...comic };
+    this.cartService.addToCart(comicToAdd);
 
     const alert = await this.alertCtrl.create({
       header: 'Añadido al Carro',
@@ -135,30 +140,30 @@ export class MangasPage {
     });
     await alert.present();
   }
-
   increment(comic: Comic) {
-    if (comic.quantity < 10) { // Asegura que la cantidad no sea mayor a 10
-      comic.quantity++;  // Aumenta la cantidad del cómic
+    if (typeof comic.quantity === 'number' && comic.quantity < 10) {
+      comic.quantity++;
     }
   }
-
+  
   decrement(comic: Comic) {
-    if (comic.quantity > 1) { // Asegura que la cantidad no sea menor a 1
-      comic.quantity--;  // Disminuye la cantidad del cómic
+    if (typeof comic.quantity === 'number' && comic.quantity > 1) {
+      comic.quantity--;
     }
   }
-
   navigateToComic(link: string) {
-    this.router.navigate([link]);
+    if (link) {
+      this.router.navigate([link]);
+    }
   }
 
   filterComics(event: any) {
-    const searchTerm = event.target.value.toLowerCase();
+    const searchTerm = event?.target?.value?.toLowerCase() || '';
 
-    if (searchTerm && searchTerm.trim() !== '') {
-      this.filteredComics = this.comics.filter((comic) => {
-        return comic.nombre_comic.toLowerCase().includes(searchTerm);
-      });
+    if (searchTerm.trim() !== '') {
+      this.filteredComics = this.comics.filter((comic) =>
+        comic.nombre_comic.toLowerCase().includes(searchTerm)
+      );
     } else {
       this.filteredComics = [...this.comics];
     }

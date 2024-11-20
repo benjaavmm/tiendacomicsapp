@@ -8,6 +8,10 @@
 </ion-header>
 
 <ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
   <!-- Loading spinner -->
   <div *ngIf="isLoading" class="ion-text-center ion-padding">
     <ion-spinner></ion-spinner>
@@ -15,50 +19,73 @@
   </div>
 
   <!-- Error message -->
-  <ion-item *ngIf="error" color="danger">
-    <ion-label>{{ error }}</ion-label>
-  </ion-item>
+  <div *ngIf="error" class="ion-text-center ion-padding">
+    <ion-icon name="alert-circle-outline" color="danger" size="large"></ion-icon>
+    <p>{{ error }}</p>
+    <ion-button (click)="loadHistorialCompras()" fill="clear">
+      Reintentar
+    </ion-button>
+  </div>
 
-  <!-- No purchases message -->
-  <ion-item *ngIf="!isLoading && compras.length === 0" lines="none">
-    <ion-label class="ion-text-center">
-      No hay compras registradas
-    </ion-label>
-  </ion-item>
+  <!-- Empty state -->
+  <div *ngIf="!isLoading && !error && compras.length === 0" class="empty-state ion-padding ion-text-center">
+    <ion-icon name="receipt-outline" size="large"></ion-icon>
+    <h2>Sin compras realizadas</h2>
+    <p>Aún no has realizado ninguna compra</p>
+    <ion-button routerLink="/home" expand="block" class="ion-margin-top">
+      Ir a la tienda
+    </ion-button>
+  </div>
 
-  <!-- Purchase history -->
-  <ion-list *ngIf="!isLoading && compras.length > 0">
-    <ion-card *ngFor="let compra of compras">
+  <!-- Purchases list -->
+  <div *ngIf="!isLoading && !error && compras.length > 0">
+    <ion-card *ngFor="let compra of compras" class="purchase-card">
       <ion-card-header>
-        <ion-card-subtitle>
-          Fecha de Compra: {{ compra.fecha }}
-        </ion-card-subtitle>
-        <ion-card-title>
-          Orden #{{ compra.id_venta }}
-        </ion-card-title>
+        <div class="order-header">
+          <div>
+            <ion-card-subtitle>Orden #{{ compra.id_venta }}</ion-card-subtitle>
+            <ion-card-title>{{ compra.fecha | date:'dd/MM/yyyy HH:mm' }}</ion-card-title>
+          </div>
+          <ion-badge [color]="getEstadoColor(compra.id_estado)">
+            {{ getEstadoText(compra.id_estado) }}
+          </ion-badge>
+        </div>
       </ion-card-header>
 
       <ion-card-content>
-        <ion-list>
-          <ion-item *ngFor="let item of compra.items" lines="none">
+        <ion-list lines="none">
+          <ion-item *ngFor="let comic of compra.items" class="comic-item">
             <ion-thumbnail slot="start">
-              <img [src]="item.foto_comic" [alt]="item.nombre_comic">
+              <img [src]="comic.foto_comic" [alt]="comic.nombre_comic"
+                   onerror="this.src='assets/default-comic.png'">
             </ion-thumbnail>
             <ion-label>
-              <h3>{{ item.nombre_comic }}</h3>
-              <p>Cantidad: {{ item.quantity }}</p>
-              <p>Precio unitario: {{ item.precio | currency }}</p>
-              <p>Subtotal: {{ item.precio * item.quantity | currency }}</p>
+              <h3 class="comic-title">{{ comic.nombre_comic }}</h3>
+              <div class="comic-details">
+                <p>
+                  <ion-text color="medium">Cantidad:</ion-text>
+                  <ion-text color="dark">{{ comic.quantity }}</ion-text>
+                </p>
+                <p>
+                  <ion-text color="medium">Precio unitario:</ion-text>
+                  <ion-text color="dark">{{ comic.precio | currency }}</ion-text>
+                </p>
+                <p class="subtotal">
+                  <ion-text color="medium">Subtotal:</ion-text>
+                  <ion-text color="dark">{{ comic.precio * comic.quantity | currency }}</ion-text>
+                </p>
+              </div>
             </ion-label>
           </ion-item>
 
-          <ion-item lines="none" class="ion-text-end">
-            <ion-label>
-              <h2><strong>Total de la compra: {{ compra.total | currency }}</strong></h2>
-            </ion-label>
-          </ion-item>
+          <div class="total-section">
+            <ion-text color="medium">Total de la compra</ion-text>
+            <ion-text color="primary" class="total-amount">
+              {{ compra.total | currency }}
+            </ion-text>
+          </div>
         </ion-list>
       </ion-card-content>
     </ion-card>
-  </ion-list>
+  </div>
 </ion-content>
