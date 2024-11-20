@@ -1,15 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MenuController, AlertController } from '@ionic/angular';
 import { CartService } from '../services/cart.service';
 import { Router } from '@angular/router';
 import { Comic } from '../../services/comic';
+import { ServicebdService } from '../../services/servicebd.service';
 
 @Component({
   selector: 'app-comicsdc',
   templateUrl: './comicsdc.page.html',
   styleUrls: ['./comicsdc.page.scss'],
 })
-export class ComicsdcPage {
+export class ComicsdcPage implements OnInit, OnDestroy {
   comics: Comic[] = [
     // Cómic: The Flash N°52
     {
@@ -116,39 +117,67 @@ export class ComicsdcPage {
     }
   ];
 
-  filteredComics: Comic[] = [...this.comics];
+  filteredComics: Comic[] = [];
 
   constructor(
     private menu: MenuController,
     private alertCtrl: AlertController,
     private cartService: CartService,
-    private router: Router
+    private router: Router,
+    private serviceBD: ServicebdService
   ) {}
+
+  async ngOnInit() {
+    await this.initializeComics();
+    this.filteredComics = [...this.comics];
+  }
+
+  private async initializeComics() {
+    try {
+      // Insertar los cómics en la base de datos
+      await this.serviceBD.insertarComics(this.comics);
+      
+      // Cargar solo los cómics de DC (categoría 3)
+      const dcComics = await this.serviceBD.getComicsByCategoria(3);
+      this.comics = dcComics;
+    } catch (error) {
+      console.error('Error al inicializar los cómics de DC:', error);
+    }
+  }
 
   openMenu() {
     this.menu.open('first');
   }
 
   async addToCart(comic: Comic) {
-    const comicToAdd = { ...comic };
-    this.cartService.addToCart(comicToAdd);
+    if (comic.quantity && comic.quantity <= comic.stock) {
+      const comicToAdd = { ...comic };
+      this.cartService.addToCart(comicToAdd);
 
-    const alert = await this.alertCtrl.create({
-      header: 'Añadido al Carro',
-      message: `Has añadido ${comic.quantity} de ${comic.nombre_comic} al carrito.`,
-      buttons: ['OK']
-    });
-    await alert.present();
+      const alert = await this.alertCtrl.create({
+        header: 'Añadido al Carro',
+        message: `Has añadido ${comic.quantity} de ${comic.nombre_comic} al carrito.`,
+        buttons: ['OK']
+      });
+      await alert.present();
+    } else {
+      const alert = await this.alertCtrl.create({
+        header: 'Error',
+        message: 'No hay suficiente stock disponible.',
+        buttons: ['OK']
+      });
+      await alert.present();
+    }
   }
 
   increment(comic: Comic) {
-    if (typeof comic.quantity === 'number' && comic.quantity < 10) {
+    if (comic.quantity && comic.quantity < Math.min(10, comic.stock)) {
       comic.quantity++;
     }
   }
 
   decrement(comic: Comic) {
-    if (typeof comic.quantity === 'number' && comic.quantity > 1) {
+    if (comic.quantity && comic.quantity > 1) {
       comic.quantity--;
     }
   }
@@ -167,5 +196,9 @@ export class ComicsdcPage {
     } else {
       this.filteredComics = [...this.comics];
     }
+  }
+
+  ngOnDestroy() {
+    
   }
 }

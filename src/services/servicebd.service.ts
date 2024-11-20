@@ -461,6 +461,163 @@ export class ServicebdService {
     const query = 'UPDATE usuario SET clave = ? WHERE id_usuario = ?';
     await this.database.executeSql(query, [newPassword, userId]);
   }
+
+  // Obtener todos los cómics
+async getAllComics(): Promise<Comic[]> {
+  try {
+    const query = 'SELECT * FROM comics';
+    const result = await this.database.executeSql(query, []);
+    const comics: Comic[] = [];
+
+    for (let i = 0; i < result.rows.length; i++) {
+      const item = result.rows.item(i);
+      comics.push({
+        id_comic: item.id_comic,
+        nombre_comic: item.nombre_comic,
+        precio: item.precio,
+        stock: item.stock,
+        descripcion: item.descripcion,
+        foto_comic: item.foto_comic,
+        id_categoria: item.id_categoria,
+        link: item.link,
+        quantity: 1
+      });
+    }
+    return comics;
+  } catch (error) {
+    this.presentAlert('Error', 'Error al obtener cómics: ' + error);
+    return [];
+  }
+}
+
+// Agregar un nuevo cómic
+async addComic(comic: Comic): Promise<boolean> {
+  try {
+    const query = `
+      INSERT INTO comics (
+        nombre_comic, precio, stock, descripcion, 
+        foto_comic, id_categoria, link
+      ) VALUES (?, ?, ?, ?, ?, ?, ?)
+    `;
+    
+    await this.database.executeSql(query, [
+      comic.nombre_comic,
+      comic.precio,
+      comic.stock || 0,
+      comic.descripcion,
+      comic.foto_comic,
+      comic.id_categoria,
+      comic.link
+    ]);
+    return true;
+  } catch (error) {
+    this.presentAlert('Error', 'Error al agregar cómic: ' + error);
+    return false;
+  }
+}
+
+// Actualizar un cómic existente
+async updateComic(comic: Comic): Promise<boolean> {
+  try {
+    const query = `
+      UPDATE comics 
+      SET nombre_comic = ?, precio = ?, stock = ?, descripcion = ?, 
+          foto_comic = ?, id_categoria = ?, link = ?
+      WHERE id_comic = ?
+    `;
+    
+    await this.database.executeSql(query, [
+      comic.nombre_comic,
+      comic.precio,
+      comic.stock,
+      comic.descripcion,
+      comic.foto_comic,
+      comic.id_categoria,
+      comic.link,
+      comic.id_comic
+    ]);
+    return true;
+  } catch (error) {
+    this.presentAlert('Error', 'Error al actualizar cómic: ' + error);
+    return false;
+  }
+}
+
+// Eliminar un cómic
+async deleteComic(id_comic: number): Promise<boolean> {
+  try {
+    const query = 'DELETE FROM comics WHERE id_comic = ?';
+    await this.database.executeSql(query, [id_comic]);
+    return true;
+  } catch (error) {
+    this.presentAlert('Error', 'Error al eliminar cómic: ' + error);
+    return false;
+  }
+}
+
+// Obtener historial de compras de todos los usuarios
+getHistorialComprasAdmin(): Observable<CompraDetalle[]> {
+  return new Observable(observer => {
+    try {
+      const query = `
+        SELECT 
+          v.id_venta,
+          v.f_venta,
+          v.total,
+          v.id_estado,
+          v.id_usuario,
+          dc.id_comic,
+          dc.cantidad,
+          c.nombre_comic,
+          c.foto_comic,
+          c.precio
+        FROM venta v 
+        LEFT JOIN detalles_venta dc ON v.id_venta = dc.id_venta 
+        LEFT JOIN comics c ON dc.id_comic = c.id_comic
+        LEFT JOIN usuario u ON v.id_usuario = u.id_usuario
+        ORDER BY v.f_venta DESC
+      `;
+
+      this.database.executeSql(query, []).then(result => {
+        const comprasMap = new Map<number, CompraDetalle>();
+
+        for (let i = 0; i < result.rows.length; i++) {
+          const item = result.rows.item(i);
+          if (!comprasMap.has(item.id_venta)) {
+            comprasMap.set(item.id_venta, {
+              id_venta: item.id_venta,
+              fecha: new Date(item.f_venta).toLocaleDateString(),
+              total: item.total,
+              id_estado: item.id_estado,
+              items: []
+            });
+          }
+
+          const compra = comprasMap.get(item.id_venta);
+          if (compra && item.id_comic) {
+            compra.items.push({
+              id_comic: item.id_comic,
+              quantity: item.cantidad,
+              nombre_comic: item.nombre_comic,
+              precio: item.precio,
+              stock: 0,
+              descripcion: '',
+              foto_comic: item.foto_comic,
+              id_categoria: 0,
+              link: ''
+            });
+          }
+        }
+
+        observer.next(Array.from(comprasMap.values()));
+        observer.complete();
+      });
+    } catch (error) {
+      observer.error('Error al obtener el historial de compras: ' + error);
+    }
+  });
+}
+
   
   
 

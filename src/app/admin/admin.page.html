@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="primary">
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/login"></ion-back-button>
     </ion-buttons>
@@ -8,58 +8,144 @@
 </ion-header>
 
 <ion-content>
-  <ion-grid>
-    <!-- Formulario para agregar o editar un cómic -->
-    <ion-row>
-      <ion-col>
-        <ion-card>
-          <ion-card-header>
-            <ion-card-title>{{ isEdit ? 'Editar Cómic' : 'Agregar Cómic' }}</ion-card-title>
-          </ion-card-header>
-          <ion-card-content>
-            <form (ngSubmit)="onSubmit(comicForm)" #comicForm="ngForm">
-              <ion-item>
-                <ion-label position="floating">Título</ion-label>
-                <ion-input type="text" name="title" [(ngModel)]="comic.title" required></ion-input>
-              </ion-item>
-              <ion-item>
-                <ion-label position="floating">Precio</ion-label>
-                <ion-input type="number" name="price" [(ngModel)]="comic.price" required></ion-input>
-              </ion-item>
-              <div *ngIf="priceError" class="error-message" style="color: red;">{{ priceError }}</div>
-              <ion-item>
-                <ion-label position="floating">Imagen</ion-label>
-                <img [src]="comic.image" *ngIf="comic.image" alt="{{ comic.title }}" style="width: 50px; height: 50px; margin-right: 10px;">
-                <ion-button (click)="presentActionSheet()">Añadir Imagen</ion-button>
-              </ion-item>
-              <ion-item>
-                <ion-label position="floating">Link</ion-label>
-                <ion-input type="text" name="link" [(ngModel)]="comic.link" required></ion-input>
-              </ion-item>
-              <ion-button expand="full" type="submit" color="primary">{{ isEdit ? 'Actualizar Cómic' : 'Agregar Cómic' }}</ion-button>
-            </form>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-    </ion-row>
+  <ion-segment [(ngModel)]="segmentValue" color="primary">
+    <ion-segment-button value="comics">
+      <ion-label>Gestión de Cómics</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="ventas">
+      <ion-label>Historial de Ventas</ion-label>
+    </ion-segment-button>
+  </ion-segment>
 
-    <!-- Lista de cómics con opciones para editar/eliminar -->
-    <ion-row>
-      <ion-col>
-        <ion-list>
-          <ion-item *ngFor="let comic of comics">
+  <div [ngSwitch]="segmentValue">
+    <div *ngSwitchCase="'comics'">
+      <!-- Formulario de Cómics -->
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>{{ isEdit ? 'Editar Cómic' : 'Agregar Nuevo Cómic' }}</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <form (ngSubmit)="onSubmit()" #comicForm="ngForm">
+            <ion-item>
+              <ion-label position="floating">Título *</ion-label>
+              <ion-input type="text" [(ngModel)]="comic.nombre_comic" name="nombre_comic" required></ion-input>
+            </ion-item>
+
+            <ion-item>
+              <ion-label position="floating">Precio *</ion-label>
+              <ion-input type="number" [(ngModel)]="comic.precio" name="precio" required></ion-input>
+            </ion-item>
+            <div *ngIf="priceError" class="error-message">
+              <ion-text color="danger">{{ priceError }}</ion-text>
+            </div>
+
+            <ion-item>
+              <ion-label position="floating">Stock *</ion-label>
+              <ion-input type="number" [(ngModel)]="comic.stock" name="stock" required></ion-input>
+            </ion-item>
+            <div *ngIf="stockError" class="error-message">
+              <ion-text color="danger">{{ stockError }}</ion-text>
+            </div>
+
+            <ion-item>
+              <ion-label position="floating">Descripción</ion-label>
+              <ion-textarea [(ngModel)]="comic.descripcion" name="descripcion"></ion-textarea>
+            </ion-item>
+
+            <ion-item>
+              <ion-label>Categoría</ion-label>
+              <ion-select [(ngModel)]="comic.id_categoria" name="id_categoria">
+                <ion-select-option *ngFor="let categoria of categorias" [value]="categoria.id">
+                  {{ categoria.nombre }}
+                </ion-select-option>
+              </ion-select>
+            </ion-item>
+
+            <ion-item>
+              <ion-label position="floating">Link</ion-label>
+              <ion-input type="text" [(ngModel)]="comic.link" name="link"></ion-input>
+            </ion-item>
+
+            <ion-item>
+              <ion-label>Imagen</ion-label>
+              <ion-button (click)="presentActionSheet()" fill="clear">
+                <ion-icon name="camera" slot="start"></ion-icon>
+                Seleccionar Imagen
+              </ion-button>
+            </ion-item>
+            <ion-img [src]="comic.foto_comic" *ngIf="comic.foto_comic"></ion-img>
+
+            <ion-button expand="block" type="submit" class="ion-margin-top">
+              {{ isEdit ? 'Actualizar' : 'Agregar' }} Cómic
+            </ion-button>
+            <ion-button expand="block" type="button" color="medium" (click)="resetForm()" class="ion-margin-top">
+              Limpiar Formulario
+            </ion-button>
+          </form>
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Lista de Cómics -->
+      <ion-list>
+        <ion-list-header>
+          <ion-label>
+            <h1>Catálogo de Cómics</h1>
+          </ion-label>
+        </ion-list-header>
+
+        <ion-item *ngFor="let comic of comics">
+          <ion-thumbnail slot="start">
+            <ion-img [src]="comic.foto_comic"></ion-img>
+          </ion-thumbnail>
+          <ion-label>
+            <h2>{{ comic.nombre_comic }}</h2>
+            <h3>{{ comic.precio | currency }}</h3>
+            <p>Stock: {{ comic.stock }}</p>
+            <p>Categoría: {{ getCategoriaName(comic.id_categoria) }}</p>
+          </ion-label>
+          <ion-buttons slot="end">
+            <ion-button color="warning" (click)="editComic(comic)">
+              <ion-icon name="create-outline"></ion-icon>
+            </ion-button>
+            <ion-button color="danger" (click)="confirmDelete(comic)">
+              <ion-icon name="trash-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-item>
+      </ion-list>
+    </div>
+
+    <div *ngSwitchCase="'ventas'">
+      <!-- Historial de Ventas -->
+      <ion-list>
+        <ion-list-header>
+          <ion-label>
+            <h1>Historial de Ventas</h1>
+          </ion-label>
+        </ion-list-header>
+
+        <ion-item-group *ngFor="let compra of historialCompras">
+          <ion-item-divider>
+            <ion-label>
+              <h2>Venta #{{ compra.id_venta }}</h2>
+              <p>Fecha: {{ compra.fecha }}</p>
+              <p>Estado: {{ getEstadoVenta(compra.id_estado) }}</p>
+              <p>Total: {{ compra.total | currency }}</p>
+            </ion-label>
+          </ion-item-divider>
+        
+          <ion-item *ngFor="let item of compra.items">
             <ion-thumbnail slot="start">
-              <img [src]="comic.image" alt="{{ comic.title }}">
+              <ion-img [src]="item.foto_comic"></ion-img>
             </ion-thumbnail>
             <ion-label>
-              <h2>{{ comic.title }}</h2>
-              <p>{{ comic.price | currency }}</p>
+              <h3>{{ item.nombre_comic }}</h3>
+              <p>Cantidad: {{ item.quantity }}</p>
+              <p>Precio unitario: {{ item.precio | currency }}</p>
             </ion-label>
-            <ion-button slot="end" color="warning" (click)="editComic(comic)">Editar</ion-button>
-            <ion-button slot="end" color="danger" (click)="confirmDelete(comic)">Eliminar</ion-button>
           </ion-item>
-        </ion-list>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+        </ion-item-group>
+      </ion-list>
+    </div>
+  </div>
 </ion-content>

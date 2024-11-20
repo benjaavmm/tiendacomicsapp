@@ -1,15 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MenuController, AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { CartService } from '../services/cart.service';
 import { Comic } from '../../services/comic';
+import { ServicebdService } from '../../services/servicebd.service';
 
 @Component({
   selector: 'app-mangas',
   templateUrl: './mangas.page.html',
   styleUrls: ['./mangas.page.scss'],
 })
-export class MangasPage {
+export class MangasPage implements OnInit, OnDestroy {
   comics: Comic[] = [
     // Cómic: Naruto
     {
@@ -97,7 +98,7 @@ export class MangasPage {
       precio: 12990,
       stock: 10,
       descripcion: 'Descripción de Attack On Titan',
-      foto_comic: 'assets/img/atackontitan.jpg',
+      foto_comic: 'assets/img/attackontitan.jpg',
       id_categoria: 2,
       link: '/attackontitan'
     },
@@ -116,45 +117,73 @@ export class MangasPage {
     }
   ];
 
-  filteredComics: Comic[] = [...this.comics];
+  filteredComics: Comic[] = [];
 
   constructor(
     private menu: MenuController,
     private alertCtrl: AlertController,
+    private cartService: CartService,
     private router: Router,
-    private cartService: CartService
+    private serviceBD: ServicebdService
   ) {}
+
+  async ngOnInit() {
+    await this.initializeComics();
+    this.filteredComics = [...this.comics];
+  }
+
+  private async initializeComics() {
+    try {
+      // Insertar los cómics en la base de datos
+      await this.serviceBD.insertarComics(this.comics);
+      
+      // Cargar solo los mangas (categoría 2)
+      const mangaComics = await this.serviceBD.getComicsByCategoria(2);
+      this.comics = mangaComics;
+    } catch (error) {
+      console.error('Error al inicializar los mangas:', error);
+    }
+  }
 
   openMenu() {
     this.menu.open('first');
   }
 
   async addToCart(comic: Comic) {
-    const comicToAdd = { ...comic };
-    this.cartService.addToCart(comicToAdd);
+    if (comic.quantity && comic.quantity <= comic.stock) {
+      const comicToAdd = { ...comic };
+      this.cartService.addToCart(comicToAdd);
 
-    const alert = await this.alertCtrl.create({
-      header: 'Añadido al Carro',
-      message: `Has añadido ${comic.quantity} de ${comic.nombre_comic} al carrito.`,
-      buttons: ['OK']
-    });
-    await alert.present();
+      const alert = await this.alertCtrl.create({
+        header: 'Añadido al Carro',
+        message: `Has añadido ${comic.quantity} de ${comic.nombre_comic} al carrito.`,
+        buttons: ['OK']
+      });
+      await alert.present();
+    } else {
+      const alert = await this.alertCtrl.create({
+        header: 'Error',
+        message: 'No hay suficiente stock disponible.',
+        buttons: ['OK']
+      });
+      await alert.present();
+    }
   }
+
   increment(comic: Comic) {
-    if (typeof comic.quantity === 'number' && comic.quantity < 10) {
+    if (comic.quantity && comic.quantity < Math.min(10, comic.stock)) {
       comic.quantity++;
     }
   }
-  
+
   decrement(comic: Comic) {
-    if (typeof comic.quantity === 'number' && comic.quantity > 1) {
+    if (comic.quantity && comic.quantity > 1) {
       comic.quantity--;
     }
   }
+
   navigateToComic(link: string) {
-    if (link) {
-      this.router.navigate([link]);
-    }
+    this.router.navigate([link]);
   }
 
   filterComics(event: any) {
@@ -167,5 +196,9 @@ export class MangasPage {
     } else {
       this.filteredComics = [...this.comics];
     }
+  }
+
+  ngOnDestroy() {
+   
   }
 }

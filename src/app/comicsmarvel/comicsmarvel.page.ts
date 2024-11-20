@@ -1,27 +1,28 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MenuController, AlertController } from '@ionic/angular';
 import { CartService } from '../services/cart.service'; 
 import { Router } from '@angular/router';
 import { Comic } from '../../services/comic'; 
+import { ServicebdService } from '../../services/servicebd.service';
 
 @Component({
   selector: 'app-comicsmarvel',
   templateUrl: './comicsmarvel.page.html',
   styleUrls: ['./comicsmarvel.page.scss'],
 })
-export class ComicsmarvelPage {
+export class ComicsmarvelPage implements OnInit, OnDestroy {
   comics: Comic[] = [
     // Cómic: The Incredible Hulk And Now The Wolverine!
     {
-      id_comic: 9, // ID único del cómic
-      quantity: 1, // Cantidad inicial en el carrito
-      nombre_comic: 'The Incredible Hulk And Now The Wolverine!', // Nombre del cómic
-      precio: 22990, // Precio del cómic
-      stock: 100, // Cantidad disponible en stock
-      descripcion: 'Descripción del cómic', // Descripción del cómic
-      foto_comic: 'assets/img/hulk.png', // Ruta de la imagen del cómic
-      id_categoria: 1, // Categoría del cómic
-      link: '/hulk' // Enlace para navegación a la página del cómic
+      id_comic: 9,
+      quantity: 1,
+      nombre_comic: 'The Incredible Hulk And Now The Wolverine!',
+      precio: 22990,
+      stock: 100,
+      descripcion: 'Descripción del cómic',
+      foto_comic: 'assets/img/hulk.png',
+      id_categoria: 1,
+      link: '/hulk'
     },
 
     // Cómic: The Amazing Spider-Man
@@ -116,39 +117,67 @@ export class ComicsmarvelPage {
     }
   ];
 
-  filteredComics: Comic[] = [...this.comics];
+  filteredComics: Comic[] = [];
 
   constructor(
     private menu: MenuController,
     private alertCtrl: AlertController,
     private cartService: CartService,
-    private router: Router
+    private router: Router,
+    private serviceBD: ServicebdService
   ) {}
+
+  async ngOnInit() {
+    await this.initializeComics();
+    this.filteredComics = [...this.comics];
+  }
+
+  private async initializeComics() {
+    try {
+      // Insertar los cómics en la base de datos
+      await this.serviceBD.insertarComics(this.comics);
+      
+      // Cargar solo los cómics de Marvel (categoría 1)
+      const marvelComics = await this.serviceBD.getComicsByCategoria(1);
+      this.comics = marvelComics;
+    } catch (error) {
+      console.error('Error al inicializar los cómics de Marvel:', error);
+    }
+  }
 
   openMenu() {
     this.menu.open('first');
   }
 
   async addToCart(comic: Comic) {
-    const comicToAdd = { ...comic };
-    this.cartService.addToCart(comicToAdd);
+    if (comic.quantity && comic.quantity <= comic.stock) {
+      const comicToAdd = { ...comic };
+      this.cartService.addToCart(comicToAdd);
 
-    const alert = await this.alertCtrl.create({
-      header: 'Añadido al Carro',
-      message: `Has añadido ${comic.quantity} de ${comic.nombre_comic} al carrito.`,
-      buttons: ['OK']
-    });
-    await alert.present();
+      const alert = await this.alertCtrl.create({
+        header: 'Añadido al Carro',
+        message: `Has añadido ${comic.quantity} de ${comic.nombre_comic} al carrito.`,
+        buttons: ['OK']
+      });
+      await alert.present();
+    } else {
+      const alert = await this.alertCtrl.create({
+        header: 'Error',
+        message: 'No hay suficiente stock disponible.',
+        buttons: ['OK']
+      });
+      await alert.present();
+    }
   }
 
   increment(comic: Comic) {
-    if (typeof comic.quantity === 'number' && comic.quantity < 10) {
+    if (comic.quantity && comic.quantity < Math.min(10, comic.stock)) {
       comic.quantity++;
     }
   }
 
   decrement(comic: Comic) {
-    if (typeof comic.quantity === 'number' && comic.quantity > 1) {
+    if (comic.quantity && comic.quantity > 1) {
       comic.quantity--;
     }
   }
@@ -167,5 +196,9 @@ export class ComicsmarvelPage {
     } else {
       this.filteredComics = [...this.comics];
     }
+  }
+
+  ngOnDestroy() {
+    
   }
 }

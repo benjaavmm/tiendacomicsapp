@@ -1,0 +1,47 @@
+.error-message {
+    color: var(--ion-color-danger);
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+  
+  ion-card {
+    margin: 1rem;
+  }
+  
+  ion-thumbnail {
+    --size: 80px;
+    margin-right: 1rem;
+  }
+  
+  ion-img {
+    max-height: 200px;
+    object-fit: cover;
+    margin: 1rem 0;
+  }
+  
+  ion-item-divider {
+    --background: var(--ion-color-light);
+    --padding-start: 1rem;
+    --padding-end: 1rem;
+    --padding-top: 0.5rem;
+    --padding-bottom: 0.5rem;
+  }
+  
+  .list-header {
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 1rem;
+    background: var(--ion-color-light);
+  }
+  
+  ion-segment {
+    padding: 0.5rem;
+  }
+  
+  form {
+    padding: 1rem 0;
+  }
+  
+  ion-button[type="submit"] {
+    margin-top: 1.5rem
+  }  
