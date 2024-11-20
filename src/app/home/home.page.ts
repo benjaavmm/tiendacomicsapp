@@ -12,112 +12,58 @@ import { ServicebdService } from '../../services/servicebd.service';
 })
 export class HomePage implements OnInit, OnDestroy {
   comics: Comic[] = [
-    // Cómic: The Flash N°52
-    {
-      id_comic: 1,
-      quantity: 1,
-      nombre_comic: 'The Flash N°52',
-      precio: 21990,
-      stock: 100,
-      descripcion: 'Descripción del cómic',
-      foto_comic: 'assets/img/flash.jpg',
-      id_categoria: 3, // DC
-      link: '/flash1'
-    },
-
-    // Cómic: Green Lantern: Tales of the Sinestro Corps
-    {
-      id_comic: 2,
-      quantity: 1,
-      nombre_comic: 'Green Lantern: Tales of the Sinestro Corps',
-      precio: 19990,
-      stock: 100,
-      descripcion: 'Descripción del cómic',
-      foto_comic: 'assets/img/linternaverde.jpg',
-      id_categoria: 3, // DC
-      link: '/linternaverde1'
-    },
-
-    // Cómic: Detective Comics #400
-    {
-      id_comic: 3,
-      quantity: 1,
-      nombre_comic: 'Detective Comics #400: El Desafío del Hombre Murciélago',
-      precio: 23990,
-      stock: 100,
-      descripcion: 'Descripción del cómic',
-      foto_comic: 'assets/img/batman1.jpg',
-      id_categoria: 3, // DC
-      link: '/batman1'
-    },
-
-    // Cómic: Dragon Ball #12
-    {
-      id_comic: 4,
-      quantity: 1,
-      nombre_comic: 'Dragon Ball #12: El Desafío de Goku y Vegeta',
-      precio: 13990,
-      stock: 100,
-      descripcion: 'Descripción del cómic',
-      foto_comic: 'assets/img/dragonball.jpg',
-      id_categoria: 2, // Manga
-      link: '/dragonball'
-    },
-
-    // Cómic: Demon Slayer
-    {
-      id_comic: 5,
-      quantity: 1,
-      nombre_comic: 'Demon Slayer',
-      precio: 11990,
-      stock: 100,
-      descripcion: 'Descripción del cómic',
-      foto_comic: 'assets/img/demonslayer.jpg',
-      id_categoria: 2, // Manga
-      link: '/demonslayer'
-    },
-
-    // Cómic: Marvel Super Heroes: Secret Wars
-    {
-      id_comic: 13,
-      quantity: 1,
-      nombre_comic: 'Marvel Super Heroes: Secret Wars',
-      precio: 20990,
-      stock: 100,
-      descripcion: 'Descripción del cómic',
-      foto_comic: 'assets/img/secretwars.jpg',
-      id_categoria: 1, // Marvel
-      link: '/secretwars'
-    },
-
-    // Cómic: Naruto
+    // Manga
     {
       id_comic: 7,
       quantity: 1,
       nombre_comic: 'Naruto',
       precio: 11990,
       stock: 100,
-      descripcion: 'Descripción del cómic',
+      descripcion: 'Manga de ninjas que narra la historia de Naruto Uzumaki',
       foto_comic: 'assets/img/naruto.jpg',
-      id_categoria: 2, // Manga
+      id_categoria: 2,
       link: '/naruto'
     },
-
-    // Cómic: The Amazing Spiderman
+    // DC Comics
+    {
+      id_comic: 3,
+      quantity: 1,
+      nombre_comic: 'Batman: Detective Comics #400',
+      precio: 23990,
+      stock: 100,
+      descripcion: 'El Caballero Oscuro se enfrenta a nuevos desafíos en Gotham',
+      foto_comic: 'assets/img/batman1.jpg',
+      id_categoria: 3,
+      link: '/batman1'
+    },
+    // Marvel Comics
     {
       id_comic: 8,
       quantity: 1,
-      nombre_comic: 'The Amazing Spiderman',
+      nombre_comic: 'The Amazing Spider-Man',
       precio: 18990,
       stock: 100,
-      descripcion: 'Descripción del cómic',
+      descripcion: 'Las increíbles aventuras del Hombre Araña',
       foto_comic: 'assets/img/spiderman.jpg',
-      id_categoria: 1, // Marvel
+      id_categoria: 1,
       link: '/spiderman'
+    },
+    {
+      id_comic: 9,
+      quantity: 1,
+      nombre_comic: 'Black Widow',
+      precio: 19990,
+      stock: 100,
+      descripcion: 'Las misiones secretas de Natasha Romanoff',
+      foto_comic: 'assets/img/blackwidow.jpg',
+      id_categoria: 1,
+      link: '/blackwidow'
     }
   ];
 
   filteredComics: Comic[] = [];
+  featuredComics: Comic[] = [];
+
   carouselImages = [
     { src: 'assets/img/marvel.png', link: '/comicsmarvel' },
     { src: 'assets/img/mangas.png', link: '/mangas' },
@@ -136,31 +82,28 @@ export class HomePage implements OnInit, OnDestroy {
   ) {}
 
   async ngOnInit() {
-    // Iniciar el carrusel
     this.slideInterval = setInterval(() => {
       this.nextSlide();
     }, 4000);
 
-    // Inicializar los cómics desde la base de datos
     await this.initializeComics();
-    this.filteredComics = [...this.comics];
+    this.selectFeaturedComics();
   }
 
   private async initializeComics() {
     try {
-      // Primero insertamos los cómics en la base de datos
       await this.serviceBD.insertarComics(this.comics);
-      
-      // Luego cargamos todos los cómics de todas las categorías
-      const marvelComics = await this.serviceBD.getComicsByCategoria(1);
-      const mangaComics = await this.serviceBD.getComicsByCategoria(2);
-      const dcComics = await this.serviceBD.getComicsByCategoria(3);
-      
-      // Combinamos todos los cómics
-      this.comics = [...marvelComics, ...mangaComics, ...dcComics];
+      this.selectFeaturedComics();
     } catch (error) {
       console.error('Error al inicializar los cómics:', error);
+      this.selectFeaturedComics();
     }
+  }
+
+  private selectFeaturedComics() {
+    // Mostrar solo los 4 cómics específicos
+    this.featuredComics = this.comics;
+    this.filteredComics = this.featuredComics;
   }
 
   openMenu() {
@@ -210,11 +153,11 @@ export class HomePage implements OnInit, OnDestroy {
     const searchTerm = event.target.value.toLowerCase();
     
     if (searchTerm && searchTerm.trim() !== '') {
-      this.filteredComics = this.comics.filter((comic) => {
+      this.filteredComics = this.featuredComics.filter((comic) => {
         return comic.nombre_comic.toLowerCase().includes(searchTerm);
       });
     } else {
-      this.filteredComics = [...this.comics];
+      this.filteredComics = [...this.featuredComics];
     }
   }
 

@@ -96,7 +96,7 @@ export class MangasPage implements OnInit, OnDestroy {
       quantity: 1,
       nombre_comic: 'Attack On Titan',
       precio: 12990,
-      stock: 10,
+      stock: 100,
       descripcion: 'Descripción de Attack On Titan',
       foto_comic: 'assets/img/attackontitan.jpg',
       id_categoria: 2,
