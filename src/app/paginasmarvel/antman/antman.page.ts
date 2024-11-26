@@ -14,7 +14,7 @@ export class AntmanPage implements OnInit {
     id_comic: 11,
     nombre_comic: 'The Astonishing Ant-Man',
     precio: 23990,
-    stock: 100,
+    stock: 10,
     descripcion: 'The Astonishing Ant-Man sigue las aventuras de Scott Lang, un exconvicto y experto en tecnología que asume el papel del héroe diminuto, Ant-Man. Con un traje que le permite encogerse hasta el tamaño de una hormiga y aumentar su fuerza, Scott enfrenta desafíos tanto dentro como fuera del traje mientras equilibra su vida como padre soltero y superhéroe.',
     foto_comic: 'assets/img/antman.jpg',
     id_categoria: 1,

@@ -15,7 +15,7 @@ export class CapitanamericaPage implements OnInit {
     id_comic: 12,
     nombre_comic: 'The Avengers: Captain America Lives Again!',
     precio: 22990,
-    stock: 100,
+    stock: 10,
     descripcion: '"The Avengers: Captain America Lives Again!" presenta el emocionante regreso del legendario Capitán América a las filas de los Vengadores. En esta historia épica, después de décadas de estar atrapado en un estado de animación suspendida, el Capitán América despierta en el mundo moderno para enfrentarse a una nueva era de desafíos.',
     foto_comic: 'assets/img/capitanamerica.jpg',
     id_categoria: 1,

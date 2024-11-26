@@ -16,7 +16,7 @@ export class DragonballPage implements OnInit {
     id_comic: 4,
     nombre_comic: 'Dragon Ball #12: El Desafío de Goku y Vegeta',
     precio: 13990,
-    stock: 100,
+    stock: 10,
     descripcion: '"En esta emocionante entrega de Dragon Ball, los legendarios guerreros Goku y Vegeta se enfrentan a un enemigo formidable lo cual promete acción, poder y emociones intensas. ¡No te pierdas esta emocionante entrega de Dragon Ball!"',
     foto_comic: 'assets/img/dragonball.jpg',
     id_categoria: 2,

@@ -14,7 +14,7 @@ export class IronmanPage implements OnInit {
     id_comic: 14,
     nombre_comic: 'The Invincible Iron Man: Cry Revolution!',
     precio: 24990,
-    stock: 100,
+    stock: 10,
     descripcion: '"The Invincible Iron Man: Cry Revolution!" narra la emocionante historia de Tony Stark, también conocido como Iron Man, mientras se enfrenta a una nueva amenaza que desafía su ingenio y su tecnología.',
     foto_comic: 'assets/img/ironman.jpg',
     id_categoria: 1,

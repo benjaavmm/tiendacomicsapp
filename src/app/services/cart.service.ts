@@ -15,7 +15,6 @@ export class CartService {
     if (savedCart) {
       try {
         const parsedCart = JSON.parse(savedCart);
-        // Asegurarse de que los id_comic sean números
         this.cartItems = parsedCart.map((item: Comic) => ({
           ...item,
           id_comic: Number(item.id_comic)
@@ -30,16 +29,22 @@ export class CartService {
   }
 
   addToCart(comic: Comic) {
-    const existingItem = this.cartItems.find(item => item.id_comic === comic.id_comic);
+    const existingItem = this.cartItems.find(item => item.id_comic === Number(comic.id_comic));
     
     if (existingItem) {
-      existingItem.quantity = (existingItem.quantity || 0) + 1;
+      // Si el item ya existe, sumamos la nueva cantidad
+      const newQuantity = (existingItem.quantity || 0) + (comic.quantity || 1);
+      // Verificamos que no exceda el stock
+      existingItem.quantity = Math.min(newQuantity, comic.stock);
     } else {
+      // Si es un nuevo item, respetamos la cantidad especificada o usamos 1 como valor predeterminado
       const newItem: Comic = {
         ...comic,
-        id_comic: Number(comic.id_comic), // Asegurarse de que sea número
-        quantity: 1
+        id_comic: Number(comic.id_comic),
+        quantity: comic.quantity || 1
       };
+      // Verificamos que la cantidad inicial no exceda el stock
+      newItem.quantity = Math.min(newItem.quantity, comic.stock);
       this.cartItems.push(newItem);
     }
 
@@ -61,7 +66,8 @@ export class CartService {
   updateItemQuantity(comic: Comic, quantity: number) {
     const item = this.cartItems.find(item => item.id_comic === Number(comic.id_comic));
     if (item) {
-      item.quantity = quantity;
+      // Asegurarnos de que la cantidad no exceda el stock
+      item.quantity = Math.min(quantity, comic.stock);
       this.updateCartCount();
       this.updateCartTotal();
       this.saveCartToStorage();
@@ -102,7 +108,6 @@ export class CartService {
   }
 
   isInCart(comicId: number | string): boolean {
-    // Convertir a número para la comparación
     const numericId = Number(comicId);
     return this.cartItems.some(item => item.id_comic === numericId);
   }

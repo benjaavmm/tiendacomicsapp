@@ -16,7 +16,7 @@ export class TokyorevengersPage implements OnInit {
     id_comic: 8,
     nombre_comic: 'Tokyo Revengers',
     precio: 12990,
-    stock: 100,
+    stock: 10,
     descripcion: '"Takemichi, un fracasado que fue miembro de una banda en su juventud, salta 12 años atrás en el tiempo para volver al instituto y salvar a su exnovia, Hina, que en la actualidad ha sido asesinada por la organización criminal Tokyo Manjikai. Con cada viaje temporal, Takemichi influye en los que le rodean y poco a poco va cambiando el pasado… ¿pero eso será suficiente para salvar a Hina y evitar que la Tokyo Manjikai se convierta en una temida banda criminal?"',
     foto_comic: 'assets/img/tokyorevengers.jpg',
     id_categoria: 2,

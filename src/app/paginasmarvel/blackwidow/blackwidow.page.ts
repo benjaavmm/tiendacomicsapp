@@ -15,7 +15,7 @@ export class BlackwidowPage implements OnInit {
     id_comic: 16,
     nombre_comic: 'Black Widow: Widow\'s Sting',
     precio: 24990,
-    stock: 100,
+    stock: 10,
     descripcion: '"Black Widow: Widow\'s Sting" sigue los pasos de Natasha Romanoff, también conocida como la Viuda Negra, en una emocionante misión llena de intriga y peligro. Cuando un antiguo enemigo resurge con un plan para desatar el caos mundial, Natasha se ve obligada a enfrentar su pasado oscuro mientras lucha por detener una conspiración que amenaza con destruir todo lo que ama.',
     foto_comic: 'assets/img/blackwidow.jpg',
     id_categoria: 1,

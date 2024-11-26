@@ -16,7 +16,7 @@ export class JujutsukaisenPage implements OnInit {
     id_comic: 22,
     nombre_comic: 'Jujutsu Kaisen',
     precio: 13990,
-    stock: 100,
+    stock: 10,
     descripcion: '"Sukuna es libre por un momento, y sus acciones atroces provocan gravísimos daños en el distrito de Shibuya. Por otro lado, un hechicero maléfico ataca por la espalda a Fushiguro y le inflige una herida fatal, por lo que no le queda otro remedio de usar su as bajo la manga."',
     foto_comic: 'assets/img/jujutsukaisen.jpg',
     id_categoria: 2,

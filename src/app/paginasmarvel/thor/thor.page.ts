@@ -16,7 +16,7 @@ export class ThorPage implements OnInit {
     id_comic: 15,
     nombre_comic: 'The Mighty Thor: The Wrath Of Odin!',
     precio: 21990,
-    stock: 100,
+    stock: 10,
     descripcion: '"The Mighty Thor: The Wrath of Odin!" sumerge a los lectores en una saga épica que sigue las hazañas del poderoso dios nórdico del trueno. Cuando el reino de Asgard se ve amenazado por una fuerza oscura ancestral, Thor se embarca en una búsqueda desesperada para salvar su hogar y proteger a los nueve reinos.',
     foto_comic: 'assets/img/thor.jpg',
     id_categoria: 1,

@@ -14,7 +14,7 @@ export class SecretwarsPage implements OnInit {
     id_comic: 13,
     nombre_comic: 'Marvel Super Heroes: Secret Wars',
     precio: 20990,
-    stock: 100,
+    stock: 10,
     descripcion: '"Marvel Super Heroes: Secret Wars es una saga épica que reúne a los héroes y villanos más emblemáticos del Universo Marvel en una batalla cósmica sin precedentes."',
     foto_comic: 'assets/img/secretwars.jpg',
     id_categoria: 1,

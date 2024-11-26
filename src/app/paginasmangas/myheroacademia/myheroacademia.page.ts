@@ -16,7 +16,7 @@ export class MyheroacademiaPage implements OnInit {
     id_comic: 24,
     nombre_comic: 'My Hero Academia',
     precio: 13990,
-    stock: 100,
+    stock: 10,
     descripcion: '"Estamos en un mundo donde abundan los superhéroes (y los supervillanos). Los mejores humanos son entrenados en la Academia de Héroes para optimizar sus poderes. Entre la minoría normal, sin poder alguno, aparece Izuku Midoriya, dispuesto a ser una excepción y formarse en la Academia para convertirse en un héroe."',
     foto_comic: 'assets/img/myheroacademia.jpg',
     id_categoria: 2,
