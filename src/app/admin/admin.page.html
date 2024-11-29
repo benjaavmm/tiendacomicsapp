@@ -19,7 +19,6 @@
 
   <div [ngSwitch]="segmentValue">
     <div *ngSwitchCase="'comics'">
-      <!-- Formulario de Cómics -->
       <ion-card>
         <ion-card-header>
           <ion-card-title>{{ isEdit ? 'Editar Cómic' : 'Agregar Nuevo Cómic' }}</ion-card-title>
@@ -54,7 +53,7 @@
 
             <ion-item>
               <ion-label>Categoría</ion-label>
-              <ion-select [(ngModel)]="comic.id_categoria" name="id_categoria">
+              <ion-select [(ngModel)]="comic.id_categoria" name="id_categoria" required>
                 <ion-select-option *ngFor="let categoria of categorias" [value]="categoria.id">
                   {{ categoria.nombre }}
                 </ion-select-option>
@@ -85,7 +84,6 @@
         </ion-card-content>
       </ion-card>
 
-      <!-- Lista de Cómics -->
       <ion-list>
         <ion-list-header>
           <ion-label>
@@ -116,7 +114,6 @@
     </div>
 
     <div *ngSwitchCase="'ventas'">
-      <!-- Historial de Ventas -->
       <ion-list>
         <ion-list-header>
           <ion-label>

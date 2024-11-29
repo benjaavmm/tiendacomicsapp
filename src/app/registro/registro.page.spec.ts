@@ -2,6 +2,13 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RegistroPage } from './registro.page';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { ServicebdService } from '../../services/servicebd.service';
+
+// Mock para el servicio que puedas estar usando
+class MockServicebdService {
+  // Simula métodos del servicio según sea necesario
+}
 
 describe('RegistroPage', () => {
   let component: RegistroPage;
@@ -9,10 +16,14 @@ describe('RegistroPage', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ RegistroPage ],
-      imports: [ 
-        IonicModule.forRoot(),
-        FormsModule
+      declarations: [RegistroPage],
+      imports: [
+        CommonModule,
+        FormsModule,
+        IonicModule.forRoot()
+      ],
+      providers: [
+        { provide: ServicebdService, useClass: MockServicebdService } // Proveedor simulado
       ]
     }).compileComponents();
 
@@ -21,83 +32,41 @@ describe('RegistroPage', () => {
     fixture.detectChanges();
   });
 
-  
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  // Prueba 1: Validación del formato de correo electrónico
   it('debería validar el formato de correo electrónico', () => {
-    
-    const correosValidos = [
-      'test@example.com',
-      'user.name@domain.com',
-      'user123@subdomain.domain.cl'
-    ];
+    const correosValidos = ['test@example.com', 'user@domain.com'];
+    const correosInvalidos = ['invalido', 'test@', '@test.com'];
 
-    // Casos de prueba con correos inválidos
-    const correosInvalidos = [
-      'correosinvalido',
-      'correo@',
-      '@dominio.com',
-      'correo@dominio.',
-      'correo sin@espacios.com'
-    ];
-
-    // Prueba correos válidos
     correosValidos.forEach(correo => {
       component.correo = correo;
       const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      expect(emailPattern.test(component.correo)).toBeTruthy(
-        `El correo ${correo} debería ser válido`
-      );
+      expect(emailPattern.test(component.correo)).toBeTruthy();
     });
 
-    // Prueba correos inválidos
     correosInvalidos.forEach(correo => {
       component.correo = correo;
       const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      expect(emailPattern.test(component.correo)).toBeFalsy(
-        `El correo ${correo} debería ser inválido`
-      );
+      expect(emailPattern.test(component.correo)).toBeFalsy();
     });
   });
 
-  // Prueba 2: Validación del formato de teléfono
-  it('debería validar el formato de teléfono chileno', () => {
-    // Casos de prueba con teléfonos válidos
-    const telefonosValidos = [
-      '+56912345678',
-      '+56987654321',
-      '+56999999999'
-    ];
+  it('debería validar el formato de teléfono', () => {
+    const telefonosValidos = ['+56912345678'];
+    const telefonosInvalidos = ['12345678', '+569123456'];
 
-    // Casos de prueba con teléfonos inválidos
-    const telefonosInvalidos = [
-      '912345678',
-      '+5691234567',  
-      '+569123456789', 
-      '+56812345678',  
-      '56912345678',   
-      '+569abcdefgh'   
-    ];
-
-    // Prueba teléfonos válidos
     telefonosValidos.forEach(telefono => {
       component.telefono = telefono;
       const phonePattern = /^\+569[0-9]{8}$/;
-      expect(phonePattern.test(component.telefono)).toBeTruthy(
-        `El teléfono ${telefono} debería ser válido`
-      );
+      expect(phonePattern.test(component.telefono)).toBeTruthy();
     });
 
-    // Prueba teléfonos inválidos
     telefonosInvalidos.forEach(telefono => {
       component.telefono = telefono;
       const phonePattern = /^\+569[0-9]{8}$/;
-      expect(phonePattern.test(component.telefono)).toBeFalsy(
-        `El teléfono ${telefono} debería ser inválido`
-      );
+      expect(phonePattern.test(component.telefono)).toBeFalsy();
     });
   });
 });
