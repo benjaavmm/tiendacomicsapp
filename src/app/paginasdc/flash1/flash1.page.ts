@@ -15,7 +15,7 @@ export class Flash1Page implements OnInit {
     id_comic: 1,
     nombre_comic: 'The Flash N°52',
     precio: 21990,
-    stock: 100,
+    stock: 10,
     descripcion: '"El cómic de Flash sigue las aventuras de Barry Allen, un científico convertido en superhéroe después de ser alcanzado por un rayo."',
     foto_comic: 'assets/img/flash.jpg',
     id_categoria: 3,

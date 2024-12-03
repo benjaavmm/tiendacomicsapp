@@ -15,7 +15,7 @@ export class Ligadelajusticia1Page implements OnInit {
     id_comic: 18,
     nombre_comic: 'Liga De La Justicia #27: Legado',
     precio: 29990,
-    stock: 100,
+    stock: 10,
     descripcion: '"La Liga de la Justicia enfrenta a su mayor amenaza en la historia: Legado, donde héroes y villanos colisionan."',
     foto_comic: 'assets/img/ligadelajusticia1.jpg',
     id_categoria: 3,

@@ -15,7 +15,7 @@ export class Batman1Page implements OnInit {
     id_comic: 3,
     nombre_comic: 'Detective Comics #400: El Desafío del Hombre Murciélago',
     precio: 23990,
-    stock: 100,
+    stock: 10,
     descripcion: '"En esta edición histórica, sumérgete en la oscuridad de Gotham City con Batman enfrentando una de las amenazas más inusuales: el Hombre Murciélago."',
     foto_comic: 'assets/img/batman1.jpg',
     id_categoria: 3,

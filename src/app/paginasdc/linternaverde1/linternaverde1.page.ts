@@ -15,7 +15,7 @@ export class Linternaverde1Page implements OnInit {
     id_comic: 2,
     nombre_comic: 'Green Lantern: Tales of the Sinestro Corps',
     precio: 19990,
-    stock: 100,
+    stock: 10,
     descripcion: '"Linterna Verde: La Noche Más Oscura es una historia épica que explora los límites del poder y la voluntad."',
     foto_comic: 'assets/img/linternaverde.jpg',
     id_categoria: 3,

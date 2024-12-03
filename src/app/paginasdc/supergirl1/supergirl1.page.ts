@@ -15,7 +15,7 @@ export class Supergirl1Page implements OnInit {
     id_comic: 19, // Asegúrate de que este campo esté presente si es necesario
     nombre_comic: 'Supergirl #3: El Reinado de los Superhombres Cibernéticos',
     precio: 17000,
-    stock: 100, // Si necesitas un stock
+    stock: 10, // Si necesitas un stock
     descripcion: '"Descubre el emocionante capítulo de Supergirl #3, donde Kara Zor-El enfrenta una amenaza que golpea cerca del corazón..."',
     foto_comic: 'assets/img/Supergirl.jpg',
     id_categoria: 3,

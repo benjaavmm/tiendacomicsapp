@@ -25,8 +25,16 @@ export class CarritoPage implements OnInit {
     this.loadCartItems();
   }
 
-  loadCartItems() {
+  async loadCartItems() {
     this.cartItems = this.cartService.getCartItems();
+    await this.updateStockForCartItems(); // Actualizar el stock al cargar el carrito
+  }
+
+  async updateStockForCartItems() {
+    for (const item of this.cartItems) {
+      const stock = await this.servicebd.verificarStockDisponible(item.id_comic);
+      item.stock = stock; // Actualizar el stock del item en el carrito
+    }
   }
 
   get totalPrice() {
@@ -40,20 +48,19 @@ export class CarritoPage implements OnInit {
     this.loadCartItems();
   }
 
-  updateQuantity(item: Comic, newQuantity: number) {
-    if (newQuantity > 0 && newQuantity <= item.stock) {
+  async updateQuantity(item: Comic, newQuantity: number) {
+    const stock = await this.servicebd.verificarStockDisponible(item.id_comic);
+    if (newQuantity > 0 && newQuantity <= stock) {
       this.cartService.updateItemQuantity(item, newQuantity);
       this.loadCartItems();
+    } else {
+      this.showStockAlert();
     }
   }
 
   increaseQuantity(item: Comic) {
     const currentQuantity = item.quantity || 1;
-    if (currentQuantity < item.stock) {
-      this.updateQuantity(item, currentQuantity + 1);
-    } else {
-      this.showStockAlert();
-    }
+    this.updateQuantity(item, currentQuantity + 1);
   }
 
   decreaseQuantity(item: Comic) {
@@ -120,7 +127,6 @@ export class CarritoPage implements OnInit {
       const userId = Number(currentUser.id_usuario);
       const id_estado = 1;
 
-      // Asegurarse de que cada item tenga una cantidad válida
       const itemsWithQuantity = this.cartItems.map(item => ({
         ...item,
         quantity: item.quantity || 1

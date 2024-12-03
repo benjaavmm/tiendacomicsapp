@@ -247,16 +247,38 @@ export class ServicebdService {
   // Métodos de venta actualizados
   async guardarVenta(f_venta: string, id_usuario: number, total: number, comics: Comic[], id_estado: number): Promise<void> {
     try {
-      await this.database.executeSql(
-        'INSERT INTO venta (f_venta, id_usuario, total) VALUES (?, ?, ?)',
-        [f_venta, id_usuario, total]
+      // Verificar stock antes de proceder
+      for (const comic of comics) {
+        const stockResult = await this.database.executeSql(
+          'SELECT stock FROM comics WHERE id_comic = ?',
+          [comic.id_comic]
+        );
+        
+        if (stockResult.rows.length === 0) {
+          throw new Error(`El cómic ${comic.nombre_comic} ya no está disponible.`);
+        }
+        
+        const stockActual = stockResult.rows.item(0).stock;
+        if (stockActual < comic.quantity) {
+          throw new Error(`Stock insuficiente para ${comic.nombre_comic}. Stock disponible: ${stockActual}`);
+        }
+      }
+
+      // Iniciar transacción
+      await this.database.executeSql('BEGIN TRANSACTION', []);
+
+      // Insertar venta
+      const insertVentaResult = await this.database.executeSql(
+        'INSERT INTO venta (f_venta, id_usuario, total, id_estado) VALUES (?, ?, ?, ?)',
+        [f_venta, id_usuario, total, id_estado]
       );
 
-      const result = await this.database.executeSql('SELECT last_insert_rowid() as id', []);
-      const id_venta = result.rows.item(0).id;
+      const id_venta = insertVentaResult.insertId;
 
+      // Procesar cada cómic
       for (const comic of comics) {
         if (comic.id_comic && comic.quantity) {
+          // Insertar detalle de venta
           await this.database.executeSql(
             'INSERT INTO detalles_venta (id_venta, id_comic, cantidad) VALUES (?, ?, ?)',
             [id_venta, comic.id_comic, comic.quantity]
@@ -264,13 +286,43 @@ export class ServicebdService {
 
           // Actualizar stock
           await this.database.executeSql(
-            'UPDATE comics SET stock = stock - ? WHERE id_comic = ?',
-            [comic.quantity, comic.id_comic]
+            'UPDATE comics SET stock = stock - ? WHERE id_comic = ? AND stock >= ?',
+            [comic.quantity, comic.id_comic, comic.quantity]
           );
         }
       }
+
+      // Confirmar transacción
+      await this.database.executeSql('COMMIT', []);
     } catch (error) {
-      console.error('Error al guardar la venta:', error);
+      // Revertir transacción en caso de error
+      await this.database.executeSql('ROLLBACK', []);
+      throw error;
+    }
+  }
+
+  // Método para verificar stock disponible
+  async verificarStockDisponible(comicId: number): Promise<number> {
+    const result = await this.database.executeSql(
+      'SELECT stock FROM comics WHERE id_comic = ?',
+      [comicId]
+    );
+    return result.rows.length > 0 ? result.rows.item(0).stock : 0;
+  }
+
+  // Método para actualizar stock (solo para admin)
+  async actualizarStock(comicId: number, nuevoStock: number): Promise<boolean> {
+    try {
+      if (nuevoStock < 0 || !Number.isInteger(nuevoStock)) {
+        throw new Error('El stock debe ser un número entero no negativo');
+      }
+
+      await this.database.executeSql(
+        'UPDATE comics SET stock = ? WHERE id_comic = ?',
+        [nuevoStock, comicId]
+      );
+      return true;
+    } catch (error) {
       throw error;
     }
   }
@@ -345,7 +397,6 @@ export class ServicebdService {
     });
   }
 
-   
   // Registrar nuevo usuario
   async registrarUsuario(usuario: Usuario): Promise<boolean> {
     try {
@@ -624,6 +675,8 @@ getHistorialComprasAdmin(): Observable<CompraDetalle[]> {
     }
   });
 }
+
+public comicsUpdated = new BehaviorSubject<boolean>(false);
 
 
   

@@ -16,7 +16,7 @@ export class Superman1Page implements OnInit {
     id_comic: 20, // Asegúrate de que este campo esté presente si es necesario
     nombre_comic: 'Superman #264: El Secreto del Mariscal de Campo Fantasma',
     precio: 18800,
-    stock: 100, // Si necesitas un stock
+    stock: 10, // Si necesitas un stock
     descripcion: '"En este emocionante número, Superman se enfrenta a un enemigo inusual: el Mariscal de Campo Fantasma. Este cómic promete acción, misterio y heroísmo mientras Superman se enfrenta a un desafío que va más allá de la fuerza física. ¡Prepárate para descubrir el secreto del Mariscal de Campo Fantasma en esta emocionante entrega!"',
     foto_comic: 'assets/img/superman1.jpg',
     id_categoria: 3,

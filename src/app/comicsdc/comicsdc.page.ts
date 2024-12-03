@@ -129,15 +129,12 @@ export class ComicsdcPage implements OnInit, OnDestroy {
 
   async ngOnInit() {
     await this.initializeComics();
-    this.filteredComics = [...this.comics];
+    this.filteredComics = this.comics.filter(comic => comic.stock > 0);
   }
 
   private async initializeComics() {
     try {
-      // Insertar los cómics en la base de datos
       await this.serviceBD.insertarComics(this.comics);
-      
-      // Cargar solo los cómics de DC (categoría 3)
       const dcComics = await this.serviceBD.getComicsByCategoria(3);
       this.comics = dcComics;
     } catch (error) {
@@ -150,20 +147,42 @@ export class ComicsdcPage implements OnInit, OnDestroy {
   }
 
   async addToCart(comic: Comic) {
-    if (comic.quantity && comic.quantity <= comic.stock) {
-      const comicToAdd = { ...comic };
-      this.cartService.addToCart(comicToAdd);
-
-      const alert = await this.alertCtrl.create({
-        header: 'Añadido al Carro',
-        message: `Has añadido ${comic.quantity} de ${comic.nombre_comic} al carrito.`,
-        buttons: ['OK']
-      });
-      await alert.present();
-    } else {
+    try {
+      if (comic.stock <= 0) {
+        const alert = await this.alertCtrl.create({
+          header: 'No Disponible',
+          message: 'Este cómic no está disponible actualmente.',
+          buttons: ['OK']
+        });
+        await alert.present();
+        return;
+      }
+  
+      if (comic.quantity && comic.quantity <= comic.stock) {
+        await this.cartService.addToCart(comic);
+        const alert = await this.alertCtrl.create({
+          header: 'Añadido al Carro',
+          message: `Has añadido ${comic.quantity} de ${comic.nombre_comic} al carrito.`,
+          buttons: ['OK']
+        });
+        await alert.present();
+      } else {
+        const alert = await this.alertCtrl.create({
+          header: 'Error',
+          message: `Stock insuficiente. Stock disponible: ${comic.stock}`,
+          buttons: ['OK']
+        });
+        await alert.present();
+      }
+    } catch (error: unknown) { // Especificar el tipo de error
+      let errorMessage = 'Ocurrió un error inesperado.';
+      if (error instanceof Error) {
+        errorMessage = error.message; // Obtener el mensaje del error
+      }
+  
       const alert = await this.alertCtrl.create({
         header: 'Error',
-        message: 'No hay suficiente stock disponible.',
+        message: errorMessage,
         buttons: ['OK']
       });
       await alert.present();
@@ -199,6 +218,6 @@ export class ComicsdcPage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    
+    // Implementar lógica de limpieza si es necesario
   }
 }
