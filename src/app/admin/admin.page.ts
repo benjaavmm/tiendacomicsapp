@@ -199,7 +199,7 @@ export class AdminPage implements OnInit {
   async selectFromGallery() {
     try {
       const image = await Camera.getPhoto({
-        quality: 100,
+        quality: 40,
         source: CameraSource.Photos,
         resultType: CameraResultType.Base64
       });

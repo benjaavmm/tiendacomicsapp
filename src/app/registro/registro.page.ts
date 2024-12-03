@@ -132,7 +132,7 @@ export class RegistroPage {
   async takePicture() {
     try {
       const image = await Camera.getPhoto({
-        quality: 90,
+        quality: 50,
         allowEditing: false,
         resultType: CameraResultType.DataUrl,
         source: CameraSource.Camera

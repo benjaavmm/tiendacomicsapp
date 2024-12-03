@@ -59,7 +59,7 @@ export class ModificarperfilPage implements OnInit {
 
   async takePicture(source: CameraSource) {
     const image = await Camera.getPhoto({
-      quality: 100,
+      quality: 50,
       source: source,
       resultType: CameraResultType.Base64
     });
