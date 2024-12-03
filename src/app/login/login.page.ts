@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { NavController, AlertController } from '@ionic/angular';
 import { ServicebdService } from '../../services/servicebd.service';
+import { Haptics, ImpactStyle } from '@capacitor/haptics';
 
 @Component({
   selector: 'app-login',
@@ -20,6 +21,9 @@ export class LoginPage {
 
   async onSubmit(form: NgForm) {
     if (form.valid) {
+      // Vibrar al intentar iniciar sesión
+      await Haptics.impact({ style: ImpactStyle.Medium });
+
       // Verificar si hay un usuario en sesión
       const existingUserJson = localStorage.getItem('currentUser');
       let existingUser: any = existingUserJson ? JSON.parse(existingUserJson) : null;
@@ -32,12 +36,12 @@ export class LoginPage {
           buttons: ['OK']
         });
         await alert.present();
-        return; // Salir del método
+        return;
       }
 
       // Si hay un usuario diferente, cerrar la sesión
       if (existingUser) {
-        this.logout(); // Cerrar sesión del usuario anterior
+        this.logout();
       }
 
       // Simulación de validación para el administrador
@@ -49,48 +53,57 @@ export class LoginPage {
             text: 'OK',
             handler: () => {
               this.navCtrl.navigateRoot('/admin');
-              localStorage.setItem('currentUser', JSON.stringify({ correo: this.username, id_rol: 1 })); // Guardar usuario
+              localStorage.setItem('currentUser', JSON.stringify({ correo: this.username, id_rol: 1 }));
             }
           }]
         });
         await alert.present();
       } else {
-        // Validar usuario normal desde el servicio
-        const usuario = await this.dbService.login(this.username, this.password);
-        
-        if (usuario) {
-          const { clave, ...usuarioSinClave } = usuario; // Eliminar la clave del objeto
-          localStorage.setItem('currentUser', JSON.stringify(usuarioSinClave)); // Guardar en localStorage
+        try {
+          // Validar usuario normal desde el servicio
+          const usuario = await this.dbService.login(this.username, this.password);
+          
+          if (usuario) {
+            const { clave, ...usuarioSinClave } = usuario;
+            localStorage.setItem('currentUser', JSON.stringify(usuarioSinClave));
 
-          if (Number(usuario.id_rol) === 2) { // Admin
+            if (Number(usuario.id_rol) === 2) {
+              const alert = await this.alertCtrl.create({
+                header: 'Bienvenido Administrador',
+                message: '¡Inicio de sesión exitoso!',
+                buttons: [{
+                  text: 'OK',
+                  handler: () => {
+                    this.navCtrl.navigateRoot('/admin');
+                  }
+                }]
+              });
+              await alert.present();
+            } else {
+              const alert = await this.alertCtrl.create({
+                header: 'Bienvenido',
+                message: '¡Inicio de sesión exitoso!',
+                buttons: [{
+                  text: 'OK',
+                  handler: () => {
+                    this.navCtrl.navigateRoot('/home');
+                  }
+                }]
+              });
+              await alert.present();
+            }
+          } else {
             const alert = await this.alertCtrl.create({
-              header: 'Bienvenido Administrador',
-              message: '¡Inicio de sesión exitoso!',
-              buttons: [{
-                text: 'OK',
-                handler: () => {
-                  this.navCtrl.navigateRoot('/admin');
-                }
-              }]
-            });
-            await alert.present();
-          } else { // Usuario normal
-            const alert = await this.alertCtrl.create({
-              header: 'Bienvenido',
-              message: '¡Inicio de sesión exitoso!',
-              buttons: [{
-                text: 'OK',
-                handler: () => {
-                  this.navCtrl.navigateRoot('/home');
-                }
-              }]
+              header: 'Error',
+              message: 'Correo o contraseña incorrectos',
+              buttons: ['OK']
             });
             await alert.present();
           }
-        } else {
+        } catch (error) {
           const alert = await this.alertCtrl.create({
             header: 'Error',
-            message: 'Correo o contraseña incorrectos',
+            message: 'Ocurrió un error al intentar iniciar sesión. Por favor, intenta nuevamente.',
             buttons: ['OK']
           });
           await alert.present();
@@ -100,7 +113,6 @@ export class LoginPage {
   }
 
   logout() {
-    localStorage.removeItem('currentUser'); // Limpiar el localStorage
-    
+    localStorage.removeItem('currentUser');
   }
 }
