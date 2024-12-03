@@ -30,7 +30,7 @@ export class RecoveryService {
     }
   }
 
-  async verificarPreguntaSeguridad(correo: string, respuesta: string): Promise<boolean> {
+  async verificarPreguntaSeguridad(correo: string, pregunta: string, respuesta: string): Promise<boolean> {
     try {
       const query = 'SELECT * FROM usuario WHERE correo = ?';
       const result = await this.dbService.getDatabase().executeSql(query, [correo]);
@@ -41,12 +41,19 @@ export class RecoveryService {
       }
 
       const respuestaGuardada = result.rows.item(0).respuesta_seguridad;
+      const preguntaGuardada = result.rows.item(0).pregunta_seguridad;
 
       // Comparar ambas respuestas en minúsculas
+      if (preguntaGuardada !== pregunta) {
+        await this.presentAlert('Error', 'Pregunta de seguridad incorrecta.');
+        return false;
+      }
+
       if (respuestaGuardada.toLowerCase() !== respuesta.toLowerCase()) {
         await this.presentAlert('Error', 'Respuesta de seguridad incorrecta.');
         return false;
       }
+      
       return true;
     } catch (error) {
       console.error('Error al verificar pregunta de seguridad:', error);

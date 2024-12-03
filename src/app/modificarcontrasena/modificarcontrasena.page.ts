@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 import { ServicebdService } from '../../services/servicebd.service';
 import { Usuario } from '../../services/usuario';
+import { Router } from '@angular/router'; 
 
 @Component({
   selector: 'app-modificarcontrasena',
@@ -16,7 +17,11 @@ export class ModificarContrasenaPage {
   confirmPasswordError: string = '';
   currentUserId: number | null = null;
 
-  constructor(private alertCtrl: AlertController, private servicebd: ServicebdService) {
+  constructor(
+    private alertCtrl: AlertController,
+    private servicebd: ServicebdService,
+    private router: Router // Inyecta Router
+  ) {
     this.servicebd.getCurrentUser().subscribe((usuario: Usuario | null) => {
       this.currentUserId = usuario ? Number(usuario.id_usuario) : null; // Obtener ID del usuario actual
     });
@@ -49,6 +54,7 @@ export class ModificarContrasenaPage {
       // Actualizar la contraseña
       await this.servicebd.updatePassword(this.currentUserId, this.newPassword);
       await this.showSuccessAlert();
+      this.logout(); // Cierra sesión después de cambiar la contraseña
     }
   }
 
@@ -56,10 +62,9 @@ export class ModificarContrasenaPage {
     const minLength = 8;
     const hasUpperCase = /[A-Z]/.test(password);
     const hasNumber = /\d/.test(password);
-    const hasSpecialChar = /[!@#$%^&*+(),.?":{}|<>]/.test(password); // Verificar carácter especial
-    return password.length >= minLength && hasUpperCase && hasNumber && hasSpecialChar; // Validar longitud, mayúscula, número y carácter especial
+    const hasSpecialChar = /[!@#$%^&*+(),.?":{}|<>]/.test(password); 
+    return password.length >= minLength && hasUpperCase && hasNumber && hasSpecialChar;
   }
-  
 
   private async showSuccessAlert() {
     const alert = await this.alertCtrl.create({
@@ -68,5 +73,10 @@ export class ModificarContrasenaPage {
       buttons: ['OK']
     });
     await alert.present();
+  }
+
+  private logout() {
+    this.servicebd.logout();
+    this.router.navigate(['/login']); // Redirige a la página de inicio de sesión
   }
 }

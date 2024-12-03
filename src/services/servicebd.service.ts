@@ -315,7 +315,8 @@ export class ServicebdService {
                 fecha: new Date(item.f_venta).toLocaleDateString(),
                 total: item.total,
                 id_estado: item.id_estado,
-                items: []
+                items: [],
+                correo: ''
               });
             }
 
@@ -546,14 +547,18 @@ async updateComic(comic: Comic): Promise<boolean> {
 // Eliminar un cómic
 async deleteComic(id_comic: number): Promise<boolean> {
   try {
+    // Proceder con la eliminación
     const query = 'DELETE FROM comics WHERE id_comic = ?';
     await this.database.executeSql(query, [id_comic]);
     return true;
   } catch (error) {
-    this.presentAlert('Error', 'Error al eliminar cómic: ' + error);
+    await this.presentAlert('Error', 'Error al eliminar cómic: ' + error);
     return false;
   }
 }
+
+
+
 
 // Obtener historial de compras de todos los usuarios
 getHistorialComprasAdmin(): Observable<CompraDetalle[]> {
@@ -565,6 +570,7 @@ getHistorialComprasAdmin(): Observable<CompraDetalle[]> {
           v.f_venta,
           v.total,
           v.id_estado,
+          u.correo,  -- Agregar el correo del usuario
           v.id_usuario,
           dc.id_comic,
           dc.cantidad,
@@ -589,6 +595,7 @@ getHistorialComprasAdmin(): Observable<CompraDetalle[]> {
               fecha: new Date(item.f_venta).toLocaleDateString(),
               total: item.total,
               id_estado: item.id_estado,
+              correo: item.correo,  // Almacenar el correo aquí
               items: []
             });
           }
@@ -617,6 +624,7 @@ getHistorialComprasAdmin(): Observable<CompraDetalle[]> {
     }
   });
 }
+
 
   
   

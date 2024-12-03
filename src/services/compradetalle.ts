@@ -5,5 +5,6 @@ export interface CompraDetalle {
   fecha: string;
   total: number;
   id_estado: number;
+  correo: string;  
   items: Comic[];
 }

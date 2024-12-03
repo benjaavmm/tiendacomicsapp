@@ -1,9 +1,9 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/login"></ion-back-button>
-    </ion-buttons>
     <ion-title>Panel de Administración</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()" color="danger">Cerrar Sesión</ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -23,13 +23,12 @@
         <ion-card-header>
           <ion-card-title>{{ isEdit ? 'Editar Cómic' : 'Agregar Nuevo Cómic' }}</ion-card-title>
         </ion-card-header>
-        <ion-card-content>
+        <ion-card-content id="comic-form">
           <form (ngSubmit)="onSubmit()" #comicForm="ngForm">
             <ion-item>
               <ion-label position="floating">Título *</ion-label>
               <ion-input type="text" [(ngModel)]="comic.nombre_comic" name="nombre_comic" required></ion-input>
             </ion-item>
-
             <ion-item>
               <ion-label position="floating">Precio *</ion-label>
               <ion-input type="number" [(ngModel)]="comic.precio" name="precio" required></ion-input>
@@ -37,7 +36,6 @@
             <div *ngIf="priceError" class="error-message">
               <ion-text color="danger">{{ priceError }}</ion-text>
             </div>
-
             <ion-item>
               <ion-label position="floating">Stock *</ion-label>
               <ion-input type="number" [(ngModel)]="comic.stock" name="stock" required></ion-input>
@@ -45,12 +43,10 @@
             <div *ngIf="stockError" class="error-message">
               <ion-text color="danger">{{ stockError }}</ion-text>
             </div>
-
             <ion-item>
               <ion-label position="floating">Descripción</ion-label>
               <ion-textarea [(ngModel)]="comic.descripcion" name="descripcion"></ion-textarea>
             </ion-item>
-
             <ion-item>
               <ion-label>Categoría</ion-label>
               <ion-select [(ngModel)]="comic.id_categoria" name="id_categoria" required>
@@ -59,12 +55,10 @@
                 </ion-select-option>
               </ion-select>
             </ion-item>
-
             <ion-item>
               <ion-label position="floating">Link</ion-label>
               <ion-input type="text" [(ngModel)]="comic.link" name="link"></ion-input>
             </ion-item>
-
             <ion-item>
               <ion-label>Imagen</ion-label>
               <ion-button (click)="presentActionSheet()" fill="clear">
@@ -73,7 +67,6 @@
               </ion-button>
             </ion-item>
             <ion-img [src]="comic.foto_comic" *ngIf="comic.foto_comic"></ion-img>
-
             <ion-button expand="block" type="submit" class="ion-margin-top">
               {{ isEdit ? 'Actualizar' : 'Agregar' }} Cómic
             </ion-button>
@@ -126,6 +119,7 @@
             <ion-label>
               <h2>Venta #{{ compra.id_venta }}</h2>
               <p>Fecha: {{ compra.fecha }}</p>
+              <p>Correo: {{ compra.correo }}</p> <!-- Mostrar el correo aquí -->
               <p>Estado: {{ getEstadoVenta(compra.id_estado) }}</p>
               <p>Total: {{ compra.total | currency }}</p>
             </ion-label>

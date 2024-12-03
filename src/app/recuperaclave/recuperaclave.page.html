@@ -27,9 +27,16 @@
 
       <!-- Paso 2: Pregunta de Seguridad -->
       <div *ngIf="paso === 2">
+        <p>Selecciona tu pregunta de seguridad:</p>
+        <ion-item>
+          <ion-label>Pregunta de Seguridad</ion-label>
+          <ion-select [(ngModel)]="preguntaSeleccionada" required>
+            <ion-select-option *ngFor="let pregunta of preguntasSeguridad" [value]="pregunta">{{ pregunta }}</ion-select-option>
+          </ion-select>
+        </ion-item>
         <p>Responde tu pregunta de seguridad:</p>
         <ion-item>
-          <ion-label position="floating">{{preguntaSeguridad}}</ion-label>
+          <ion-label position="floating">Respuesta</ion-label>
           <ion-input type="text" name="respuesta" [(ngModel)]="respuestaSeguridad" required></ion-input>
         </ion-item>
       </div>
@@ -46,9 +53,7 @@
         </ion-item>
       </div>
 
-      <ion-button expand="full" type="submit" class="mt-3">
-        {{paso === 3 ? 'Cambiar Contraseña' : 'Continuar...'}}
-      </ion-button>
+      <ion-button expand="full" type="submit">Siguiente</ion-button>
     </form>
   </div>
 </ion-content>

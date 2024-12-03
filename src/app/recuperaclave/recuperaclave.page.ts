@@ -14,11 +14,17 @@ import { Usuario } from '../../services/usuario';
 export class RecuperaclavePage {
   email: string = '';
   paso: number = 1;
-  preguntaSeguridad: string = '';
+  preguntaSeleccionada: string = ''; // Nueva propiedad
   respuestaSeguridad: string = '';
   nuevaPassword: string = '';
   confirmarPassword: string = '';
-  usuario: Usuario | null = null;
+  preguntasSeguridad: string[] = [
+    '¿Cuál es el nombre de tu primera mascota?',
+    '¿Cuál es tu color favorito?',
+    '¿En qué ciudad naciste?',
+    '¿Cuál es el nombre de tu madre?',
+    '¿Cuál es tu comida favorita?'
+  ];
 
   constructor(
     private recoveryService: RecoveryService,
@@ -58,6 +64,10 @@ export class RecuperaclavePage {
   }
 
   private validarCamposPaso2(): boolean {
+    if (this.preguntaSeleccionada.trim() === '') {
+      this.mostrarAlerta('Error', 'Debes seleccionar una pregunta de seguridad.');
+      return false;
+    }
     if (this.respuestaSeguridad.trim() === '') {
       this.mostrarAlerta('Error', 'La respuesta de seguridad no puede estar vacía.');
       return false;
@@ -80,7 +90,6 @@ export class RecuperaclavePage {
   private async verificarCorreo() {
     const { valid, preguntaSeguridad } = await this.recoveryService.verificarCorreo(this.email);
     if (valid) {
-      this.preguntaSeguridad = preguntaSeguridad || '';
       this.paso = 2; // Avanza al paso 2
     } else {
       this.mostrarAlerta('Error', 'El correo no está registrado.');
@@ -88,7 +97,7 @@ export class RecuperaclavePage {
   }
 
   private async verificarPreguntaSeguridad() {
-    const isCorrect = await this.recoveryService.verificarPreguntaSeguridad(this.email, this.respuestaSeguridad);
+    const isCorrect = await this.recoveryService.verificarPreguntaSeguridad(this.email, this.preguntaSeleccionada, this.respuestaSeguridad);
     if (isCorrect) {
       this.paso = 3; // Avanza al paso 3
     } else {

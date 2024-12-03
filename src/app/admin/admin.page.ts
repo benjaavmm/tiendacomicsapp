@@ -4,6 +4,7 @@ import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { ServicebdService } from '../../services/servicebd.service';
 import { Comic } from '../../services/comic';
 import { CompraDetalle } from '../../services/compradetalle';
+import { Router } from '@angular/router'; 
 
 @Component({
   selector: 'app-admin',
@@ -39,7 +40,8 @@ export class AdminPage implements OnInit {
   constructor(
     private serviceBD: ServicebdService,
     private alertController: AlertController,
-    private actionSheetController: ActionSheetController
+    private actionSheetController: ActionSheetController,
+    private router: Router 
   ) {}
 
   ngOnInit() {
@@ -72,8 +74,8 @@ export class AdminPage implements OnInit {
       return;
     }
 
-    if (this.comic.stock < 0) {
-      this.stockError = 'El stock no puede ser negativo.';
+    if (this.comic.stock < 0 || !Number.isInteger(this.comic.stock)) {
+      this.stockError = 'El stock debe ser un número entero no negativo.';
       return;
     }
 
@@ -100,6 +102,12 @@ export class AdminPage implements OnInit {
   editComic(comic: Comic) {
     this.isEdit = true;
     this.comic = { ...comic };
+    setTimeout(() => {
+      const element = document.getElementById('comic-form');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' }); // Desplaza la vista hacia el formulario
+      }
+    }, 0);
   }
 
   async confirmDelete(comic: Comic) {
@@ -114,24 +122,22 @@ export class AdminPage implements OnInit {
         {
           text: 'Eliminar',
           handler: async () => {
-            await this.deleteComic(comic);
+            if (comic.id_comic) {
+              try {
+                const deleted = await this.serviceBD.deleteComic(comic.id_comic);
+                if (deleted) {
+                  await this.loadComics();
+                  await this.presentAlert('Éxito', 'Cómic eliminado correctamente');
+                }
+              } catch (error) {
+                await this.presentAlert('Error', 'Error al eliminar el cómic: ' + error);
+              }
+            }
           }
         }
       ]
     });
     await alert.present();
-  }
-
-  async deleteComic(comic: Comic) {
-    if (comic.id_comic) {
-      try {
-        await this.serviceBD.deleteComic(comic.id_comic);
-        await this.loadComics();
-        await this.presentAlert('Éxito', 'Cómic eliminado correctamente');
-      } catch (error) {
-        await this.presentAlert('Error', 'Error al eliminar el cómic: ' + error);
-      }
-    }
   }
 
   resetForm() {
@@ -231,5 +237,10 @@ export class AdminPage implements OnInit {
   getCategoriaName(id_categoria: number): string {
     const categoria = this.categorias.find(cat => cat.id === id_categoria);
     return categoria ? categoria.nombre : 'Sin categoría';
+  }
+
+  logout() {
+    this.serviceBD.logout(); 
+    this.router.navigate(['/login']); 
   }
 }

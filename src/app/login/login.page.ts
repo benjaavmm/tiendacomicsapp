@@ -90,7 +90,7 @@ export class LoginPage {
         } else {
           const alert = await this.alertCtrl.create({
             header: 'Error',
-            message: 'Usuario o contraseña incorrectos',
+            message: 'Correo o contraseña incorrectos',
             buttons: ['OK']
           });
           await alert.present();
