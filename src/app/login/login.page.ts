@@ -24,25 +24,8 @@ export class LoginPage {
       // Vibrar al intentar iniciar sesión
       await Haptics.impact({ style: ImpactStyle.Medium });
 
-      // Verificar si hay un usuario en sesión
-      const existingUserJson = localStorage.getItem('currentUser');
-      let existingUser: any = existingUserJson ? JSON.parse(existingUserJson) : null;
-
-      // Si hay un usuario en sesión y es el mismo que intenta iniciar sesión
-      if (existingUser && existingUser.correo === this.username) {
-        const alert = await this.alertCtrl.create({
-          header: 'Información',
-          message: 'Ya tienes una sesión abierta con esta cuenta.',
-          buttons: ['OK']
-        });
-        await alert.present();
-        return;
-      }
-
-      // Si hay un usuario diferente, cerrar la sesión
-      if (existingUser) {
-        this.logout();
-      }
+      // Cerrar sesión si hay un usuario existente
+      this.logout();
 
       // Simulación de validación para el administrador
       if (this.username === 'admin@admin.com' && this.password === 'Admin+123') {
