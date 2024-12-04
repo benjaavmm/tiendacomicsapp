@@ -100,8 +100,9 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   private selectFeaturedComics() {
-    this.featuredComics = this.comics;
-    this.filteredComics = this.featuredComics;
+    // Solo seleccionamos los primeros 4 cómics
+    this.featuredComics = this.comics.slice(0, 4);
+    this.filteredComics = [...this.featuredComics];
   }
 
   openMenu() {
@@ -109,18 +110,42 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   async addToCart(comic: Comic) {
-    if (comic.quantity && comic.quantity <= comic.stock) {
-      this.cartService.addToCart({ ...comic });
-      const alert = await this.alertCtrl.create({
-        header: 'Añadido al Carro',
-        message: `Has añadido ${comic.quantity} de ${comic.nombre_comic} al carrito.`,
-        buttons: ['OK']
-      });
-      await alert.present();
-    } else {
+    try {
+      if (comic.stock <= 0) {
+        const alert = await this.alertCtrl.create({
+          header: 'No Disponible',
+          message: 'Este cómic no está disponible actualmente.',
+          buttons: ['OK']
+        });
+        await alert.present();
+        return;
+      }
+
+      if (comic.quantity && comic.quantity <= comic.stock) {
+        this.cartService.addToCart({ ...comic });
+        const alert = await this.alertCtrl.create({
+          header: 'Añadido al Carro',
+          message: `Has añadido ${comic.quantity} de ${comic.nombre_comic} al carrito.`,
+          buttons: ['OK']
+        });
+        await alert.present();
+      } else {
+        const alert = await this.alertCtrl.create({
+          header: 'Error',
+          message: `Stock insuficiente. Stock disponible: ${comic.stock}`,
+          buttons: ['OK']
+        });
+        await alert.present();
+      }
+    } catch (error: unknown) {
+      let errorMessage = 'Ocurrió un error inesperado.';
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+
       const alert = await this.alertCtrl.create({
         header: 'Error',
-        message: 'No hay suficiente stock disponible.',
+        message: errorMessage,
         buttons: ['OK']
       });
       await alert.present();

@@ -92,14 +92,14 @@ export class MangasPage implements OnInit, OnDestroy {
 
     // Cómic: Attack On Titan
     {
-      id_comic: 25,
-      quantity: 1,
+      id_comic: 25, // Asegúrate de que este campo esté presente si es necesario
       nombre_comic: 'Attack On Titan',
       precio: 12990,
-      stock: 100,
-      descripcion: 'Descripción de Attack On Titan',
-      foto_comic: 'assets/img/attackontitan.jpg',
+      stock: 10,
+      descripcion: '"El Escuadrón de Reconocimiento planea una jugada arriesgada; que Eren, en forma de Titán, intente reparar la Muralla Rose, reclamando, por primera vez en un siglo, territorio para los humanos. Pero el control que tiene Eren como Titán dista mucho de ser perfecto y, cuando se descontrola, ¡ni siquiera Armin puede detenerlo! Con el peso de la supervivencia de la humanidad sobre sus enormes hombros, ¿podrá Eren recuperar la razón? ¿O se perderá para siempre?"',
+      foto_comic: 'assets/img/atackontitan.jpg',
       id_categoria: 2,
+      quantity: 0,
       link: '/attackontitan'
     },
 
