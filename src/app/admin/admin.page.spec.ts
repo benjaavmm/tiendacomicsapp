@@ -1,34 +1,41 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AdminPage } from './admin.page';
 import { ServicebdService } from '../../services/servicebd.service';
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { AlertController, ActionSheetController, IonicModule } from '@ionic/angular';
 import { SQLite } from '@awesome-cordova-plugins/sqlite/ngx';
 import { RouterTestingModule } from '@angular/router/testing';
 
-// Mock para SQLite
 class MockSQLite {}
 
 class MockServicebdService {
+  comicsUpdated = new Subject<void>(); // Añadido el Subject para comicsUpdated
+
   getHistorialComprasAdmin() {
-    return of([]); 
+    return of([]);
   }
+
+  getAllComicsAdmin() {
+    return Promise.resolve([]);
+  }
+
   getCurrentUser() {
-    return of({}); 
+    return of({ id: 1, email: 'test@test.com' });
   }
-  getAllComics() {
-    return Promise.resolve([]); 
+
+  updateComic() {
+    return Promise.resolve();
   }
-  updateComic(comic: any) {
-    return Promise.resolve(); 
+
+  addComic() {
+    return Promise.resolve();
   }
-  addComic(comic: any) {
-    return Promise.resolve(); 
+
+  deleteComic() {
+    return Promise.resolve(true);
   }
-  deleteComic(id: number) {
-    return Promise.resolve(); 
-  }
+
   logout() {
     return Promise.resolve();
   }
@@ -53,24 +60,11 @@ describe('AdminPage', () => {
         ActionSheetController
       ]
     }).compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(AdminPage);
     component = fixture.componentInstance;
-    // Inicializar las propiedades necesarias
-    component.comics = [];
-    component.historialCompras = [];
-    component.segmentValue = 'comics';
-    component.comic = {
-      id_comic: 0,
-      nombre_comic: '',
-      precio: 0,
-      stock: 0,
-      descripcion: '',
-      foto_comic: '',
-      id_categoria: 1,
-      link: '',
-      quantity: 1
-    };
     fixture.detectChanges();
   });
 
