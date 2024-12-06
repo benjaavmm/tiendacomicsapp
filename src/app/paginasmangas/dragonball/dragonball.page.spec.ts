@@ -1,7 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { TestingModule } from '../../testing.module';
 import { DragonballPage } from './dragonball.page';
 
 describe('DragonballPage', () => {
@@ -10,11 +8,7 @@ describe('DragonballPage', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        CommonModule,
-        FormsModule,
-        IonicModule.forRoot()
-      ],
+      imports: [TestingModule],
       declarations: [DragonballPage]
     }).compileComponents();
 

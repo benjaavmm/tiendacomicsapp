@@ -1,8 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestingModule } from '../../testing.module';
 import { NarutoPage } from './naruto.page';
-import { IonicModule } from '@ionic/angular';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 
 describe('NarutoPage', () => {
   let component: NarutoPage;
@@ -10,11 +8,7 @@ describe('NarutoPage', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        CommonModule,
-        FormsModule,
-        IonicModule.forRoot() // Importar IonicModule
-      ],
+      imports: [TestingModule],
       declarations: [NarutoPage]
     }).compileComponents();
 

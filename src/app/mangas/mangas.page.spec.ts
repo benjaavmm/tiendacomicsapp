@@ -1,31 +1,27 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { MangasPage } from './mangas.page';
-import { ServicebdService } from '../../services/servicebd.service'; 
+import { TestingModule } from '../testing.module';
+import { ServicebdService } from '../../services/servicebd.service';
 import { of } from 'rxjs';
-
-class MockServicebdService {
-  getData() {
-    return of([]);
-  }
-}
 
 describe('MangasPage', () => {
   let component: MangasPage;
   let fixture: ComponentFixture<MangasPage>;
+  let mockServiceBD: Partial<ServicebdService>;
 
   beforeEach(async () => {
+    mockServiceBD = {
+      dbState: () => of(true),
+      getComicsByCategoria: () => Promise.resolve([]),
+      insertarComics: () => Promise.resolve(),
+      getCurrentUser: () => of(null)
+    };
+
     await TestBed.configureTestingModule({
-      imports: [
-        CommonModule,
-        FormsModule,
-        IonicModule.forRoot()
-      ],
+      imports: [TestingModule],
       declarations: [MangasPage],
       providers: [
-        { provide: ServicebdService, useClass: MockServicebdService }
+        { provide: ServicebdService, useValue: mockServiceBD }
       ]
     }).compileComponents();
 

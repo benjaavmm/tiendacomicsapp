@@ -1,7 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { TestingModule } from '../../testing.module';
 import { Linternaverde1Page } from './linternaverde1.page';
 
 describe('Linternaverde1Page', () => {
@@ -10,11 +8,7 @@ describe('Linternaverde1Page', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        CommonModule,
-        FormsModule,
-        IonicModule.forRoot()
-      ],
+      imports: [TestingModule],
       declarations: [Linternaverde1Page]
     }).compileComponents();
 
