@@ -44,13 +44,8 @@ export class RecoveryService {
       const preguntaGuardada = result.rows.item(0).pregunta_seguridad;
 
       // Comparar ambas respuestas en minúsculas
-      if (preguntaGuardada !== pregunta) {
-        await this.presentAlert('Error', 'Pregunta de seguridad incorrecta.');
-        return false;
-      }
-
-      if (respuestaGuardada.toLowerCase() !== respuesta.toLowerCase()) {
-        await this.presentAlert('Error', 'Respuesta de seguridad incorrecta.');
+      if (preguntaGuardada !== pregunta || respuestaGuardada.toLowerCase() !== respuesta.toLowerCase()) {
+        await this.presentAlert('Error', 'Pregunta o respuesta de seguridad incorrecta.');
         return false;
       }
       

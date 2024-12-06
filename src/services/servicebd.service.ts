@@ -399,6 +399,34 @@ export class ServicebdService {
     });
   }
 
+  // Agregar un método específico para el admin que muestre todos los cómics
+async getAllComicsAdmin(): Promise<Comic[]> {
+  try {
+    const query = 'SELECT * FROM comics';
+    const result = await this.database.executeSql(query, []);
+    const comics: Comic[] = [];
+
+    for (let i = 0; i < result.rows.length; i++) {
+      const item = result.rows.item(i);
+      comics.push({
+        id_comic: item.id_comic,
+        nombre_comic: item.nombre_comic,
+        precio: item.precio,
+        stock: item.stock,
+        descripcion: item.descripcion,
+        foto_comic: item.foto_comic,
+        id_categoria: item.id_categoria,
+        link: item.link,
+        quantity: 1
+      });
+    }
+    return comics;
+  } catch (error) {
+    this.presentAlert('Error', 'Error al obtener cómics: ' + error);
+    return [];
+  }
+}
+
   // Registrar nuevo usuario
   async registrarUsuario(usuario: Usuario): Promise<boolean> {
     try {
@@ -524,32 +552,33 @@ export class ServicebdService {
   }
 
   // Obtener todos los cómics
-async getAllComics(): Promise<Comic[]> {
-  try {
-    const query = 'SELECT * FROM comics';
-    const result = await this.database.executeSql(query, []);
-    const comics: Comic[] = [];
-
-    for (let i = 0; i < result.rows.length; i++) {
-      const item = result.rows.item(i);
-      comics.push({
-        id_comic: item.id_comic,
-        nombre_comic: item.nombre_comic,
-        precio: item.precio,
-        stock: item.stock,
-        descripcion: item.descripcion,
-        foto_comic: item.foto_comic,
-        id_categoria: item.id_categoria,
-        link: item.link,
-        quantity: 1
-      });
+  async getAllComics(): Promise<Comic[]> {
+    try {
+      // Modificamos la consulta para solo traer cómics con stock > 0
+      const query = 'SELECT * FROM comics WHERE stock > 0';
+      const result = await this.database.executeSql(query, []);
+      const comics: Comic[] = [];
+  
+      for (let i = 0; i < result.rows.length; i++) {
+        const item = result.rows.item(i);
+        comics.push({
+          id_comic: item.id_comic,
+          nombre_comic: item.nombre_comic,
+          precio: item.precio,
+          stock: item.stock,
+          descripcion: item.descripcion,
+          foto_comic: item.foto_comic,
+          id_categoria: item.id_categoria,
+          link: item.link,
+          quantity: 1
+        });
+      }
+      return comics;
+    } catch (error) {
+      this.presentAlert('Error', 'Error al obtener cómics: ' + error);
+      return [];
     }
-    return comics;
-  } catch (error) {
-    this.presentAlert('Error', 'Error al obtener cómics: ' + error);
-    return [];
   }
-}
 
 // Agregar un nuevo cómic
 async addComic(comic: Comic): Promise<boolean> {
@@ -607,15 +636,19 @@ async updateComic(comic: Comic): Promise<boolean> {
 // Eliminar un cómic
 async deleteComic(id_comic: number): Promise<boolean> {
   try {
-    // Proceder con la eliminación
-    const query = 'DELETE FROM comics WHERE id_comic = ?';
+    // En lugar de eliminar, establecemos el stock a 0
+    const query = 'UPDATE comics SET stock = 0 WHERE id_comic = ?';
     await this.database.executeSql(query, [id_comic]);
+    
+    // Emitir evento de actualización
+    this.comicsUpdated.next(true);
     return true;
   } catch (error) {
     await this.presentAlert('Error', 'Error al eliminar cómic: ' + error);
     return false;
   }
 }
+
 
 
 

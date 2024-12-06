@@ -47,10 +47,15 @@ export class AdminPage implements OnInit {
   ngOnInit() {
     this.loadComics();
     this.loadHistorialCompras();
+  
+    // Suscribirse a los cambios en los cómics
+    this.serviceBD.comicsUpdated.subscribe(() => {
+      this.loadComics();
+    });
   }
-
+  
   async loadComics() {
-    this.comics = await this.serviceBD.getAllComics();
+    this.comics = await this.serviceBD.getAllComicsAdmin();
   }
 
   loadHistorialCompras() {
@@ -113,7 +118,7 @@ export class AdminPage implements OnInit {
   async confirmDelete(comic: Comic) {
     const alert = await this.alertController.create({
       header: 'Confirmar Eliminación',
-      message: `¿Estás seguro que quieres eliminar '${comic.nombre_comic}'?`,
+      message: `¿Estás seguro que quieres eliminar '${comic.nombre_comic}'? Esto establecerá su stock en 0.`,
       buttons: [
         {
           text: 'Cancelar',
