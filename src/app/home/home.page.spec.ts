@@ -3,8 +3,8 @@ import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { HomePage } from './home.page';
 import { ServicebdService } from '../../services/servicebd.service';
+import { Subject } from 'rxjs';
 
-// Mock completo del servicio
 class MockServicebdService {
   insertarComics() {
     return Promise.resolve();
@@ -20,7 +20,10 @@ class MockServicebdService {
     };
   }
 
-  // Agrega otros métodos que uses en HomePage
+  getLogoutEvent() {
+    return new Subject();
+  }
+
   filterComics() {
     return [];
   }
@@ -54,7 +57,6 @@ describe('HomePage', () => {
     expect(component).toBeTruthy();
   });
 
-  // Prueba para inicialización de cómics
   it('should initialize comics', async () => {
     spyOn(serviceBDSpy, 'insertarComics').and.returnValue(Promise.resolve());
     await component.ngOnInit();

@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { CartService } from './cart.service';
 import { TestingModule } from '../testing.module';
 import { ServicebdService } from '../../services/servicebd.service';
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 
 describe('CartService', () => {
   let service: CartService;
@@ -10,10 +10,11 @@ describe('CartService', () => {
 
   beforeEach(() => {
     mockServiceBD = {
-      dbState: () => of(true), // Ahora devuelve un Observable<boolean>
+      dbState: () => of(true),
       getComicsByCategoria: () => Promise.resolve([]),
       insertarComics: () => Promise.resolve(),
-      getCurrentUser: () => of(null) // Ahora devuelve un Observable<Usuario | null>
+      getCurrentUser: () => of(null),
+      getLogoutEvent: () => new Subject() // Agregamos el método faltante
     };
 
     TestBed.configureTestingModule({

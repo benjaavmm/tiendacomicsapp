@@ -4,11 +4,19 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CarritoPage } from './carrito.page';
 import { ServicebdService } from '../../services/servicebd.service'; 
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 
 class MockServicebdService {
   getData() {
     return of([]);
+  }
+  
+  getLogoutEvent() {
+    return new Subject();
+  }
+  
+  getCurrentUser() {
+    return of(null);
   }
 }
 

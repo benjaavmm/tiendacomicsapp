@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ComicsmarvelPage } from './comicsmarvel.page';
 import { TestingModule } from '../testing.module';
 import { ServicebdService } from '../../services/servicebd.service';
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 
 describe('ComicsmarvelPage', () => {
   let component: ComicsmarvelPage;
@@ -14,7 +14,8 @@ describe('ComicsmarvelPage', () => {
       dbState: () => of(true),
       getComicsByCategoria: () => Promise.resolve([]),
       insertarComics: () => Promise.resolve(),
-      getCurrentUser: () => of(null)
+      getCurrentUser: () => of(null),
+      getLogoutEvent: () => new Subject()
     };
 
     await TestBed.configureTestingModule({

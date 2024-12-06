@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
 import { TestingModule } from '../testing.module';
 import { ServicebdService } from '../../services/servicebd.service';
 import { CartService } from '../services/cart.service';
 import { ComicsdcPage } from './comicsdc.page';
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 
 describe('ComicsdcPage', () => {
   let component: ComicsdcPage;
@@ -13,10 +12,11 @@ describe('ComicsdcPage', () => {
 
   beforeEach(async () => {
     mockServiceBD = {
-      dbState: () => of(true), // Ahora devuelve un Observable<boolean>
+      dbState: () => of(true),
       getComicsByCategoria: () => Promise.resolve([]),
       insertarComics: () => Promise.resolve(),
-      getCurrentUser: () => of(null) // Ahora devuelve un Observable<Usuario | null>
+      getCurrentUser: () => of(null),
+      getLogoutEvent: () => new Subject()
     };
 
     await TestBed.configureTestingModule({
