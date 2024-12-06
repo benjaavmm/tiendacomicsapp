@@ -3,7 +3,6 @@ import { BehaviorSubject } from 'rxjs';
 import { Comic } from '../../services/comic';
 import { ServicebdService } from '../../services/servicebd.service';
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -13,6 +12,15 @@ export class CartService {
   private cartTotal = new BehaviorSubject(0);
 
   constructor(private serviceBD: ServicebdService) {
+    this.loadSavedCart();
+
+    // Escuchar el evento de cierre de sesión
+    this.serviceBD.getLogoutEvent().subscribe(() => {
+      this.clearCart(); // Limpiar el carrito al cerrar sesión
+    });
+  }
+
+  private loadSavedCart() {
     const savedCart = localStorage.getItem('cart');
     if (savedCart) {
       try {
@@ -79,7 +87,6 @@ export class CartService {
       this.saveCartToStorage();
     }
   }
-  
 
   getCartItems(): Comic[] {
     return [...this.cartItems];

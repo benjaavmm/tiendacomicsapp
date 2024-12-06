@@ -6,6 +6,7 @@ import { Usuario } from './usuario';
 import { Comic } from './comic'; 
 import { CompraDetalle } from './compradetalle';
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -82,6 +83,7 @@ export class ServicebdService {
     private sqlite: SQLite,
     private platform: Platform,
     private alertController: AlertController
+    
   ) {
     this.initializeDatabase();
   }
@@ -473,9 +475,16 @@ export class ServicebdService {
   }
 
   // Cerrar sesión
+  private logoutEvent = new BehaviorSubject<boolean>(false);
+
+  getLogoutEvent(): Observable<boolean> {
+    return this.logoutEvent.asObservable();
+  }
+
   logout() {
-    this.currentUser.next(null); // Limpiar el usuario actual
-    localStorage.removeItem('currentUser'); // Eliminar del localStorage
+    this.currentUser.next(null);
+    localStorage.removeItem('currentUser');
+    this.logoutEvent.next(true); // Emitir evento de logout
   }
 
   // Actualizar perfil de usuario
