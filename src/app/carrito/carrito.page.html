@@ -49,10 +49,15 @@
     </ion-text>
   </div>
 
-  <ion-button expand="block" 
-              (click)="checkout()" 
-              [disabled]="cartItems.length === 0"
-              class="checkout-button">
-    Realizar Compra
-  </ion-button>
+  <!-- Botón de PayPal -->
+<div id="paypal-button-container" style="margin: 16px 0;"></div>
+
+<!-- Botón actual de realizar compra -->
+<ion-button expand="block" 
+            (click)="checkout()" 
+            [disabled]="cartItems.length === 0"
+            class="checkout-button">
+  Realizar Compra
+</ion-button>
+
 </ion-content>

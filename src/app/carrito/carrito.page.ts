@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { CartService } from '../services/cart.service';
 import { AlertController } from '@ionic/angular';
 import { ServicebdService } from '../../services/servicebd.service';
@@ -6,12 +6,36 @@ import { firstValueFrom } from 'rxjs';
 import { Comic } from '../../services/comic';
 import { Router } from '@angular/router';
 
+// Interfaces para tipado PayPal
+interface PayPalActions {
+  order: {
+    create(data: any): Promise<string>;
+    capture(): Promise<PayPalOrderDetails>;
+  };
+}
+
+interface PayPalOrderDetails {
+  payer: {
+    name: {
+      given_name: string;
+      surname?: string;
+    };
+    email_address?: string;
+  };
+  id?: string;
+  status?: string;
+}
+
+interface PayPalError {
+  message: string;
+}
+
 @Component({
   selector: 'app-carrito',
   templateUrl: './carrito.page.html',
   styleUrls: ['./carrito.page.scss'],
 })
-export class CarritoPage implements OnInit {
+export class CarritoPage implements OnInit, AfterViewInit {
   cartItems: Comic[] = [];
 
   constructor(
@@ -23,6 +47,12 @@ export class CarritoPage implements OnInit {
 
   ngOnInit() {
     this.loadCartItems();
+  }
+
+  ngAfterViewInit() {
+    this.loadPayPalScript().then(() => {
+      this.renderPayPalButton();
+    });
   }
 
   async loadCartItems() {
@@ -165,5 +195,57 @@ export class CarritoPage implements OnInit {
       });
       await errorAlert.present();
     }
+  }
+
+  loadPayPalScript(): Promise<void> {
+    return new Promise((resolve) => {
+      if ((<any>window).paypal) {
+        resolve();
+        return;
+      }
+      const script = document.createElement('script');
+      script.src = "https://www.paypal.com/sdk/js?client-id=AVOh689GV5C9Qmfuoqsems26uMX-UHnKJ5wBkPaeeu1R9c0Y7jazTsPoVqtMYBt3fuFEPcbJtrzXfcM3&currency=USD";
+      script.onload = () => {
+        resolve();
+      };
+      document.body.appendChild(script);
+    });
+  }
+
+  renderPayPalButton() {
+    (<any>window).paypal.Buttons({
+      style: {
+        layout: 'vertical',
+        color: 'blue',
+        shape: 'rect',
+        label: 'paypal'
+      },
+      createOrder: (data: unknown, actions: PayPalActions) => {
+        return actions.order.create({
+          purchase_units: [{
+            amount: {
+              value: this.totalPrice.toFixed(2)
+            }
+          }]
+        });
+      },
+      onApprove: (data: unknown, actions: PayPalActions) => {
+        return actions.order.capture().then((details: PayPalOrderDetails) => {
+          alert(`Pago completado por ${details.payer.name.given_name}`);
+          this.processSuccessfulPayment();
+        });
+      },
+      onError: (err: PayPalError) => {
+        console.error('Error en PayPal:', err.message);
+        alert('Hubo un error con el pago de PayPal.');
+      },
+      onCancel: () => {
+        alert('Pago cancelado.');
+      }
+    }).render('#paypal-button-container');
+  }
+
+  processSuccessfulPayment() {
+    this.processPayment();
   }
 }

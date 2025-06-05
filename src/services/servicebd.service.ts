@@ -6,7 +6,6 @@ import { Usuario } from './usuario';
 import { Comic } from './comic'; 
 import { CompraDetalle } from './compradetalle';
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -59,6 +58,14 @@ export class ServicebdService {
       FOREIGN KEY (id_categoria) REFERENCES categoria (id_categoria)
     );`;
 
+  // Nueva tabla estado para estados de venta/pago
+  private tablaEstado = `
+    CREATE TABLE IF NOT EXISTS estado (
+      id_estado INTEGER PRIMARY KEY AUTOINCREMENT,
+      nombre_estado VARCHAR(50) NOT NULL
+    );`;
+
+  // Tabla venta extendida con campos PayPal
   private tablaVenta = `
     CREATE TABLE IF NOT EXISTS venta (
       id_venta INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -66,7 +73,12 @@ export class ServicebdService {
       id_usuario INTEGER,
       total NUMERIC,
       id_estado INTEGER DEFAULT 1,
-      FOREIGN KEY (id_usuario) REFERENCES usuario (id_usuario)
+      paypal_order_id VARCHAR(100),
+      paypal_status VARCHAR(50),
+      paypal_payer_id VARCHAR(100),
+      paypal_payment_time DATETIME,
+      FOREIGN KEY (id_usuario) REFERENCES usuario (id_usuario),
+      FOREIGN KEY (id_estado) REFERENCES estado (id_estado)
     );`;
 
   private tablaDetallesVenta = `
@@ -83,7 +95,6 @@ export class ServicebdService {
     private sqlite: SQLite,
     private platform: Platform,
     private alertController: AlertController
-    
   ) {
     this.initializeDatabase();
   }
@@ -127,9 +138,10 @@ export class ServicebdService {
       await this.database.executeSql(this.tablaCategoria, []);
       await this.database.executeSql(this.tablaUsuario, []);
       await this.database.executeSql(this.tablaComics, []);
+      await this.database.executeSql(this.tablaEstado, []);
       await this.database.executeSql(this.tablaVenta, []);
       await this.database.executeSql(this.tablaDetallesVenta, []);
-      
+
       // Insertar roles por defecto
       await this.database.executeSql(
         'INSERT OR IGNORE INTO rol (id_rol, nombre_rol) VALUES (?, ?)',
@@ -153,7 +165,25 @@ export class ServicebdService {
         'INSERT OR IGNORE INTO categoria (id_categoria, nombre_categoria) VALUES (?, ?)',
         [3, 'DC']
       );
-      
+
+      // Insertar estados por defecto para ventas
+      await this.database.executeSql(
+        'INSERT OR IGNORE INTO estado (id_estado, nombre_estado) VALUES (?, ?)',
+        [1, 'Pendiente']
+      );
+      await this.database.executeSql(
+        'INSERT OR IGNORE INTO estado (id_estado, nombre_estado) VALUES (?, ?)',
+        [2, 'Completado']
+      );
+      await this.database.executeSql(
+        'INSERT OR IGNORE INTO estado (id_estado, nombre_estado) VALUES (?, ?)',
+        [3, 'Cancelado']
+      );
+      await this.database.executeSql(
+        'INSERT OR IGNORE INTO estado (id_estado, nombre_estado) VALUES (?, ?)',
+        [4, 'Fallido']
+      );
+
       this.isDBReady.next(true);
       await this.cargarUsuarios();
     } catch (error) {
@@ -246,8 +276,18 @@ export class ServicebdService {
     }
   }
 
-  // Métodos de venta actualizados
-  async guardarVenta(f_venta: string, id_usuario: number, total: number, comics: Comic[], id_estado: number): Promise<void> {
+  // Métodos de venta actualizados para PayPal
+  async guardarVenta(
+    f_venta: string,
+    id_usuario: number,
+    total: number,
+    comics: Comic[],
+    id_estado: number,
+    paypal_order_id?: string,
+    paypal_status?: string,
+    paypal_payer_id?: string,
+    paypal_payment_time?: string
+  ): Promise<void> {
     try {
       // Verificar stock antes de proceder
       for (const comic of comics) {
@@ -269,10 +309,12 @@ export class ServicebdService {
       // Iniciar transacción
       await this.database.executeSql('BEGIN TRANSACTION', []);
 
-      // Insertar venta
+      // Insertar venta con datos PayPal
       const insertVentaResult = await this.database.executeSql(
-        'INSERT INTO venta (f_venta, id_usuario, total, id_estado) VALUES (?, ?, ?, ?)',
-        [f_venta, id_usuario, total, id_estado]
+        `INSERT INTO venta 
+          (f_venta, id_usuario, total, id_estado, paypal_order_id, paypal_status, paypal_payer_id, paypal_payment_time) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+        [f_venta, id_usuario, total, id_estado, paypal_order_id || null, paypal_status || null, paypal_payer_id || null, paypal_payment_time || null]
       );
 
       const id_venta = insertVentaResult.insertId;
@@ -286,11 +328,13 @@ export class ServicebdService {
             [id_venta, comic.id_comic, comic.quantity]
           );
 
-          // Actualizar stock
-          await this.database.executeSql(
-            'UPDATE comics SET stock = stock - ? WHERE id_comic = ? AND stock >= ?',
-            [comic.quantity, comic.id_comic, comic.quantity]
-          );
+          // Actualizar stock solo si estado es Completado (id_estado=2)
+          if (id_estado === 2) {
+            await this.database.executeSql(
+              'UPDATE comics SET stock = stock - ? WHERE id_comic = ? AND stock >= ?',
+              [comic.quantity, comic.id_comic, comic.quantity]
+            );
+          }
         }
       }
 
@@ -299,6 +343,71 @@ export class ServicebdService {
     } catch (error) {
       // Revertir transacción en caso de error
       await this.database.executeSql('ROLLBACK', []);
+      throw error;
+    }
+  }
+
+  // Método para actualizar estado y datos PayPal de una venta
+  async actualizarEstadoPago(
+    id_venta: number,
+    paypal_status: string,
+    paypal_order_id?: string,
+    paypal_payer_id?: string,
+    paypal_payment_time?: string
+  ): Promise<void> {
+    try {
+      // Mapear estado PayPal a id_estado local
+      let id_estado = 4; // Fallido por defecto
+      switch (paypal_status.toUpperCase()) {
+        case 'COMPLETED':
+          id_estado = 2;
+          break;
+        case 'PENDING':
+          id_estado = 1;
+          break;
+        case 'CANCELLED':
+        case 'CANCELED':
+          id_estado = 3;
+          break;
+      }
+
+      const query = `
+        UPDATE venta 
+        SET 
+          paypal_status = ?,
+          id_estado = ?,
+          paypal_order_id = ?,
+          paypal_payer_id = ?,
+          paypal_payment_time = ?
+        WHERE id_venta = ?
+      `;
+
+      await this.database.executeSql(query, [
+        paypal_status,
+        id_estado,
+        paypal_order_id || null,
+        paypal_payer_id || null,
+        paypal_payment_time || null,
+        id_venta
+      ]);
+
+      // Si el pago se completó, actualizar stock (si no se hizo antes)
+      if (id_estado === 2) {
+        // Obtener detalles de venta
+        const detalles = await this.database.executeSql(
+          'SELECT id_comic, cantidad FROM detalles_venta WHERE id_venta = ?',
+          [id_venta]
+        );
+
+        for (let i = 0; i < detalles.rows.length; i++) {
+          const item = detalles.rows.item(i);
+          await this.database.executeSql(
+            'UPDATE comics SET stock = stock - ? WHERE id_comic = ? AND stock >= ?',
+            [item.cantidad, item.id_comic, item.cantidad]
+          );
+        }
+      }
+    } catch (error) {
       throw error;
     }
   }
@@ -400,32 +509,32 @@ export class ServicebdService {
   }
 
   // Agregar un método específico para el admin que muestre todos los cómics
-async getAllComicsAdmin(): Promise<Comic[]> {
-  try {
-    const query = 'SELECT * FROM comics';
-    const result = await this.database.executeSql(query, []);
-    const comics: Comic[] = [];
+  async getAllComicsAdmin(): Promise<Comic[]> {
+    try {
+      const query = 'SELECT * FROM comics';
+      const result = await this.database.executeSql(query, []);
+      const comics: Comic[] = [];
 
-    for (let i = 0; i < result.rows.length; i++) {
-      const item = result.rows.item(i);
-      comics.push({
-        id_comic: item.id_comic,
-        nombre_comic: item.nombre_comic,
-        precio: item.precio,
-        stock: item.stock,
-        descripcion: item.descripcion,
-        foto_comic: item.foto_comic,
-        id_categoria: item.id_categoria,
-        link: item.link,
-        quantity: 1
-      });
+      for (let i = 0; i < result.rows.length; i++) {
+        const item = result.rows.item(i);
+        comics.push({
+          id_comic: item.id_comic,
+          nombre_comic: item.nombre_comic,
+          precio: item.precio,
+          stock: item.stock,
+          descripcion: item.descripcion,
+          foto_comic: item.foto_comic,
+          id_categoria: item.id_categoria,
+          link: item.link,
+          quantity: 1
+        });
+      }
+      return comics;
+    } catch (error) {
+      this.presentAlert('Error', 'Error al obtener cómics: ' + error);
+      return [];
     }
-    return comics;
-  } catch (error) {
-    this.presentAlert('Error', 'Error al obtener cómics: ' + error);
-    return [];
   }
-}
 
   // Registrar nuevo usuario
   async registrarUsuario(usuario: Usuario): Promise<boolean> {
@@ -554,7 +663,7 @@ async getAllComicsAdmin(): Promise<Comic[]> {
   // Obtener todos los cómics
   async getAllComics(): Promise<Comic[]> {
     try {
-      // Modificamos la consulta para solo traer cómics con stock > 0
+      // Solo traer cómics con stock > 0
       const query = 'SELECT * FROM comics WHERE stock > 0';
       const result = await this.database.executeSql(query, []);
       const comics: Comic[] = [];
@@ -580,149 +689,139 @@ async getAllComicsAdmin(): Promise<Comic[]> {
     }
   }
 
-// Agregar un nuevo cómic
-async addComic(comic: Comic): Promise<boolean> {
-  try {
-    const query = `
-      INSERT INTO comics (
-        nombre_comic, precio, stock, descripcion, 
-        foto_comic, id_categoria, link
-      ) VALUES (?, ?, ?, ?, ?, ?, ?)
-    `;
-    
-    await this.database.executeSql(query, [
-      comic.nombre_comic,
-      comic.precio,
-      comic.stock || 0,
-      comic.descripcion,
-      comic.foto_comic,
-      comic.id_categoria,
-      comic.link
-    ]);
-    return true;
-  } catch (error) {
-    this.presentAlert('Error', 'Error al agregar cómic: ' + error);
-    return false;
-  }
-}
-
-// Actualizar un cómic existente
-async updateComic(comic: Comic): Promise<boolean> {
-  try {
-    const query = `
-      UPDATE comics 
-      SET nombre_comic = ?, precio = ?, stock = ?, descripcion = ?, 
-          foto_comic = ?, id_categoria = ?, link = ?
-      WHERE id_comic = ?
-    `;
-    
-    await this.database.executeSql(query, [
-      comic.nombre_comic,
-      comic.precio,
-      comic.stock,
-      comic.descripcion,
-      comic.foto_comic,
-      comic.id_categoria,
-      comic.link,
-      comic.id_comic
-    ]);
-    return true;
-  } catch (error) {
-    this.presentAlert('Error', 'Error al actualizar cómic: ' + error);
-    return false;
-  }
-}
-
-// Eliminar un cómic
-async deleteComic(id_comic: number): Promise<boolean> {
-  try {
-    // En lugar de eliminar, establecemos el stock a 0
-    const query = 'UPDATE comics SET stock = 0 WHERE id_comic = ?';
-    await this.database.executeSql(query, [id_comic]);
-    
-    // Emitir evento de actualización
-    this.comicsUpdated.next(true);
-    return true;
-  } catch (error) {
-    await this.presentAlert('Error', 'Error al eliminar cómic: ' + error);
-    return false;
-  }
-}
-
-
-
-
-
-// Obtener historial de compras de todos los usuarios
-getHistorialComprasAdmin(): Observable<CompraDetalle[]> {
-  return new Observable(observer => {
+  // Agregar un nuevo cómic
+  async addComic(comic: Comic): Promise<boolean> {
     try {
       const query = `
-        SELECT 
-          v.id_venta,
-          v.f_venta,
-          v.total,
-          v.id_estado,
-          u.correo,  -- Agregar el correo del usuario
-          v.id_usuario,
-          dc.id_comic,
-          dc.cantidad,
-          c.nombre_comic,
-          c.foto_comic,
-          c.precio
-        FROM venta v 
-        LEFT JOIN detalles_venta dc ON v.id_venta = dc.id_venta 
-        LEFT JOIN comics c ON dc.id_comic = c.id_comic
-        LEFT JOIN usuario u ON v.id_usuario = u.id_usuario
-        ORDER BY v.f_venta DESC
+        INSERT INTO comics (
+          nombre_comic, precio, stock, descripcion, 
+          foto_comic, id_categoria, link
+        ) VALUES (?, ?, ?, ?, ?, ?, ?)
       `;
-
-      this.database.executeSql(query, []).then(result => {
-        const comprasMap = new Map<number, CompraDetalle>();
-
-        for (let i = 0; i < result.rows.length; i++) {
-          const item = result.rows.item(i);
-          if (!comprasMap.has(item.id_venta)) {
-            comprasMap.set(item.id_venta, {
-              id_venta: item.id_venta,
-              fecha: new Date(item.f_venta).toLocaleDateString(),
-              total: item.total,
-              id_estado: item.id_estado,
-              correo: item.correo,  // Almacenar el correo aquí
-              items: []
-            });
-          }
-
-          const compra = comprasMap.get(item.id_venta);
-          if (compra && item.id_comic) {
-            compra.items.push({
-              id_comic: item.id_comic,
-              quantity: item.cantidad,
-              nombre_comic: item.nombre_comic,
-              precio: item.precio,
-              stock: 0,
-              descripcion: '',
-              foto_comic: item.foto_comic,
-              id_categoria: 0,
-              link: ''
-            });
-          }
-        }
-
-        observer.next(Array.from(comprasMap.values()));
-        observer.complete();
-      });
+      
+      await this.database.executeSql(query, [
+        comic.nombre_comic,
+        comic.precio,
+        comic.stock || 0,
+        comic.descripcion,
+        comic.foto_comic,
+        comic.id_categoria,
+        comic.link
+      ]);
+      return true;
     } catch (error) {
-      observer.error('Error al obtener el historial de compras: ' + error);
+      this.presentAlert('Error', 'Error al agregar cómic: ' + error);
+      return false;
     }
-  });
-}
+  }
 
-public comicsUpdated = new BehaviorSubject<boolean>(false);
+  // Actualizar un cómic existente
+  async updateComic(comic: Comic): Promise<boolean> {
+    try {
+      const query = `
+        UPDATE comics 
+        SET nombre_comic = ?, precio = ?, stock = ?, descripcion = ?, 
+            foto_comic = ?, id_categoria = ?, link = ?
+        WHERE id_comic = ?
+      `;
+      
+      await this.database.executeSql(query, [
+        comic.nombre_comic,
+        comic.precio,
+        comic.stock,
+        comic.descripcion,
+        comic.foto_comic,
+        comic.id_categoria,
+        comic.link,
+        comic.id_comic
+      ]);
+      return true;
+    } catch (error) {
+      this.presentAlert('Error', 'Error al actualizar cómic: ' + error);
+      return false;
+    }
+  }
 
+  // Eliminar un cómic (establecer stock a 0)
+  async deleteComic(id_comic: number): Promise<boolean> {
+    try {
+      const query = 'UPDATE comics SET stock = 0 WHERE id_comic = ?';
+      await this.database.executeSql(query, [id_comic]);
+      
+      this.comicsUpdated.next(true);
+      return true;
+    } catch (error) {
+      await this.presentAlert('Error', 'Error al eliminar cómic: ' + error);
+      return false;
+    }
+  }
 
-  
-  
+  // Obtener historial de compras de todos los usuarios
+  getHistorialComprasAdmin(): Observable<CompraDetalle[]> {
+    return new Observable(observer => {
+      try {
+        const query = `
+          SELECT 
+            v.id_venta,
+            v.f_venta,
+            v.total,
+            v.id_estado,
+            u.correo,
+            v.id_usuario,
+            dc.id_comic,
+            dc.cantidad,
+            c.nombre_comic,
+            c.foto_comic,
+            c.precio
+          FROM venta v 
+          LEFT JOIN detalles_venta dc ON v.id_venta = dc.id_venta 
+          LEFT JOIN comics c ON dc.id_comic = c.id_comic
+          LEFT JOIN usuario u ON v.id_usuario = u.id_usuario
+          ORDER BY v.f_venta DESC
+        `;
+
+        this.database.executeSql(query, []).then(result => {
+          const comprasMap = new Map<number, CompraDetalle>();
+
+          for (let i = 0; i < result.rows.length; i++) {
+            const item = result.rows.item(i);
+            if (!comprasMap.has(item.id_venta)) {
+              comprasMap.set(item.id_venta, {
+                id_venta: item.id_venta,
+                fecha: new Date(item.f_venta).toLocaleDateString(),
+                total: item.total,
+                id_estado: item.id_estado,
+                correo: item.correo,
+                items: []
+              });
+            }
+
+            const compra = comprasMap.get(item.id_venta);
+            if (compra && item.id_comic) {
+              compra.items.push({
+                id_comic: item.id_comic,
+                quantity: item.cantidad,
+                nombre_comic: item.nombre_comic,
+                precio: item.precio,
+                stock: 0,
+                descripcion: '',
+                foto_comic: item.foto_comic,
+                id_categoria: 0,
+                link: ''
+              });
+            }
+          }
+
+          observer.next(Array.from(comprasMap.values()));
+          observer.complete();
+        });
+      } catch (error) {
+        observer.error('Error al obtener el historial de compras: ' + error);
+      }
+    });
+  }
+
+  public comicsUpdated = new BehaviorSubject<boolean>(false);
 
   private async presentAlert(header: string, message: string) {
     const alert = await this.alertController.create({
