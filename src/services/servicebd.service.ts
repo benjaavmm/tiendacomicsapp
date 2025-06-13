@@ -67,19 +67,19 @@ export class ServicebdService {
 
   // Tabla venta extendida con campos PayPal
   private tablaVenta = `
-    CREATE TABLE IF NOT EXISTS venta (
-      id_venta INTEGER PRIMARY KEY AUTOINCREMENT,
-      f_venta DATE,
-      id_usuario INTEGER,
-      total NUMERIC,
-      id_estado INTEGER DEFAULT 1,
-      paypal_order_id VARCHAR(100),
-      paypal_status VARCHAR(50),
-      paypal_payer_id VARCHAR(100),
-      paypal_payment_time DATETIME,
-      FOREIGN KEY (id_usuario) REFERENCES usuario (id_usuario),
-      FOREIGN KEY (id_estado) REFERENCES estado (id_estado)
-    );`;
+  CREATE TABLE IF NOT EXISTS venta (
+    id_venta INTEGER PRIMARY KEY AUTOINCREMENT,
+    f_venta DATE,
+    id_usuario INTEGER,
+    total NUMERIC,
+    id_estado INTEGER DEFAULT 1,
+    paypal_order_id VARCHAR(100),
+    paypal_status VARCHAR(50),
+    paypal_payer_id VARCHAR(100),
+    paypal_payment_time DATETIME,
+    FOREIGN KEY (id_usuario) REFERENCES usuario (id_usuario),
+    FOREIGN KEY (id_estado) REFERENCES estado (id_estado)
+  );`;
 
   private tablaDetallesVenta = `
     CREATE TABLE IF NOT EXISTS detalles_venta (
@@ -281,71 +281,186 @@ export class ServicebdService {
     f_venta: string,
     id_usuario: number,
     total: number,
-    comics: Comic[],
+    comics: Comic[], // Asegurarse que estos cómics tienen 'quantity'
     id_estado: number,
     paypal_order_id?: string,
     paypal_status?: string,
     paypal_payer_id?: string,
     paypal_payment_time?: string
-  ): Promise<void> {
+  ): Promise<number> {
+
+    // Validaciones iniciales robustas
+    if (!this.isDBReady.value || !this.database) {
+      console.error("guardarVenta: La base de datos no está lista.");
+      throw new Error('La base de datos no está inicializada.');
+    }
+    if (!id_usuario || typeof id_usuario !== 'number' || id_usuario <= 0) {
+      console.error("guardarVenta: ID de usuario inválido:", id_usuario);
+      throw new Error(`ID de usuario no válido: ${id_usuario}`);
+    }
+    if (!comics || comics.length === 0) {
+      console.error("guardarVenta: No hay cómics para guardar.");
+      throw new Error('No hay cómics para guardar en la venta.');
+    }
+    if (typeof total !== 'number' || total < 0) {
+        console.warn(`guardarVenta: Total inválido (${total}), se establecerá a 0.`);
+        total = 0; // O lanzar error si prefieres: throw new Error(`Total inválido: ${total}`);
+    }
+    if (typeof id_estado !== 'number') {
+        console.error("guardarVenta: ID de estado inválido:", id_estado);
+        throw new Error(`ID de estado no válido: ${id_estado}`);
+    }
+
+    console.log(`Iniciando guardarVenta: Usuario ${id_usuario}, Total ${total}, Estado ${id_estado}, Items ${comics.length}`);
+
     try {
-      // Verificar stock antes de proceder
+      // Verificación de stock DENTRO de la transacción para consistencia
+      // Iniciar transacción explícitamente
+      console.log("Iniciando transacción SQL...");
+      await this.database.executeSql('BEGIN TRANSACTION', []);
+      console.log("Transacción iniciada.");
+
+      // Verificar stock para cada item DENTRO de la transacción
+      const stockErrores: string[] = [];
       for (const comic of comics) {
+        const cantidadSolicitada = comic.quantity || 1; // Usar 1 si quantity no está definido
+        if (!comic.id_comic || cantidadSolicitada <= 0) {
+            stockErrores.push(`Item inválido detectado: ID ${comic.id_comic}, Cantidad ${cantidadSolicitada}`);
+            continue; // Saltar este item inválido
+        }
+
         const stockResult = await this.database.executeSql(
           'SELECT stock FROM comics WHERE id_comic = ?',
           [comic.id_comic]
         );
-        
+
         if (stockResult.rows.length === 0) {
-          throw new Error(`El cómic ${comic.nombre_comic} ya no está disponible.`);
+          stockErrores.push(`El cómic ${comic.nombre_comic || `ID ${comic.id_comic}`} no existe.`);
+          continue;
         }
-        
+
         const stockActual = stockResult.rows.item(0).stock;
-        if (stockActual < comic.quantity) {
-          throw new Error(`Stock insuficiente para ${comic.nombre_comic}. Stock disponible: ${stockActual}`);
+        if (stockActual < cantidadSolicitada) {
+          stockErrores.push(`Stock insuficiente para ${comic.nombre_comic || `ID ${comic.id_comic}`}. Disponible: ${stockActual}, Solicitado: ${cantidadSolicitada}`);
         }
       }
 
-      // Iniciar transacción
-      await this.database.executeSql('BEGIN TRANSACTION', []);
+      // Si hubo errores de stock o items inválidos, hacer rollback y lanzar error
+      if (stockErrores.length > 0) {
+        console.error("Errores de stock detectados:", stockErrores);
+        await this.database.executeSql('ROLLBACK', []);
+        console.log("Transacción revertida debido a errores de stock.");
+        throw new Error(stockErrores.join('; '));
+      }
+      console.log("Verificación de stock completada dentro de la transacción.");
 
-      // Insertar venta con datos PayPal
+      // Insertar la venta principal
+      console.log("Insertando registro en tabla 'venta'...");
       const insertVentaResult = await this.database.executeSql(
-        `INSERT INTO venta 
-          (f_venta, id_usuario, total, id_estado, paypal_order_id, paypal_status, paypal_payer_id, paypal_payment_time) 
+        `INSERT INTO venta
+          (f_venta, id_usuario, total, id_estado, paypal_order_id, paypal_status, paypal_payer_id, paypal_payment_time)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-        [f_venta, id_usuario, total, id_estado, paypal_order_id || null, paypal_status || null, paypal_payer_id || null, paypal_payment_time || null]
+        [
+          f_venta, id_usuario, total, id_estado,
+          paypal_order_id || null, paypal_status || null, paypal_payer_id || null, paypal_payment_time || null
+        ]
       );
 
       const id_venta = insertVentaResult.insertId;
+      if (!id_venta || id_venta <= 0) {
+          throw new Error("No se pudo obtener un ID de venta válido después de la inserción.");
+      }
+      console.log(`Registro 'venta' insertado. ID: ${id_venta}`);
 
-      // Procesar cada cómic
+      // Insertar detalles y actualizar stock (si aplica)
+      console.log("Insertando detalles de venta y actualizando stock...");
       for (const comic of comics) {
-        if (comic.id_comic && comic.quantity) {
-          // Insertar detalle de venta
-          await this.database.executeSql(
-            'INSERT INTO detalles_venta (id_venta, id_comic, cantidad) VALUES (?, ?, ?)',
-            [id_venta, comic.id_comic, comic.quantity]
+        const cantidad = comic.quantity || 1; // Usar la cantidad verificada
+        if (!comic.id_comic || cantidad <= 0) continue; // Doble chequeo por si acaso
+
+        // Insertar detalle
+        await this.database.executeSql(
+          'INSERT INTO detalles_venta (id_venta, id_comic, cantidad) VALUES (?, ?, ?)',
+          [id_venta, comic.id_comic, cantidad]
+        );
+        console.log(` - Detalle insertado: Venta ${id_venta}, Comic ${comic.id_comic}, Cantidad ${cantidad}`);
+
+        // Actualizar stock SOLO si el estado es 'Completado' (id_estado = 2)
+        if (id_estado === 2) {
+          const updateResult = await this.database.executeSql(
+            // Asegurarse que la resta no deje stock negativo (aunque ya verificamos antes)
+            'UPDATE comics SET stock = stock - ? WHERE id_comic = ? AND stock >= ?',
+            [cantidad, comic.id_comic, cantidad]
           );
 
-          // Actualizar stock solo si estado es Completado (id_estado=2)
-          if (id_estado === 2) {
-            await this.database.executeSql(
-              'UPDATE comics SET stock = stock - ? WHERE id_comic = ? AND stock >= ?',
-              [comic.quantity, comic.id_comic, comic.quantity]
-            );
+          // Verificar si la actualización afectó alguna fila
+          if (updateResult.rowsAffected === 0) {
+            // Esto es grave, indica inconsistencia o un problema concurrente
+            console.error(`FALLO al actualizar stock para Comic ID ${comic.id_comic}. Cantidad: ${cantidad}. RowsAffected: 0.`);
+            throw new Error(`No se pudo actualizar el stock para ${comic.nombre_comic || `ID ${comic.id_comic}`}. Puede que el stock haya cambiado.`);
           }
+          console.log(` - Stock actualizado para Comic ${comic.id_comic}. Reducido en ${cantidad}.`);
         }
       }
 
-      // Confirmar transacción
+      // Confirmar la transacción
+      console.log("Confirmando transacción SQL...");
       await this.database.executeSql('COMMIT', []);
+      console.log(`Transacción COMMIT exitosa para Venta ID: ${id_venta}`);
+
+      this.comicsUpdated.next(true); // Notificar que el stock pudo haber cambiado
+      return id_venta; // Retornar el ID de la venta creada
+
     } catch (error) {
-      // Revertir transacción en caso de error
-      await this.database.executeSql('ROLLBACK', []);
-      throw error;
+      // Bloque CATCH MEJORADO
+      console.error('ERROR durante la transacción de guardarVenta:', error);
+
+      // Intentar hacer rollback si aún no se ha hecho
+      try {
+        console.log("Intentando ROLLBACK debido a error...");
+        await this.database.executeSql('ROLLBACK', []);
+        console.log("ROLLBACK ejecutado.");
+      } catch (rollbackError) {
+        console.error('Error CRÍTICO durante el ROLLBACK:', rollbackError);
+        // Aquí la base de datos podría estar en un estado inconsistente.
+        // Es importante loguear este error también.
+      }
+
+      // Formatear el mensaje de error para ser más útil
+      let detailedErrorMessage = 'Error al guardar la venta: ';
+      if (error instanceof Error) {
+        detailedErrorMessage += error.message; // Mensaje estándar si es un objeto Error
+      } else if (typeof error === 'string') {
+        detailedErrorMessage += error; // Si el error es solo un string
+      } else {
+        // Intentar obtener más detalles del objeto de error (común en plugins Cordova)
+        // Buscar códigos de error comunes de SQLite
+        if (error && typeof error === 'object') {
+            if ('message' in error && error.message) {
+                 detailedErrorMessage += String(error.message);
+            } else if ('code' in error && error.code) {
+                detailedErrorMessage += `Código de error ${error.code}`;
+                // Puedes añadir mapeos específicos de códigos de error SQLite si los conoces
+                // ej. if (error.code === 6) detailedErrorMessage += ' (Tabla bloqueada)';
+            } else {
+                // Si no hay 'message' ni 'code', intentar serializar (con precaución)
+                try {
+                    detailedErrorMessage += JSON.stringify(error);
+                } catch (stringifyError) {
+                    detailedErrorMessage += 'Objeto de error no serializable.';
+                }
+            }
+        } else {
+            detailedErrorMessage += 'Error desconocido o no estándar.'; // Fallback final
+        }
+      }
+
+      console.error("Mensaje de error formateado:", detailedErrorMessage);
+      // Lanzar un nuevo error con el mensaje detallado
+      throw new Error(detailedErrorMessage);
     }
   }
+
 
   // Método para actualizar estado y datos PayPal de una venta
   async actualizarEstadoPago(
